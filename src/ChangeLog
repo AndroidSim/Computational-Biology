@@ -1,0 +1,106 @@
+2020-06-17  aks   <drandrewksmith@gmail.com>
+
+	* merge ^/branches/islj-graduni into ^/trunks/islj
+
+2019-11-19  aks   <drandrewksmith@gmail.com>
+
+	* merge ^/branches/islj-ALTrelease into ^/trunks/islj
+	* src: changes in Hepatocyte.java
+	* resources: changes in configuration files in cfg directory
+	* bin: modified compare-exps.sh to follow symbolic links when getting band data.
+
+2019-06-13-12:03  gepr  <gepr@tempusdictum.com>
+
+	* Throughout the code: Made changes suggested by -Xlint and Netbeans (e.g. type checking, serial version ids, functional idiom, etc.)
+
+2019-04-11  aks   <drandrewksmith@gmail.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ALTrelease
+
+2018-03-22-10:38  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2017-05-24  aks   <drandrewksmith@gmail.com>
+
+	* merge --reintegrate islj-zb into trunk islj
+
+2016-09-08  gepr  <gepr@tempusdictum.com>
+
+	* batch_control.properties (seed): Include 24 truly random numbers to use as seeds for distributed experiments.
+
+2016-05-28-13:38  gepr  <gepr@tempusdictum.com>
+
+	* SR.properties (numislparams): "death" → "necosis".
+
+2016-03-09 gepr <gepr@tempusdictum.com>
+
+	* */*.java isl.util → bsg.util
+
+2015-02-13  gepr  <gepr@tempusdictum.com>
+
+	* batch_control.properties (measureAllSolute): Yet another Reaction Product specific measurement parameter to allow it to measure non-reaction products as well.
+
+2015-02-02 gepr <gepr@tempusdictum.com>
+
+	* batch_control.properties(measureRxnProducts): Merge bkp's reaction product switch from isl-is version 676.  New boolean parameter to control whether or not to measure rxnProduct and produce rxnProduct files.
+
+
+
+	vvvvvvvv isl-is branch dev vvvvvvvv
+	
+
+2015-01-13  bkp <b.p@berkeley.edu>
+
+	* batch_control.properties (measureRxnProducts): New boolean parameter to control
+	whether or not to measure rxnProduct and produce rxnProduct files.
+
+
+	^^^^^^^ isl-is branch dev ^^^^^^^^^^
+
+
+2014-10-15  gepr  <gepr@tempusdictum.com>
+
+	* SR.properties: Change Compound to oAPAP, metProb to rxnProb,
+	metabolites to rxnProducts, metProbGradient to rxnProbGradient,
+	Metabolite_N to N, Damage1 to nMD, and Damage2 to MitoDD.
+
+2014-10-14   aks   <drandrewksmith@gmail.com>
+
+	* SR.properties (SR): set vary = false for isl parameter deathRange
+
+2014-10-13   aks   <drandrewksmith@gmail.com>
+
+	* SR.properties (SR): added some parameters and parameter modifications for current 
+	experiments.  Also, modification for independently varying the PV and CV values of spatial parameters.
+
+2014-10-08   aks   <drandrewksmith@gmail.com>
+
+	* SR.properties (SR): added parameter numSRexps to specify the number of experiment 		directories to create in ../exp
+
+2014-10-07  gepr  <gepr@tempusdictum.com>
+
+	* SR.properties (SR): Changed SR to false for verification and regression tests.
+
+2014-10-05   aks   <drandrewksmith@gmail.com>
+
+      	* SR.properties: modified database structure for both isl and delivery parameters
+
+2014-09-17  aks   <drandrewksmith@gmail.com>
+
+	* SR.properties: added parameter database structure 
+
+2014-09-12  aks   <drandrewksmith@gmail.com>
+
+	* SR.properties: file containing the parameters for sensitivity runs
+
+2012-08-08  gepr  <gepr@red.red.dontexist.com>
+
+	* (comments): Fixed copyright statement throughout.
+
+2012-07-19  gepr  <gepr@red.red.dontexist.com>
+
+	* batch_control.properties (gui, seed, cycleLimit)
+	(monteCarloTrials, runFileBase, lobuleIterates): All moved from
+	isl.properties to batch_control.properties.
+

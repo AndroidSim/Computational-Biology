@@ -1,0 +1,4 @@
+2019-06-13-11:57  gepr  <gepr@tempusdictum.com>
+
+	* logback.xml: Δ debug to info as default. Changed from log.debug() to log.info() in several places to promote the regular log outputs we rely on.
+

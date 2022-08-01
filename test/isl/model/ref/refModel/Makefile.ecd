@@ -1,0 +1,28 @@
+
+JAVAHOME ?= $(shell find /usr -name "jni.h" -print \
+               | sed -e 's|\(.*\)/include/jni.h|\1|' )
+
+
+all: liver_model
+
+lib: isl_model_ref_AbstractCDModelTest.o liver_model.o Model.h ConvectionDispersion.o ExtendedConvectionDispersion.o
+	g++ -o libreflivermodel.so -shared -Wl,-soname,libreflivermodel.so -I/$(JAVAHOME)/include -I/$(JAVAHOME)/include/linux isl_model_ref_AbstractCDModelTest.cc ConvectionDispersion.cc ExtendedConvectionDispersion.cc -static -lc
+
+liver_model: liver_model.o Model.h ConvectionDispersion.o ExtendedConvectionDispersion.o
+	g++ -g -o liver_model liver_model.o ConvectionDispersion.o ExtendedConvectionDispersion.o -I.
+
+liver_model.o: liver_model.cc
+	g++ -g -c liver_model.cc -I.
+
+ConvectionDispersion.o: Model.h ConvectionDispersion.cc ConvectionDispersion.h	
+	g++ -g -c ConvectionDispersion.cc -I.
+
+ExtendedConvectionDispersion.o: Model.h ExtendedConvectionDispersion.cc ExtendedConvectionDispersion.h	
+	g++ -g -c ExtendedConvectionDispersion.cc -I.
+
+isl_model_ref_AbstractCDModelTest.o: isl_model_ref_AbstractCDModelTest.cc isl_model_ref_AbstractCDModelTest.h Model.h ConvectionDispersion.h ExtendedConvectionDispersion.h	
+	g++ -g -c isl_model_ref_AbstractCDModelTest.cc -I. -I/$(JAVAHOME)/include -I/$(JAVAHOME)/include/linux
+
+
+clean:
+	rm liver_model liver_model.o ConvectionDispersion.o ExtendedConvectionDispersion.o isl_model_ref_AbstractCDModelTest.o libreflivermodel.so

@@ -1,0 +1,36 @@
+2021-03-04  aks   <drandrewksmith@gmail.com>
+
+	* changed for new lib/bsg-r1437.jar
+
+2019-06-11    <gepr@aks0.c.ucsf-generic.internal>
+
+	* Setup for Netbeans 11 and JDK 12. 
+
+2018-02-06-16:52  gepr  <gepr@tempusdictum.com>
+
+	* project.properties (bsg-1074.jar): Use the automatically checked out module from the new bsg.util.CollectionUtils.countType[s]() → countObjects[By|Of]Type() interface change.
+
+2016-03-09  gepr  <gepr@tempusdictum.com>
+
+	* build-impl.xml: Change library dependency from another netbeans project to the bsg.jar file, checked out via the svn:externals property, which automatically checks out https://subversion.assembla.com/svn/bsg-ucsf/trunks/bsg/dist/bsg.jar, revision 826 and places it in islj/lib/bsg-r826.jar.  To see the svn:externals property, check out islj and issue the command "$ svn propget svn:externals islj/lib".
+
+	* nbproject/*: Assume the bsg.util classes are available as a sibling project (temporary until we clean up the packaging).
+
+2015-08-25  gepr  <gepr@tempusdictum.com>
+
+	* project.properties (includes): Changed to Open JDK 1.8, which will present problems for other users and in the cloud.
+
+2014-03-17  gepr  <gepr@tempusdictum.com>
+
+	* Removed dependency on JMF.jar.
+
+2011-08-10  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* project.properties (commons-math-2.2.jar): Add commons math lib.
+
+2011-06-20  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* project.properties (excludes): Added colt, cfg directory,
+	junit4, logback-classic, logback-core, slf4j to referenced
+	libraries.  Changed mason14 to mason15-with-src.q
+

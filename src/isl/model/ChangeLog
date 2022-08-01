@@ -1,0 +1,3045 @@
+2021-09-06  aks   <drandrewksmith@gmail.com>
+
+    * MetabolicParams.java: added test binding probability gradient parameters when reading them in from the metabolic.properties file. 
+
+2021-03-03  aks   <drandrewksmith@gmail.com>
+
+	* HepStruct.java: went back to original calculation for the inverse sigmoid when converting a cell's unified gradient value to its parameterized distance that did not involve the new shift and sharp parameters because they are not needed for a sigmoid unified gradient. Also, added the new function call format for the sigmoid gradient calculation with the new shift and sharp parameters.
+	* MetabolicParams.java: added a check for whether or not either the new shift or sharp parameters for the simgoid gradient are zero. If so, a runtime error is thrown.
+
+2021-02-25  aks   <drandrewksmith@gmail.com>
+
+	* HepStructParams.java: Fixed runtime exception error message that checks if the start and finish unified gradient values are equal (i.e. these two values can not be equal).
+	* MetabolicParams.java: Added a check on the new sigmoid gradient parameters, "sharp" and "shift", which are read in through the key, type, val structure of the properties loop.
+	* HepStruct.java (evalGradientfromUniG()): added new parameters, sharp and shift, to function that calculates a gradient value from the unified gradient.
+	* Hepatocyte.java & NecrosisHandler.java: modified the function calls to HepStruct.evalGradientfromUniG() for the new definition containing the new sigmoid parameters.
+
+2020-07-28  aks   <drandrewksmith@gmail.com>
+
+	* HepStruct.java (evalGradientfromUniG()): added check if calculated gradient value is negative, and, if so, change it to zero. 
+
+2020-07-27  aks   <drandrewksmith@gmail.com>
+
+	* HepStructParams.java: added runtime error message if unified gradient start == finish
+	* HepStruct.java (evalGradientfromUniG()): added ability to evaluate gradients using sigmoid unified gradient.
+	* HepStruct.java (setUnifiedGradient()): added ability to set unified gradient to a sigmoid.
+
+2020-07-20  aks   <drandrewksmith@gmail.com>
+
+	* HepStruct.java (setUnifiedGradient()): added Sigmoid gradient option for unified gradient.
+	* HepStruct.java (distances2UniGradient()): added use of Sigmoid gradient to calculate the unified gradient value from cell distances dPV and dCV.
+	* Hepstruct.java (evalGradientfromUniG()): another function of the same name as before (different arguments) that evaluates other gradients using the unified gradient of that cell and the two endpoint values at the PV and CV.
+
+2020-07-07  aks   <drandrewksmith@gmail.com>
+
+	* HepStructParams.java: assigned input unified gradient parameters directly.	
+	* HepStruct.java (setUnifiedGradient()): modified to work called from ISL.java.
+	* HepStruct.java (getUnifiedGradient()): get unified gradient as class Gradient. currently unused.
+	* HepStruct.java (distances2UniGradient()): function to go from hepatocyte distances dCV and dPV to unified gradient value.
+	* HepStruct.java (uniGradient2distances()): function to go from unified gradient value to hepatocyte distances dCV and dPV.
+	* HepStruct.java (evalGradientfromUniG()): function to evaluate any gradient through inputting unified gradient value of a hepatocyte.
+	* ISL.java: call setUnifiedGradient() after hepStruct initiated.
+	
+2020-07-01  aks   <drandrewksmith@gmail.com>
+
+	* HepStructParams.java: added code to read in unified gradient parameters "uniGradtype" and "uniGradrange" located in isl.properties.
+	* HepStruct.java (setUnifiedGradient()): new function to set up the unified gradient.
+
+2020-03-06-11:32  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* HepStructParams.java (RSRCGRADIENTSCRIPT*): Delete parameters and code reading the script as a parameter.
+	* HepStruct.java (max_grid, init()): Temporarily make max_grid public to replace JavaScript resource gradient with hard-coded Java version. Remove initialization of the JavaScript script.
+	* HepStruct.java (rsrc_grad_script): Delete.
+
+2020-03-04-10:17  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* HepStruct.java (evalGradient()): Flip from dPV base to dCV base. This implies changes to all gradient parameters like rxnProb[Start|Finish], gshDepletionRange, etc.
+
+2020-02-27-16:19  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* HepStruct.java (evalGradient()): Consolidate calls to LinearGradient.eval() into a HepStruct method.
+
+2019-10-18    <gepr@mia.c.ucsf-generic.internal>
+
+	* SSParams.java: Look for and read new parameters exos (boolean) and exoManhattanDist (integer) to control whether the EXO messaging mechanism is used. This was a merge from ^/branches/islj-evs r1265.
+
+vvvvvvvvvvvvvvvvvvvvvvv merge from ^/branches/islj-evs vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2019-10-09-14:13  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Solute.java (TypeString): Remove implementation of getType().
+	* MobileObject.java, Hepatocyte.java (TypeString): Δ getType() calls to getTypeString() for move from bsg-r1074 to bsg-r1220.
+
+2019-08-08  gepr  <gepr@zareason-mediabox5330>
+
+	* SS.java(accept()): Add a hasProperty("core2Rim") check and use 0.5 as the default if it doesn't exist in that Solute's properties.
+
+^^^^^^^^^^^^^^^^^^^^^^^^ merge from ^/branches/islj-evs ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2019-08-22-15:21  gepr  <gepr@tempusdictum.com>
+
+	* HepStruct.java (init()): Rather than linking recalcitrant leaf nodes to the CV, allow the failed link to happen, then (iteratively) prune the leaf nodes from the tree.
+	* HepStruct.java (prune(), getLeaves()): prune() walks the graph, perhaps repeatedly, and deletes the leaf nodes. getLeaves() walks the graph and returns a Map<layer,node> of the leaves to remove. Although it seems reasonable to use recursion for this, because we maintain a convenience structure of nodes per layer, doing so would involve a repeated object lookup in that structure, reducing the parsimony of a recursive function. The prune() will run repeatedly as long as the previous prune() had a node whose only output was a node previously deleted.
+
+2019-08-13  gepr  <gepr@zareason-mediabox5330>
+
+	* ISL.java (AbstractISLModel): Add the RxnProbMap to the HepInit records.
+
+2019-08-09    <gepr@mia.c.ucsf-generic.internal>
+
+	* SS.java(accept()): Merge a change from ^/branches/islj-evs that tests for the existence of core2Rim before relying on it.
+	* HepStruct.java(init()): Add another safety for graph edges. If there are many edges such that a leaf node cannot be given an output edge because every new edge forms a cycle, connect that leaf to the CV, regardless of what layer it's in.
+
+2019-06-26-17:31  gepr  <gepr@tempusdictum.com>
+
+	* HepStruct.java(init()): With the output of the adjacency matrix, we no longer need to print the graph edges into the log file, at least not on a regular basis. This change demotes them from log.info() to log.debug().
+
+2019-06-13-12:03  gepr  <gepr@tempusdictum.com>
+
+	* SS.java (LiverNodes): Switch to BSG ArrayList shuffle() away from MASON's built-in Bag shuffler to continue moving toward strong typing.
+
+2019-05-24    <gepr@aks0.c.ucsf-generic.internal>
+
+	* LiverNode.java (isCycle()): Capture downstream failure. Remove log.debug() calls.
+
+2019-05-24-12:15  gepr  <gepr@tempusdictum.com>
+
+	* LiverNode.java (isCycle()): Check for self-self edges.
+	* HepStruct.java (init()): Check intra-layer edges for cycles.
+
+2019-05-24-10:24  gepr  <gepr@tempusdictum.com>
+
+	* LiverNode.java (isCycle()): Recursive function to test for cycles in the HepStruct graph.
+	* HepStruct.java (linkNodeToLayer()): Replace 1 and 2 node cycle proscription with a recursive test to disallow any cycles at all.
+
+2019-05-09-16:45  gepr  <gepr@tempusdictum.com>
+
+	* SS.java (getCoreCapPerSolute()): Return the area of the disc rather than the coreScale directly.
+
+2019-05-07-15:16  gepr  <gepr@tempusdictum.com>
+
+	* ISL, Solute, SoluteType: Move the dynamic isBindable() logic from ISL to Solute and remove the bindable IVar from SoluteType.
+
+2019-04-30-10:03  gepr  <gepr@tempusdictum.com>
+
+	* LiverNode, Solute, Hepatocyte, KupfferCell, ReactionHandler: Change the API for Solute class by removing the bindable parameter. It is now retrieved from the SoluteType parameter. Also remove the Solute.bindable IVar and change Solute.isBindable() implementation to use SoluteType.bindable, which is set by the ISL after the metabolic environments have been specified.
+
+2019-04-29-10:21  gepr  <gepr@tempusdictum.com>
+
+	* EnzymeGroup, Harness, InnerSpace, Solute, SSSpace, Vas, BindingHandler, Cell, Hepatocyte, KupfferCell, ReactionHandler: Use encapsulated getter for the type string. And use SoluteType instead of the type string for Solute.
+	* DeliveryMethod.java (getSoluteType()): Removed as unnecessary.
+
+2019-04-26-11:34  gepr  <gepr@tempusdictum.com>
+
+	* EnzymeGroup.java, Solute.java, Hepatocyte.java: getType() → getTypeString().
+
+2019-04-19-09:18  gepr  <gepr@tempusdictum.com>
+
+	* HepStruct.java (init()): Change the way postPathLength and priorPathLength are calculated for each LiverNode to two recursive functions calculatedCV(LiverNode) and calculatedPV(LiverNode). These produce the average of the (recursively called) results from their outlet and inlet nodes, respectively.  calculated[CP]V([CP]V) = 0, respectively.
+
+2018-11-21-16:54  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-09-06-12:11  gepr  <gepr@tempusdictum.com>
+
+	* ISLParams.java (cellEnterExitProb[s]): Remove the "s" from this parameter to match that used for Solutes (types.properties). Also throw a runtime exception if the parameter isn't found rather than a passive WARNing.
+
+2018-08-22-09:39  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryParams.java (loadTypeParams()): Read an additional types.properties entry for whether to test the property and, if so, what type. Possible values are "sums" (assert that the values sum to 1.0) vs "exists" (asssert that the map keys exist as classes).
+	* ISLParams.java (loadParams()): Ditto.
+
+2018-08-17-09:02  gepr  <gepr@tempusdictum.com>
+
+	* [ISL|SS]Params.java (membraneCrossProb, cellEnterExitProbs): Move the reading of the parameter from SSParams to ISLParams. Δ the parameter name and the format.
+
+2018-08-16-12:33  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (flow[In|Out]ward(), jump2Space(), moveMoore()): Δ canItLeave() → canCross(,OUT) and accept() → canCross(,IN).
+
+2018-07-17-13:23  gepr  <gepr@tempusdictum.com>
+
+	* BileCanal.java (Tube): Handle case where ssFlowRate > Bile.length.
+
+2018-06-12-07:57  gepr  <gepr@tempusdictum.com>
+
+	* SoluteType.java (isAmplified, isAmplified(), ampRange): 2 new convenience instance variables (IVars) and one new getter method for querying for amplification without re-parsing the string parameter for each query.
+	(init()): Initialize the isAmplified and ampRange IVars from the property.
+	* DeliveryMethod.java (getSoluteType()): Convenience method for getting the SoluteType from the Solute.type string.
+
+2018-05-15-10:34  gepr  <gepr@tempusdictum.com>
+
+	* InnerSpace.java (jump2Space()): Call renamed method Δ getCoreCap() → getCoreCapPerSolute().
+	* Harness,LiverNode[s], SS, Vas (getInletCapPerSolute()): Renamed from getInletCap() to reflect that it's per Solute type.
+	* SS.java (get[Core|Whole]CapPerSolute()): Renamed from get[Core|Whole]Cap() to reflect per Solute type.
+	* Body.java (calculateEndoSample(), tot[In|SS]CapPerST): Refactor to calculate capacities per Solute type, rather than across all Solute types.
+
+2018-05-09-11:36  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (countSoluteAt()): Remove the version that sums over all Solute types.
+	* SS.java (tryRim()), InnerSpace.java (jump2Rim()): Call Solute-specific countSoluteAt() method to compare against gridScale, rather than comparing the Σ of all Solute.
+	* InnerSpace.java (getCoreCount(), getInnerSpaceCount()): Deleted since they were unused.
+
+2018-03-20  aks   <drandrewksmith@gmail.com>
+
+	*SSparams.java: transport_delay_max >= transport_delay_min instead of just >, i.e. max and min can now be equal.
+
+2018-03-12  aks   <drandrewksmith@gmail.com>
+
+	* ISLParams.java: added "ALT" string for ALT measurements.
+
+2018-02-23-09:53  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (jump2Space(), moveMoore()): Track Solute in both the grid and the Cell indices and prevent Solute from moving to a grid point without also entering the Cell.
+
+2018-02-19-14:43  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (flow[In|Out]ward(), moveMoore()): Test for presence in Cell, fixes bug where Solute sitting next to a Cell, in the same grid point, was being logged as an exit.
+
+2018-02-16-11:47  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (flow[In|Out]ward(), moveMoore()): Add an additional option for a Solute moving into a grid point containing a Cell.  I.e. change from
+	  if (oldCell == null || oldCell.canItLeave(Solute))
+	to
+	  if (oldCell == null || !oldCell.listSolute().contains(Solute) || oldCell.canItLeave(Solute))
+	This fixes a bug (even in the trunk) where Solute that are not membraneCrossing (e.g. Marker) are prevented from moving back toward the InnerSpace if they happeened to wander out into, say, DisseSpace.
+	(jump2Space()): Move Grid.setObjectLocation() call out of the if-clause testing for the presence of a Cell.  This fixes a bug in this refactor (not in the trunk) where Solute was being tracked in 2 places.
+	* SS.java (describe()): Add finer-grained descriptive output for SSes.
+
+2018-02-13  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java(addSolute()): refactored ALT release mechanism to take into account the amount of damage from the previous Solute addition; therefore, an ALT is created and released when damage > threshold *and* damage now > damage previous
+
+2018-02-13-11:23  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java (membraneCrossProb): New parameter to specify a pRNG draw when a Solute tries to enter or exit any Cell. The code also allows for solute-specific, dynamic, membraneCrossProb property in types.properties.
+
+
+2018-02-08-15:56  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (moveMoore()): Adopt the abandoned reponsiblity for setting the Solute in the SSGrid in order to allow Cell.accept() to register entries and Cell.remove() to register exits.
+
+2018-02-07-10:26  gepr  <gepr@tempusdictum.com>
+
+	* Binding[Handler|Info], Cell[Info], EC, E[IL][Handler|Info], Hepatocyte, KupfferCell, NecrosisHandler, Reaction[Handler|Info]: Subsume all Cell-centric classes into a new package isl.model.cell.
+
+2018-02-06-16:39  gepr  <gepr@tempusdictum.com>
+
+	* BindingHandler, BindingInfo, Cell, CellInfo, ELHandler, NecrosisHandler, SS: Cell.solutes is no longer publicly visible. Use Cell.listSolute(), which creates an unmodifiable List copy of Cell.solutes.
+	* ELHandler, Harness, NecrosisHandler: bsg.util.CollectionUtils.countType[s]() → countObjects[By|Of]Type().
+
+2018-01-08  aks   <drandrewksmith@gmail.com>
+
+	* SSParams.java: added parameter reads for transportDelayMin and transportDelayMax
+	* Hepatocyte.java(addSolute(), transportSolute()): creation of ALTtransporter object with functions to calculated membrane damage Solute types and schedule transport event. Also, addes transportSolute() as this transport event.
+	* Transporter.class: added field variables and functions to this previously empty class
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^ merge from trunk to islj-ssf ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2018-02-01-14:53  gepr  <gepr@tempusdictum.com>
+
+	* SS: Separate scale into 2 parameters, one for the Core and one for the grids. Add new getCoreCap() method.
+	* InnerSpace.java (jump2Space()): Use core scale to see if it can enter.
+	* ISL[Params], SSSpace (scale, [grid|core]Scale): Separate scale into 2 parameters, one for the Core and one for the grids.
+	* BileCanal, Cell: Replace scale with gridScale.
+
+2018-01-25-14:16  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (setProbV()): Fix bug in path where Space-specific lateralBias = Solute-specific lateralBias.
+
+2018-01-23-15:42  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (setProbV()): Accommodate flow distinctions between InnerSpace and the rest of the (outer) spaces.
+	* SSParams.java (Parameters): Split ss*Bias into [inner|outer]*Bias to allow InnerSpace to have a different bias than the other spaces.
+	* InnerSpace.java (setProbV()): Override so InnerSpace can use the new inner[Forward|Lateral]Bias.
+
+2018-01-19-16:08  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java (flowRate): Δ from int to double.
+	* InnerSpace.java (flow): Δ from int to double.
+	(advanceCore()): Add a pRNG draw such that if draw < 0.5, flowRate is floored and ≥ 0.5, ceilinged.
+	* SS.java (stepPhysics()): ditto for BileCanal.
+
+2018-01-19-10:43  gepr  <gepr@tempusdictum.com>
+
+	* InnerSpace.java (advanceCore()): Place flowRate calculations inside the SoluteType loop and check each SoluteType for its own flowRate.
+
+2018-01-18-16:06  gepr  <gepr@tempusdictum.com>
+
+	* SS.java (tryCore(),describe()): Handle Solute-specific core(s).
+	* InnerSpace.java (core → cores): Move from a single Tube core to multiple cores, one for each SoluteType.
+	(getCoreCount()): New method walks the cores and counts their Solute, partly for debug output and partly for limit checking.
+	(getInnerSpaceCount()): Use new getCoreCount().
+	(advanceCore()): pRandomize the SoluteTypes and advance each core according to that shuffled order.
+	(coreOut()): Walk a shuffled ordering of the cores for Solute moving outward.
+	(jump2Space()): Select the appropriate core when jumping from rim to core.
+
+2018-01-17-11:16  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (setProbV()): Remove space-wide forward and lateral biases as arguments. Query SoluteTypes for their [forward|lateral]Bias.  If nonexistent, use system-wide values.
+	(describeProbV()): Append the sum.
+	* SS.java (setGeometry()): Remove system-wide forward and lateral biases as arguments to setProbV().
+
+2018-01-16-14:37  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (setProbV()): Remove call to applySpeedToProbV().
+
+2018-01-11-08:26  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (probV → probVs): ΔprobV to a Map<String,EnumMap<Dir,Double>> to contain a probV for each grid.
+	(applySpeedToProbV()): Change to return a new EnumMap, rather than modify the argument.
+	(setProbV()): Delete the no longer used method.
+	* InnerSpace,SSSpace: ΔprobV to a probVs.get() call.
+
+2018-01-10-14:48  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (setProbV()): Delete the one with no args.  Move the main one closer to its polymorph.  Change to call the 3 new methods.
+	(baseProbV(), applySpeedToProbV(), normProbV()): 3 new methods to replace the old, specific setProbV().  baseProbV() computes a baseline probV given the structure of the grids (whether there's an inwardGrid or outwardGrid) and the lateral and forward biases.  applySpeedToProbV() modifies the given EnumMap<Dir,Double> to spread the probability of "staying put", equally amongst the other possible neighborhood locations.  "speed" is hard-coded to 1.0 for now, producing identical results to the old method.  normProbV() arranges the given EnumMap across [0,1] so that a single pRNG draw chooses one of the directions.
+
+2017-09-08-09:52  gepr  <gepr@tempusdictum.com>
+
+	* SSSpace.java (countSoluteAt()): Fix bug by assigning the sum to count.
+
+2017-09-01-15:55  gepr  <gepr@tempusdictum.com>
+
+	* SoluteType.java: Move loading type.properties from DeliveryParams to here.
+	* SampledCompartment.java (calculateSample()): DeliveryMethod.allSolute moved to ISL.
+	* SSSpace.java: Renamed from SSGrid.java.
+	(grids): Change so that we have 1 grid per SoluteType.  Still uses same probV for all grids.
+	(getSoluteType()): method to compare SoluteType.tag and Solute.tag.
+	(getAllObjects()): Walk the grids and get all the Solutes indexed by each.
+	(countAllSolute()): Walk the grids and get the number of Solute.
+	(countSoluteAt()): Count the Solute in all the grids at a given x,y.
+	(putSoluteAt()): Place a Solute, based on its tag, in an appropriate grid.
+	(removeSolute()): Find the Solute and remove it from the appropriate grid.
+	(constructor): Record the width and height in IVars. Init the solute-specific grids.
+	(flow[Inward|Outward]): Replace with flowInOrOut().
+	(get1stSolute()): Delete unused 1st solute tracker.
+	(moveMoore()): Loop over solute-specific grids and move them according to a single probV.
+	* SSGrid.java: Renamed to SSSpace.java.
+	* SS.java (LiverNodes): Rename SSGrid to SSSpace.  Use SSSpace.putSoluteAt() wrapper for the grids in SSSpace.
+	* NecrosisHandler.java (Runnable): Rename myGrid to mySpace.
+	* LiverNode.java (LiverNodes): Move DeliveryMethod.allSolute to ISL.  Rename SSGrid to SSSpace.
+	* InnerSpace.java (flowInward()): Changed to jump2Space() to accommodate super's consolidation of flow[Inward|Outward] into flowInOrOut.
+	* InnerSpace,KupfferCells (SSSpace): Renamed SSGrid to SSSpace and no longer inherits from SparseGrid2D.
+	* ISL.java (AbstractISLModel): Moved DeliveryMethod.allSolute to ISL.
+	(loadTypeParams()): Moved from DeliveryParams.
+	* Hepatocyte.java (ReactionInfo): Renamed myGrid to mySpace.
+	* HepSpace.java (SSSpace): Rename SSGrid to SSSpace and no longer inherits from SparseGrid2D.
+	* FullSS.java (SS): DeliveryMethod.allSolute moved to ISL. Renamed SSGrid to SSSpace.
+	(describe()): Change output log to show contents of spaces, rather than just counts of Solute.
+	* Delivery[Method|Params], Dose: DeliverMethod.allSolute moved to ISL.
+	(init()): Separate types.properties from delivery.properties and move types.properties to SoluteType.
+	* Cell, EC: myGrid renamed to mySpace to reflect that SSGrid is renamed to SSSpace and no longer inherits from sim.util.SparseGrid2D.
+	(accept()): Change placement of Solute from SparseGrid2D.setObjectLocation() to SSSpace.putSoluteAt().
+
+2017-08-23-14:27  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java: If kcDensity > 0 but ecDensity <= 0 throw an error.
+	* FullSS.java (setGeometry()): Avoid instantiating the ESpace if ecDensity is <= 0.0.  And wire the InnerSpace directly to either the SoD or the HepSpace.
+	(fillSpaces()):  Don't try to fill the eSpace if it doesn't exist.
+	(stepPhysics()): Don't try to flow() the eSpace if it's null.
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv second merge of trunks/islj into branches/islj-ssf (after exloc) vvvvvvvvvvvv
+
+2018-01-02-13:48  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (getCellsAtY()): Add tests for null celGrid and empty celGrid points.
+
+2017-12-27-15:36  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (trackedSolute): Remove bit rot.  We haven't used the tracked Solute for a long time.
+	(getSoluteAt(), getCellsAtY()): New methods in preparation for inter-SS neighborhoods and a new extraCellular, location-specific Solute measure.
+	* SS,HepStruct: Merge FullSS.java.  The new architecture removed SimpleSS and we no longer need the extra layer in the inheritance hierarchy. Call SS() constructor instead of FullSS().
+	(describe()): Add calls to new SSGrid methods which return Solute and Cells at max Y in the HepSpace.
+	* FullSS.java：Delete.
+
+2017-12-13-10:04  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (necrose()): In addition to releasing Solute, remove the Hepatocyte from the SSGrid so that non-membraneCrossing Solute can travel freely in that grid point.
+
+2017-12-12-14:14  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (canItLeave(), necrose()): Free up bound Solute when we necrose(). And allow Solute to wander away from this grid point.
+
+2017-11-07-09:14  gepr  <gepr@tempusdictum.com>
+
+	* ReactionInfo, SSGrid (countRxnProd()): Rename to incRxnProd() to mirror the new incRepairCount().
+	* ReactionHandler.java (run()): Add a special case for Repair reaction products.  No longer create them as Solute objects.  Track them as int Cell.repairCount with a call to ReactionInfo.incRepairCount().
+	* ISLParams.java (GSHKEY, REPKEY): Add static Strings for 'GSH_Depletion' and 'Repair'.
+	* Hepatocyte.java (countRxnProd()): Rename to incRxnProd() to mirror incRepairCount().
+	* Cell.java (repairCount): New IVar, getter, and incrementor to track the Repair events.  Repair is no longer a (true) Solute object.
+
+2017-11-03-09:33  gepr  <gepr@tempusdictum.com>
+
+	* Body (calculate[Exo|Endo]Sample()): Use ceil() instead of round() to catch a very rare lingering Solute (cycle > 20k).
+	* LiverNode.java (distribute()): Use ceil() instead of round().
+	(push()): Refactor to only iterate once and use ceil() instead of round().
+
+2017-10-30-10:43  gepr  <gepr@tempusdictum.com>
+
+	* SampledCompartment.java (Constructor): Allow input to a SampledCompartment to be null.  But log a warning.
+	* ISL.java (initConstituents()): Remove the call to Body.resetInput() and set the IntroCompartment's input to null as it gets its Solute from the (active) Dose object.
+	* DeliveryParams.java (loadDoseParams()): Account for the 3rd option to Dose to the IntroCompartment (as well as Body or PV).
+	* Body.java (resetInput()): Remove obsolete method because IntroCompartment is no longer passively drawn from, but actively injects, albeit with the same sampling function.
+
+2017-10-25  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java (addSolute()): newly created ALT Solutes have bindable = true
+
+2017-10-23-15:22  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java (updateOutputs()): Add extra log.debug to see inputs after its calculated.
+	* Harness.java (stepPhysics()): Add extra log.debug so we can see when the PV.distributed is zeroed.
+
+2017-10-23-12:30  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java (describe()): Output "distributed (" and "passed (" regardless of whether they're empty.
+	* SampledCompartment.java (step()): Extra debug log entry in the case more was added to the CV since CV.describe().
+	* LiverNode.java (push()): Round the ratio of what to push.
+	* Harness.java (stepPhysics()): Clear the distributed buffer each cycle.
+
+2017-10-09-10:24  gepr  <gepr@tempusdictum.com>
+
+	* FullSS, HepStruct[Params], ISL, SS: Change "node" to "layer" throughout.
+
+2017-10-09-09:57  gepr  <gepr@tempusdictum.com>
+
+	* HepStruct.java (init()): Add clause to test for SSes without input nodes.  If such an input-less node is in the 1st layer, throw an exception because it was supposed to get input from the hepStructIn.  Otherwise, chose an SS from the previous layer as this node's single input.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ second merge of trunks/islj into branches/islj-ssf (after exloc) ^^^^^^^^^^^^
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv merged trunks/islj into branches/islj-ssf vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2017-09-27-11:01  gepr  <gepr@tempusdictum.com>
+
+	* branches/islj-exf merged into trunk.
+
+2017-09-25-13:50  gepr  <gepr@tempusdictum.com>
+
+	* Body.java (calculateSample()): Avoid referencing the Solute absent from bodyXferTypes when calculating the sample.
+
+2017-09-20-10:40  gepr  <gepr@tempusdictum.com>
+
+	* HepStructParams.java (Parameters): Allow ssLastLayerClamped for context=culture case.  And add a space intensive log.warn to the log output to call attention to the coercion.
+
+2017-09-14-10:46  gepr  <gepr@tempusdictum.com>
+
+	* Dose.java (calcDose()): Keep "dose" constant at referenceDose for the entire diffusion.  While not a very good match for the name of the method, it prevents code duplication in the constantConcStep() and bodyInfusionStep() methods.
+
+2017-09-13-09:41  gepr  <gepr@tempusdictum.com>
+
+	* ISL, ISLParams (useBody): Resurrect useBody for the infusion direct to PV use case.  Only instantiate Body if useBody is true.  Map introCompartment to PV if useBody = false.  Don't schedule Body if useBody = false.
+	* DeliveryParams.java (loadDoseParams()): Test useBody and inject in Body or PV, as appropriate. Remove infusionConcMax because we no longer use the script.
+
+2017-09-12-15:22  gepr  <gepr@tempusdictum.com>
+
+	* SS.java (getWholeCap()): New method to get the capacity of all the SSes.  Not used for the non-SS LiverNodes.
+	* ISLParams.java (loadParams()): Change bodyXfer[Rate|Mod] warning to say that xferMod will be used.
+	* Harness, InnerSpace, LiverNode, LiverNodes, SS, Vas (getCC(), getInletCap()): Change this method to better reflect what it does.
+	* Body.java (calculateEndoSample()): Test an endogenous sample function to use the ratio inlet capacity to the capacity of all SSes in the HepStruct.
+
+2017-09-08-16:56  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java (loadParams()): if context=culture, coerce useSoD=false and ecdens<=0.0, so that no ESpace is created.
+	* ISL[Params].java (context/CONTEXT): Meta-parameter coercing several other parameters.  Can be "culture" or "body".
+	(loadParams()): Warn user that bodyXfer[Rate|Mod] will be ignored if context=culture.
+	* HepStructParams.java (loadSpec()): If context=culture, coerce the hepstruct to 1 layer and no intra-layer edges.
+	(loadParams()): if context=culture, coerce lastLayerClamped = false.
+	* Body.java (calculateSample()): Modal use of a different sampling function depending on context.  context=body => the exponential function based on bodyXfer[Rate|Mod].  context=culture => an endogenous function of the size/capacity of the hepstruct.
+	(calculateE[nd|x]oSample())： New functions for the different modes.
+
+2017-08-23-14:27  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java: If kcDensity > 0 but ecDensity <= 0 throw an error.
+	* FullSS.java (setGeometry()): Avoid instantiating the ESpace if ecDensity is <= 0.0.  And wire the InnerSpace directly to either the SoD or the HepSpace.
+	(fillSpaces()):  Don't try to fill the eSpace if it doesn't exist.
+	(stepPhysics()): Don't try to flow() the eSpace if it's null.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ merged trunks/islj into branches/islj-ssf ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2017-08-16-17:07  gepr  <gepr@tempusdictum.com>
+
+	* Delivery[Params|Method].java (profileMeasure): Deleted because we now output all 3 profile measures "outFract", "doseFract", and "extRatio".
+
+2017-08-02-17:20  gepr  <gepr@tempusdictum.com>
+
+	* SimpleSS.java: Delete.  No longer used since we eliminated the context=culture option.
+
+2017-06-23-12:40  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (repEvents, numElimEvents): Test to see if these outputs from the Binomial dist. equal 0 and if so, don't execute the unnecessary logic.
+	* MetabolicEnvironment, MetabolicParams, Hepatocyte (drPrΔ): New parameter by which to reduce or raise P_rxn for a given EG in the presence of down regulating Solute.
+	* Hepatocyte.java (rxnProbMapOrig): New map IVar so that, if a DR event occurs, the original P_rxn can be stored so that we can replenish to it later.o
+
+2017-06-21-16:08  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (scheduleElimEvents(), foldEventsToQueue()): Renamed functions to better indicate that the values of what's being placed on the elimQueue are # of events, not amounts to decrement the EG.Capacity.
+	* MetabolicParams(loadParams()), Hepatocyte.java (handleDownRegulation()): New paramter drΔ specifying how much EG.Capacity to replenish or decrement per event.
+
+2017-06-20-09:28  gepr  <gepr@tempusdictum.com>
+
+	* MetabolicEnvironment (drInterval), MetabolicParams (loadParams()), Hepatocyte (handleDownRegulation(), scheduleElim(), foldToQueue()): Change from drInterval ∈ ℕ [1,∞) to ℝ [0.0,∞).  When < 1.0, it will allow multiple decrements to EG.Capacity to be scheduled in the same cycle (over and above the last change that allowed multiple decrements to accumulate, but disallowed them to be scheduled in the same cycle).  When drInterval > 1.0 but equal to integers, it acts as before.  When > 1.0, but between integers (e.g. 1.5), it will pad as necessary to accumulate to a discrete decrement.
+
+2017-06-19-12:00  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (handleDownRegulation()):  Allow scheduled elimination events to overlap, rather than retaining a strict inactivity in elimination between successive elimination events.  E.g. if the H scheduled a capacity decrement for drInterval cycles from now, rather than adding an additional drInterval elimination events onto the end of the queue, it now adds that event to the previous one so that 2 decrements will occur drInterval cycles from now.  It still only adds 1 decrement event per DR trigger.
+
+2017-05-30-15:55  gepr  <gepr@tempusdictum.com>
+
+	* SS.java (tryRim()): Allow multiple (up to scale) objects to enter the Rim grid points from prior SSes.
+
+2017-05-10-09:21  gepr  <gepr@tempusdictum.com>
+
+	* HepStruct.java: Allow lastLayerClamped == true even if there's only 1 layer (culture mode).
+
+2017-05-03-16:51  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java: Steal AKS' Amplify/GSH changes from the islj-ALTrelease branch for inclusion here.  Simply: Move GSH depletion code in front of the test for amplification.
+
+2017-05-02-16:39  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java(rxnProdCount,countRxnProd()): New IntGrid2D to keep track of reaction products created in this grid.
+	* ReactionInfo.java(countRxnProd()): New method implemented by Hepatocytes to count reaction products.
+	* MetabolicParams.java,ReactionHandler: rxnProdsToCount -- new parameter specifying which Solute types, created by ReactionHandler, to log in the new measure.
+	* Hepatocyte.java: Pass through call from ReactionHandler to SSGrid.
+	* HepSpace.java: Initialize the SSGRid.rxnProdCount IntGrid2D.  Included in all SSGrids but only initialized here for now.
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv from islj-zb vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2017-04-20-16:44  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java: getPassedCount() → getPassed() in order for the new CountExtraCellularSolute to include these in the count.
+
+2017-04-17-10:34  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java(getInputs()): New accessor for the inputs IVar.  Used instead of DeliveryMethod's soluteIn for calculating extraction ratios and output fractions.
+
+2017-04-14-15:31  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryParams.java: Split profileMeasure into 3 options: doseFraction = output/max, outputFraction = output/input, extraction = (input-output)/input.
+
+2017-04-05-13:46  gepr  <gepr@tempusdictum.com>
+
+	* HepStruct[Params].java(lastLayer[Clamped|Circ|Length]): New parameters that specify that the last layer in the HepStruct graph is clamped to a particular geometry.  SSes are now constructed separately from the HepStruct layers/zones, then later placed in the layers and wired up.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ from islj-zb ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv islj-drd changes vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2017-03-22-11:31  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte, MetabolicEnvironment, MetabolicParams: drRate → drInterval to better reflect its usage.
+	* CellInfo, Hepatocyte, NecrosisHandler: getDistanceFrom[PC]V() → getD[PC]V(boolean).  Shorten and add a boolean to indicate whether to use the actual d[PC]V or the fake one loaded form hepinit JSON files.  Note that the measures (rxn products and enzymes) use actual d[PC]V, whereas intraCellular functions use the fake ones.
+
+2017-03-17-16:08  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java: Removed hard-coded ref to "Cytokine".  We now use EG.downRegulatedBy = Solute1 ; Solute 2 ... Add a Binomial so that we don't have to walk the solutes list and draw for each Solute.  Changed the type of elimQueues because we don't need MutableInts.  Added a main() to test Binomial.
+	* HepStruct[Params](dr[Replenish|Remove|Rate]): Moved to MetabolicParams.
+	* EnzymeGroup.java(downRegulatedBy): Add ArrayList<String> to know which Solute causes EGs to DR.
+	* Cell(createEnzymeGroups()): set the downRegulatedBy ArrayList<String> when the EGs are created.
+
+2017-03-14-11:44  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java(stepPhysics()): Change from shallow to deep copy of pool for logging outputs.
+	* SoluteType.java: Renamed from DoseEntry.  Inherit from new isl.io.Propertied.  Takes data from new types.properties.
+	* SampledCompartment.java(initPool()): Implement new method allowing better tracking of state with MutableInts.
+	(calculateSample()): Separate out Dose vs. SoluteType.
+	* NecrosisHandler, ReactionHandler, ReactionInfo: Separate Dose vs. SoluteTypes.
+	* Medium.java: Make a deep copy of the pool for recording outputs.  Before, we relied on the re-construction of the pool each cycle, meaning we could keep using the old MutableInts.  That no longer works ... and was bad style anyway.
+	* KupfferCell, LiverNode: Separate Dose (BolusEntry) data from SoluteTypes.
+	* Injectable.java(initPool()): New method for all Injectable Compartments so that MutableInt state will be maintained without the continual construction/abandonment of new MutableInts.
+	* ISLParams, MetabolicParams: Parameters moved to isl.io.
+	* Hepatocyte.java: "props" → "properties", reflecting EnzymeGroup, Solute, and SoluteType common extension from Propertied.  Reflect the separation of doses vs. solute vs. solute type.
+	* HepStructParams.java: Parameters moved to isl.io.
+	* EnzymeGroup, Solute, SoluteType: Inherit from new abstract class isl.io.Propertied, which defines getProperty(), hasProperty(), etc.
+	* Dose.java: Changed solution ArrayList<DoseEntry> → Map<String,Double>, keys are what's dosed, values are the doseRatio.  ⇒ the entries in this map have doses > 0.
+	(bolusStep()): Garbage Collection overhead was too intense for creating/abandoning MutableInts.  Use Integers, ints, longs, etc. for temporary data.
+
+2017-03-14-10:38  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryParams.java: Parameters moved to isl.io.  Split Solute type from Dose properties.  Split loadParams() into loadTypeParams() and loadDoseParams().
+	* DeliveryMethod.java: Split Solute type specific properties from delivery.properties into types.properties and split Dose from SoluteType data.  ⇒ Δs to properties are accessed (not from Bolus Entries anymore), refMaxSolute (for when we want to calculate a fake output fraction or extraction ratio), etc.
+	* Compartment.java(initPool()): We now have to initialize the pool because we changed the way we rely (or don't) on the variable state of MutableInts to keep track of what's in Compartments.  The new (tentative) policy is to use Integer, ints, longs, etc. for temporary things that will (eventually) be added to some state like pools.  CollectionUtils.addIn() will expect MutableInts in the first parameter, and create them if they're not.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ islj-drd changes ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+vvvvvvvvvvvvvvvvvvvvvvvvvv islj-btr changes vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2017-02-28-10:48  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java(createEnzymeGroups()): Exit if there are no groups to create.
+
+2017-02-27-11:08  gepr  <gepr@tempusdictum.com>
+
+	* Body.java(getSoluteMap()): Return the sum (deep copy) of pool and doseReservoir.
+
+2017-02-24-09:21  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java (loadParams()): Streamline code with new Parameters functions.
+	* MetabolicParams.java(loadParams()): Streamline code for reading EGs.
+	* ISLParams.java (bodyXferRate, bodyXferMod, recirculate): New parameters for the transfer function from Body to PV of the form: δ = bodyXferMod * |Body| * (1 - e^(-rt)).
+	* (useBody, context, flushCulture, flushEfficiency, flushInterval): Deleted.
+	* HepStruct, ISL: Remove context=culture entirely.
+	* Dose.java: Remove JavaScript.  Dose now goes whole hog into the DoseReservoir.
+	* DeliveryParams.java(bodyXferTypes, scriptLocation, scriptParams, scriptInputs): New parameter specifying which Solute types transfer from the Body to the PV. Deleted dose script. Now hard-coding the transfer function in Java.
+	* DeliveryMethod.java: Removed call out to JavaScript.
+	* Culture, Medium: Deleted.
+	* Cell.java(createEnzymeGroup()): Defensive test for non-existent groups in the .properties files.
+	* Body, SampledCompartment (doseReservoir, inject(), calculateSample(), distribute(), step(): Refactor so that doses go into a doseReservoir and is then fed to the PV, either combined with the Body.pool or not, depending on the recirculate boolean.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^ islj-btr changes ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2017-02-16-16:29  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java: Allow ssFlowRate to be set to 0.
+	* ReactionHandler.java: Commented out log.debug() to help track events for particular EGs.
+	* Hepatocyte.java: Commented out log.debug() calls for tracking EG's initial capacity for both graded and not.
+	* BileCanal.java,InnerSpace.java: Bail on advance() and advanceCore() if ssFlowRate < 1.
+	* Hepatocyte.java: Bug fix.  Call super.init() from Hepatocyte.init(HepInit).  This prevented any reactions from taking place.
+
+2017-02-06-15:21  gepr  <gepr@tempusdictum.com>
+
+	* Dose.java(bodyInfusionStep()): Bug fix.  If the number of Solute generated doesn't exactly equal the amount we're supposed to Dose, we were choosing p-randomly amongst all Solute listed in delivery.properties.  That allowed the generation of some Solute that's not supposed to be Dosed (e.g. a downstream reaction product).  Add a lambda selection to choose (p-randomly) from only those Solute with doseRatio > Float.MIN_VALUE.
+
+2016-12-05  gepr  <gepr@tempusdictum.com>
+
+	* bind-prob-function.js, MetabolicEnvironment, MetabolicParams: Remove binding probability script entirely.  That logic is now hard-coded into the Cell.getBindingProbability() java code.
+
+	* Cell.java (getBindingProbability()): Move logic from bind-prop-function.js into BindingHandler.getBindingProbability() implementation.  This reduces memory consumption and runtime dramatically.
+
+2016-11-17-14:39  gepr  <gepr@tempusdictum.com>
+
+	* ReactionHandler.java (run()): Eliminate "metabolic" parameter and test on rxnProducts instead.  Change index of rxn maps from s.type to EG.
+
+	* ISL.java (initConstituents()): Move delivery instantiation to after Cell.MET_ENV.  Init bindable flags based on metabolic.properties, merely for convenience when looping over Solute types.
+
+	* Hepatocyte.java (createEnzymeGroups(), finishInit()): Separate out a method (setGradients()) to set up the EG gradients.
+
+	* [Delivery|Metabolic]Params.java (loadParams()): Move rxnProb and rxnProducts property testing from DeliveryParams to MetabolicParams.
+
+	* DeliveryMethod.java (estimateTotal()): Rather than loop over the Solute types, we now loop over the EnzymeGroups, which accompanies the move of rxnProb from delivery to metabolic.properties.
+
+	* BindingHandler.java (run()): Move "break" so that the logic looks for multiple EnzymeGroups that might process a Solute.  Before, we would break when we found the first EG that processed a Solute.  Now we only break if/when we actually bind the Solute.
+
+2016-11-02-16:46  gepr  <gepr@tempusdictum.com>
+
+	* FullSS.java (setGeometry()): Stop logging the ESpace objects.
+
+2016-10-26-16:56  gepr  <gepr@tempusdictum.com>
+
+	* MetabolicParams.java (loadParams()): Change fatal error for mismatched Cells and the EGs assigned to them.  This is now a warning, allowing an EG to exist in the metabolic.properties file, without being assigned to a cell type.  Also changed the text of to better describe what's happened.
+
+	* ISL.java (initConstituents()): log.debug statement to print 1st hepatocyte's enzyme groups (in order).
+	
+	* Hepatocyte.java: Use getter adder for enzyme groups structure.
+
+	* Cell.java (createEnzymeGroups()): Wrap adding to groups inside new addEnzymeGroup() method to support ordering feature.
+	(throughout): Call getEnzymeGroups() instead of accessing groups structure directly.
+	(addEnzymeGroup()): New method encapsulates EG adding to allow for re-ordering.  Order is partial, according to the ordering parameter.  If 2 EG's have the same ordering parameter value, they are added in the order they appear in the metabolic.properties file.
+
+2016-10-26-16:47  gepr  <gepr@tempusdictum.com>
+
+	* Binding[Info|Handler].java (run()): Remove cut-n-paste code and replace with call to binding_info.isBound().
+
+2016-10-22  gepr  <gepr@tempusdictum.com>
+
+	* MetabolicEnvironment.java (bind[min|max]): Moved from ISL.
+
+	* Hepatocyte.java (init(), createEnzmeGroups()): Call super.init(). Override createEnzymeGroups() to read the "graded" property for any given EnzymeGroup that applies ot Hepatocytes.
+	(getBindmax()): Promoted to Cell.
+	(getInitialCapacity()): Removed.
+
+	* E[IL]Handler.java (constructor): Access bindmax from BindingInfo.
+
+	* EC, KupfferCell (init()): Remove and rely on super (Cell).
+
+	* [Delivery|Metabolic]Params: Move log ivar to Parameters interface.  Consolidate property parsing and move to Parameters.
+	* SSParams (bind[min|max]): Move from SS to MetabolicEnvironment.
+
+	* Cell.java (createEnzymeGroups(), init(), initialCapacity): Remove initialCapacity instance variable, since it's only used as an input to EnzymeGroups and varies based on type of EnzymeGroup, rather than Cell type.
+	(createEnzymeGroups()): Check for "graded" property of the EnzymeGroup and, if present, throw an exception because generic Cells don't yet have a basis for PV⇔CV gradients (i.e. they don't have the dist_[pv|cv] ivars.  This superclass method will be used when createEnzymeGroups() is called on ECs and KupfferCells, where "graded" will be invalid for now.  Hepatocyte will override it.
+	(getBind[min|max]()): Need to implement for BindingInfo, which is generic to all Cells.
+	(getBindingProbability()): Use new MET_ENV singleton handle.
+
+	* Cell, ISL (MET_INV, environment): Move singleton MetabolicEnvironment from an instance variable in ISL to a static variable in Cell.  This moves it closer to where it's used, which helps code readability as well as model semantics.
+	* [Binding|Cell]Info.java (getBind[min|max]()): Moved from CellInfo to BindingInfo.
+
+2017-04-27 aks <drandrewksmith@gmail.com>
+
+	* SSParams.java: code to read in features "ALTmax" and "ALTthreshold" from isl.properties.
+
+	* Hepatocyte.java: code for the ALT release mechanism, most in addSolute().
+
+2016-09-08  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java: ArrayList<Solute> → Map<String,Number>.
+
+	* SampledCompartment.java (model): Callback handle to ISL.
+	(pool): Promoted to Compartment.
+	(constructor): Add ISL callback.
+	(getAvailableSolute()): ArrayList<Solute> → Map<String,Number>.  Made public.
+	(step(), calculateSample()): ArrayList<Solute> → Map<String,Number>.  The generic sample_ratio is used across all Solute types.  We use model.delivery.allSolute to calculate the spread.  That allSolute should be a list of unique DoseEntries, 1 per Solute type.
+	(inject()): Removed, use inherited.
+	(distribute()): Wrapper for calling output.inject().
+
+	* SS.java (solutes, getSolutes()): Demoted solutes from LiverNode to SS so compartments like Vasa, Body, Medium, etc. don't have to maintain/process large numbers of Solute objects.  That means only the SSes keep local track/control of Solute objects.
+	(getSoluteMap()): Override to dynamically count the types of the extant solute, rather than return the (empty and irrelevant) "pool".
+	(distribute(), push()): Polymorphic with LiverNode.distribute(), which uses the type map.  This one uses the ArrayList<Solute>.
+
+	* Medium.java (outputs): Change ArrayList<Solute> → Map<String,Number>.
+
+	* LiverNode.java: Δ from ArrayList<Solute> → Map<String,Number> to avoid having to maintain and process long lists of Solute objects in panmictic compartments including Harnesses/Medium, Vasa, Body, Intro, etc.
+	(solutes, getSolutes(), getNumSolutes()): Delete.
+	(distribute()): Δ method signature and use solute type count instead of Solute list.
+	(push()): Δ parameter to use solute type map.  The entire method changed from p-randomly selecting Solute objects to assigning probabilities to bins: [0,P_type1), [P_type1, P_type2), .... Whichever bin the p-random draw falls into, that's the Solute type that is created.
+
+	* IntroCompartment.java (constructor): Add callback handle to ISL.
+	(getAvailableSolute()): ArrayList<Solute> → Map<String,Number>.
+
+	* Injectable.java (Injectable): ArrayList<Solute> → Map<String,Number>.
+
+	* ISL.java (initConstituents()): Send this callback handle to Body and Intro.
+
+	* Harness.java (stepPhysics()): ArrayList<Solute> → Map<String,Number> to support tracking only type counts in Compartments (including Harnesses).  Note that this changes the need for (or at least the way we do) p-random Solute movement/type.  For now, we removed the p-randomness because we abandon Solute objects and re-generate them according to counts of their type.
+	(inject()): Removed.  Now uses the inherited one.
+	(accept()): When someone requests we accept(Solute s,...), abandon that Solute object to the GC and increment it's type count.
+	(describe()): ArrayList<Solute> → Map<String,Number>.
+
+	* Dose.java (step(),bolusStep(), constantConcStep(), bodyInfusionStep()): Dose using type counts rather than Solute objects. We now only dose Compartments that have solute type maps, which means we don't need to create Solute here anymore.
+
+	* DeliveryParams.java (loadParams()): Test for different DoseEntry values using the same type name.
+
+	* DeliveryMethod.java (registerDose()): Change method sig from ArrayList<Solute> to Map<String,Number>.
+
+	* Culture.java (flush()): Consolidate 2 methods into 1 since we're no longer maintaining a full list of Solute objects.
+
+	* Compartment.java (pool): Change type from ArrayList<Solute> to Map<String,Number>.  This prevents us from having to maintain and process large numbers of dormant Solute objects.
+	(distribute()): Demoted to LiverNode.
+	(inject()): Promoted from SampledCompartment.
+
+	* Body.java (constructor): Include callback to ISL for access to complete list of DoseEntries in order to track Solute types for the pool.
+	(getAvailableSolute()): Change method signature to match changes from Solute list to type count.
+
+2016-08-18  gepr  <gepr@tempusdictum.com>
+
+	* dose-function.js: The only one of these scripts that needs to behave different on the first pass.  So we invoke a JS-defined init() the first time eval() is called.  Other scripts can use the "var started" if they need to.
+
+	* *.js: Remove explicit loading of premable.js, which is now done in the ScriptEval constructor.  Define the JS eval() function, which will be called repeatedly, rather than re-loading the script file for each iteration.  This avoids the JVM having too many open JS script files.
+
+2016-08-08-15:35  gepr  <gepr@tempusdictum.com>
+
+	* Culture.java (flushReplaceList(), flushShrinkList(), registerFlushed()): Keep a HashMap type→count of Solute flushed until the next cycle.
+
+2016-08-08-10:25  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java (buildActions()): Schedule a flush for the Culture Medium if flushCulture == true.
+
+	* Culture.java (log): Instantiate.
+	(flushCulture, flushEfficiency, flushInterval): New parameters for flushing the Culture Medium.
+	(scheduleFlush()): Called by the ISL to schedule the appropriate flushing method.  (flushEfficiency >= 0.6 ? flushReplaceList() : flushShrinkList()).
+	(flushReplaceList()): Choose a few Solute from the list to put into a new list and keep.
+	(flushShrinkList()): Remove a few Solute from the list.
+
+2016-07-13-16:23  gepr  <gepr@tempusdictum.com>
+
+	* SS.java (LiverNodes): Count the nectrotic triggers for Hepatocytes.
+
+2016-06-30  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (init()): In order to support verifiability, rather than summon a p-random Hepatocyte record every time, only summon a p-random one when there aren't enough to fill current needs.  If you use a p-random selection for all of them, the hepinit-?.json files are not readily comparable.  The Hepatocyte IDs are all different and the Hepatocytes will be stored in the json file in a different order.  Using H.id as the key for a HashMap and storing/loading based on that key makes the json files more comparable.  The p-randomness of the structure is lessened somewhat by doing it this way.  If we p-randomly selected records without respect to H.id, there would be less chances of an artifact.  But it degrades verifiability because the input hepinits will differ from the output hepinits.
+
+	* ISLParams.java (hepInit[Read|Write]): New parameters to read/write hepatocyte init data.
+
+	* ISL.java (HepInit[Read|Write]): New variables to either read Hepatocyte dist_[pc]v or generate them.
+
+	* Hepatocyte.java (init(), finishInit()): Polymorphic to either read dist_[pc]v from a file or generate them.
+
+	* SS, FullSS, SimpleSS: Move hSpace up to SS so that it's easier to walk.
+
+2016-06-20  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java: Upgrade to Java 8 (unnecessary unboxing, explicit generics in constructors, functional iteration, etc.).
+
+	* HepStruct.java (init()): Initialize nodeCount to 1 if context=culture, 2 otherwise. Construct FullSS if context=liver, SimpleSS if context=culture. 
+
+	* Harness.java (stepPhysics()): Fold Solute moved this cycle into distributed data structure.  If this structure were used in the infusion/liver use case, it would break the calculation of extraction ratio.  But Vas does not call super.stepPhysics() at all.  And without this change the context=culture use case only shows the Solute types in the Dose, not that which is recirculated through the Medium.
+
+	* FullSS, SimpleSS, SS: Demote SS → FullSS, create a super SS class, and new subclass SimpleSS to accommodate context=[liver|culture].  SimpleSSes have an InnerSpace wrapped by a HepSpace, and a BileCanal; no SSpace, no ESpace, no Kupffer Cells, etc.
+
+2016-06-10-15:53  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java (Harness): Extend Harness and move elements generic to Vas and Medium up.
+	* Medium.java: New sibling to Vas to be used when context = "culture".
+	* Lobule.java (HepStruct): Re-add [portal|central]Vein as convenience constructs for initialization of the lobule.
+	* ISL.java(initConstituents()): instantiate new Culture when context = "culture".  Test for context = "culture" when deciding whether to create the Body.
+	* HepStruct.java: Use the new Harness, super to Vas and Medium.
+	(step()): Only schedule the Medium once, despite being both the input and the output for the Culture.
+	* Harness.java: New parent for (demoted) Vas and new Medium.
+	* Culture.java: New sibling to Lobule.
+
+2016-06-07-16:43  gepr  <gepr@tempusdictum.com>
+
+	* *.java: lobule → hepStruct throughout.
+	* HepStruct.java: ei_gradient_script → rsrc_grad_script.  [portal|central]Vein → struct[Input|Output].  Make HepStruct abstract, extended by Lobule: initIO() is a new abstract method.  Lobule.initIO() creates the PV and CV and assigns them to the struct[Input|Output], respectively.
+	* HepStructParams.java: ei → rsrc.  lobulespec.properties → hepstructspec.properties
+	* ISL.java(initConstituents()): New ivar "context" to indicate whether it's a liver or a culture.
+	* ISLParams.java: New enum for CONTEXT.[CULTURE|LIVER].
+
+
+2016-05-28-13:42  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte, NecrosisHandler, SS, SSParams: "death" → "necrosis".
+
+2016-05-13-17:15  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java (describe()): Add "Eliminated" output to the PV so we can see the count of Bile contents as they flow backward.
+
+	* SS.java (accept()): Change the acceptance criteria for SS.BILE to work off the last element, rather than the first.
+
+	* LiverNode.java (inNodes, fan[in|out]Weights): New inNodes convenience variable to keep track of the LiverNodes that feed this one.  Change distWeights to fanoutWeights and new faninWeights, each of which use the getCC() function to estimate how many Solute can travel in that (respective) direction.
+	(distribute()): Refactor to handle both a distribution down and up stream, depending on the CompartmentType.
+	(getCC()): Add a warning comment indicating that this getCC() only depends on the physical/geometric properties, not current occupation.
+	(computeDistWeights()): Add parameter for direction (North or South, indicating which set of weights to compute, forward or backward flowing.
+
+	* ISL.java (initConstituents()): Leave in a handy debug output, commented out.
+
+	* BileCanal.java (advance()): New override to handle BileCanal's "advance", which is in the opposite direction to the regular LiverNode's "advance".
+
+	* BileCanal.java (flow()): Flow the 1st "slots" lists rather than the last "slots" lists to the next LiverNode.
+
+2016-05-13-17:02  gepr  <gepr@tempusdictum.com>
+
+	* BileCanal.java (getCC(), calcCC()): Multiply the area of the Tube by the model scale, allowing that many Solute to occupy a virtual grid point at the same time.
+
+2016-04-28-15:35  gepr  <gepr@tempusdictum.com>
+
+	* MetabolicParams.java (Parameters): Implement the new Parameters interface.
+	(loadParams()): Read and set the script parameter and input keys.
+
+	* MetabolicEnvironment.java (init()): Script parameter and input keys are now passed directly from .properties to the script.
+
+	* LobuleParams.java (Parameters): Implement the new Parameters interface.
+	(loadParams()): Read and set the script parameter and input keys.
+
+	* Lobule.java (init()): Script parameter and input keys are now passed directly from .properties to the script.
+
+	* ISLParams.java (Parameters): Implement the new Parameters interface.
+
+	* Hepatocyte.java (getResources()): Script parameter and input keys are now passed directly from .properties to the script.
+
+	* Dose.java (constantConcStep()): Script parameter and input keys are now passed directly from .properties to the script.
+
+	* DeliveryParams.java (Parameters): Implement the new Parameters interface.
+	(loadParams()): Read and set the script parameter and input keys.
+
+	* DeliveryMethod.java (init()): Script parameter/input keys are now passed directly from the .properties file to the script.
+
+	* Cell.java (getBindingProbability()): Script parameter keys are now passed directly from the .properties file to the script.
+
+	* ei-gradient-function.js: Add copyrigth header.  Change from accepting explicit variables and parameters to accepting/parsing arrays put from the Java.
+
+	* Lobule.java (init()): Change from putting explicit parameer names into the script to putting 2 arrays of equal length, one for keys, one for values.
+
+	* Hepatocyte.java (getResources()): Change from putting explicit variable names into the script scope to putting 2 arrays of the same length, one for keys, one for values.
+
+2016-04-27  gepr  <gepr@tempusdictum.com>
+
+	* ELHandler.java (run()): Change minimum enzyme (groups) back to using number of enzymes, rather than number of bound solute (broken in revision 723/2015-04-07).
+
+	* Hepatocyte.java (constructor, init()): Move construction of E[IL]Handler from constructor to init() in order to take advantage of the EnzymeGroups created in init().  ∄ E[IL] without the enzyme groups.
+
+2016-04-20  gepr  <gepr@tempusdictum.com>
+
+	* constant-conc-function.js, dose-function.js: Add parameter and variable checks through preamble.js.  Use parameter and variable arrays.
+
+	* DeliveryParams, Dose (INFUSION_CONC_MAX): infusionConcMax, infusion_conc_max new parameter to pass to constant-conc-function.js.
+	(constantConcStep(), bodyInfusionStep(), calcDose()): Use variable array rather than put() for each variable.
+
+	* DeliveryMethod.java (init()): Initialize the constant-conc-function.js and dose-function.js with parameter and variable arrays (scope.put("pkeys",String[])) rather than puts for each variable.
+
+2016-04-18  gepr  <gepr@tempusdictum.com>
+
+	* bind-prob-function.js: Load new preamble.js script in bsg-r843.jar.
+
+	* MetabolicParams.java (BINDPROBSCRIPT): New parameter bindProbScriptLocation.  Move bind_prob_script instantiation to here.
+
+	* MetabolicEnvironment.java: Reformatting throughout.  Move bind_prob_script from Lobule to here.  Move initialization of bind_prob_script from ISL to here.
+
+	* LobuleParams.java (EIGRADIENTSCRIPT): New parameter eiGradientScriptLocation.
+
+	* Lobule.java: Move bind_prob_script membership to MetabolicEnvironment.  Move bind_prob_script instantiation to MetabolicParameters.
+	(constructor): Move ei_gradient_script instantiation to LobuleParameters.
+	(init()): Move ei_gradient_script initialization from constructor to init().
+
+	* ISL.java: Move bind_prob_script initialization to MetabolicEnvironment.
+
+	* Hepatocyte.java (getResources()): Use scope.put for model_time, just like for distance_from_PV.
+
+	* Dose.java (constantConcStep(), bodyInfusionStep(), calcDose()): Use scope.put for model_time since we'll often have more than just 1 input variable for ScriptEvals.
+
+	* DeliveryParams.java (DeliveryParams): SCRIPT_FILE → DOSESCRIPT, scriptFile → scriptLocation.
+	(DeliveryParams): Specify path in scriptLocation rather than Java code.
+
+	* Cell.java: bind_prob_script moved from lobule to metabolic environment.
+
+2016-04-14  gepr  <gepr@tempusdictum.com>
+
+	* bind-prob-function.js: Receive 4 arrays, 2 for parameters (only set once) and 2 for variables: keys → vals.  Set up a pMap to check the types of the parameters and an iMap to check the types of the inputs/variables.  Load a check() function to check both.  But only load it once using the started boolean.  For convenience, assign the values in the vals array to named variables.
+
+	* ISL.java (AbstractISLModel): New usage pattern for ScriptEval instances.  Pass in dual arrays for script parameters, keys and values.  Also pass in a "started" boolean so that parameters are only handled once.
+
+	* Cell.java (BindingInfo): New usage pattern for ScriptEval instances.  Pass in dual arrays for variables, keys and values, co-indexed that the script will test for proper content.  Also exit with an informative error when we catch a ScriptException.  Since the bind-prob-function.js is independent of time, pass in NaN when we eval().
+
+2016-04-12  gepr  <gepr@tempusdictum.com>
+
+	* Cell, Dose, Hepatocyte: Catch new exception tossed by ScriptEval.
+
+2016-03-30  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryMethod, Dose, E[IL]Handler, Hepatocyte: MyInt → MutableInt.
+
+2016-03-14  gepr  <gepr@tempusdictum.com>
+
+	* DeathHandler.java: Change from scheduling death at min + uniform(max) to min + uniform(max-min).
+
+2016-03-08  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java: getFloat(param,param,float,float) is deprecated for getFloatWithMax().
+
+	* Cell.java: Change Cell.actionShuffler from sim.util.Bag to java.util.ArrayList<Runnable> so that the compiler can help check types and so we can use a more compact (and type checked execution in Cell.iterate().  Note that this causes a slight difference in the way events are ordered, which causes a failure under exact diff.
+
+2015-09-21  gepr  <gepr@tempusdictum.com>
+
+	* ref/RefModel.java (cdModelParameters): Declare as Properties rather than Map.
+	(constructor): don't hide IVar bolusContents with local variable.
+	(buildObjects()): Use generics wildcard to avoid rawtypes warning.
+	Explicitly identify Exceptions rather than a blanket catch.
+
+	* data/CSVDataModel.java: Return to generics typed IVars.
+	(setTimeColumnIndex()): Don't hide "data" IVar with local variables.
+	(get[Interpolated]Outputs()): Suppress "unchecked" warning re: Number superclass.
+
+	* Vas.java (stepPhysics()): SuppressWarnings "unchecked" for return from shuffle().
+	(describe()): Replace generics-based for with stream().forEach.
+
+	* SSParams.java (loadParams()): MASON deprecated the polymorphic getDouble() and getFloat(), recommending get[Float|Double]WithMax().
+
+	* SS.java (LiverNodes): Replace index-based bileCanal loop with generics loop.  This should survive a conversion of Tube to ArrayList from raw array type.
+
+	* LobuleParams.java (loadParams()): MASON deprecated the polymorphic getDouble() and getFloat(), recommending get[Float|Double]WithMax().
+	(param): Use param object created and passed to PDB (for slightly more robust error output).
+
+	* Lobule.java (init()): Replace "edges" index with "edgeNdx".
+	Replace index-based for loops with generics for loop.
+	Replace getEdgesOut(node).size() == 0 with ...isEmpty().
+	Replace generics for with stream().forEach to set ss.postPathLength in CV.
+
+	* InnerSpace.java (ss): Remove, since this one just hid the IVar in the parent class.
+	(constructor): Replace anonymous Runnables with lambdas.
+
+	* ISLParams.java: MASON deprecated the polymorphic getDouble() and getFloat(), recommending get[Float|Double]WithMax().
+
+	* Hepatocyte.java (init()): Suppress WArnings for "unchecked" because the properties structure is ignorant of the value types (in this case Double2D rather than Object).
+
+	* DoseEntry.java (propCompare()): Suppress Warnings for "unchecked" because the properties structure is ignorant of the nestedness of the value.  (It's a LinkedHashMap of LinkedHashMaps.
+
+	* DeathHandler.java (Runnable): Replace anonymous Steppable with lambda.
+
+	* Cell.java (iterate()): Replace for loop with stream().forEach.
+	(scheduleRelease()): Replace anonymous Steppable with lambda.
+
+2015-04-01  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryMethod.java (clearSoluteIn()): Defensive.  Write Time=NaN when we zero the data structure.
+
+2015-03-23  gepr  <gepr@tempusdictum.com>
+
+	* bolus-dose-function.js: Delete.
+	* dose-function.js: Add.  Make initial_pool a parameter set by the Java code.
+	* ISL, Hepatocyte, ReactionHandler: Change BolusEntry to DoseEntry.
+
+	* Dose.java: Change BolusEntry to DoseEntry and bolusRatio to doseRatio.
+	(bolusStep()): Remove filler methods where if too little Solute was generated, fill the empty space with the first BolusEntry.  If too much was created, remove all the solute on the end of the list.
+
+	* DeliveryParams.java (referenceDose): New parameter.  Change bolusRatio to doseRatio and BolusEntry to DoseEntry.
+
+	* DeliveryMethod.java (referenceDose): New parameter setting the reference number of objects to be created in association with a given Dose.  Any given Solute can specify a doseRatio ∈ [0,∞) to increase or decrease its amount in relation to that referenceDose.  Change BolusEntry to DoseEntry.  Change bolusRatio to doseRatio.  Also make changes recommended by Netbeans.
+
+	* BolusEntry: Deleted.
+	* DoseEntry: Added.
+	* DeathHandler (constructor, determineDeathTypes()): Change BolusEntry to DoseEntry.
+
+2015-02-26  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java (getSoluteIn()): Delete.  Moved to DeliveryMethod.  Also refactor according to netbeans recommendations.
+
+	* Dose.java (step()): Call DeliveryMethod.registerDose() every time we inject Solutes.
+
+	* DeliveryParams,Vas: Refactor according to netbeans recommendations.
+
+	* DeliveryMethod.java (soluteIn, registerDose(), getSoluteIn(), clearSoluteIn()): moved from ISL to accommodate variable dose.targets. Note that soluteIn is a mixed data structure in that the "Time" entry is <String,Double> and the rest should be <String,MyInt>.  Doses call DeliveryMethod.registerDose() when they dose their targets.
+
+	* BolusEntry.java (equals(), propCompare()): Expand the equals() method to include sub-components of BolusEntry (except bolusRatio).  Throws an exception if the components don't match.  I.e. multiple entries in delivery.properties should match.  This may open the door to just specifying bolusRatio in duplicate entries in later doses.
+
+2015-02-24  gepr  <gepr@tempusdictum.com>
+
+	* ReactionHandler, ReactionInfo: Use new unique ArrayList<BolusEntry> DeliveryMethod.allSolute.
+
+	* ISL.java (initConstituents()): Use new uniquely populated list of BolusEntries in DeliveryMethod, as well as generics.
+
+	* Hepatocyte.java (getBolusEntries()): Change from Bag to ArrayList<BolusEntry>.
+
+	* Dose.java (id): Mainly for debugging.
+	(deliveryType): "infusion" or "bolus".
+	(time): moved from an array in DeliveryMethod.
+	(infusionStopTime): Made per-dose rather than per-experiment along with deliveryType.
+	(constructor): Move setting of Dose's BolusEntries to a setter so that the dose can be created early on and the entries read/set later on.
+	(step()): bolus vs. infusion use case moved here, per dose.  Reschedule bolus according to the logic, if: 1) it's a bolus, 2) it hasn't started yet, 3) there exist solute to distribute, then reschedule this dose.  Reschedule infusion dose simply if it's not yet time to stop the infusion.
+	(constantConcStep()): Use current dose.solution rather than a reference dose, enabled by each dose having its own deliveryType.
+	(calcDose): Simply execute the script according to a shifted time.
+
+	* DeliveryParams.java (profileMeasure, extraction, fraction): New parameter specifying whether to use output fraction or extraction ratio for the main profile.
+	(scriptFile): New dose specific parameter specifying a javascript file to use for that dose.  They should be placed in the class path under isl/model.
+	(loadParams()): Use a HashSet to compile a unique list of BolusEntries across all doses.  InfusionStopTime moved into scope of a particular dose, if it uses the infusion deliveryType.
+	
+	* DeliveryMethod.java (step()): Remove, no longer Steppable.  Dose promoted to fully responsible discrete event.
+	(allSolue): ArrayList<BolusEntry>, unique collection of BolusEntries in all doses.
+	(constructor): Remove misleading formal parameter for the Injectable target, since that is chosen according to useBody and/or useIntro parameters.
+	(init()): Remove hard-coded script files and use new scriptFile parameter in deliver.properties.
+	(start()): Schedule Doses and they'll schedule themselves.
+	(estimateTotal()): Use different scriptFile's for each dose to estimate their contribution to a total dose.  Total doses of each Solute type is summed over all doses, providing the divisor for the output fraction measure.  E.g. of_Marker = |Marker|/sum_i(|Marker_total_i|), where i = dose number.
+
+	* DeathHandler.java (constructor, determinDeath[Inh]Types()): Use new DeliveryMethod.allSolute ArrayList, with generics.
+
+	* BolusEntry.java (equals(), hashCode()): Implement to facilitate creating the uniquely populated DeliverMethod.allSolute, via HashSet.  Limits equality to that of the Solute.tag String, which might eventuall cause unexpected behavior.  In particular, if two doses have entries with the same tag but different other properties, they will still be considered equivalent.  Hence, the DeliveryParams should test for that.
+
+2015-02-13  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (canItLeave()): Moved from here to Cell.
+
+	* Hepatocyte.java (accept()):  Add pRNG draw against new delivery.property "pGSHUp" to determine which gshUp Solute impact GSH and which do not.  Change so that gshUp is decremented from gsh_accumulator rather than incremented to gsh_threshold.  gsh_accumulator is clamped at 0.0.  This change is accompanied by a change to Hepatocyte.canItLeave() so that non-eliminated gshUp solute stays stuck inside the Hepatocyte.
+	(canItLeave()): Moved to here from HepSpace.  Added a hack that if a Solute has the pGSHUp property, then it cannot leave the Hepatocyte.  This is clearly inadequate and should be represented by a Binder of some sort.  However, that would require refactoring the Binder/Enzyme mechanism, which we're doing in a parallel development effort already.  An alternate hack would be to implement a new data structure and place non-eliminated gshUp solute in there.  That would require a change to the CountReactionProducts measure, which is called much more often than canItLeave(), so the current hack should be more efficient.
+
+	* HepSpace.java (canItLeave()): Moved from here to Hepatocyte.
+
+	* Cell.java (canItLeave()): Moved to here from SSGrid so that the Cell becomes fully responsible for what can enter (accept()) and exit.
+
+2015-02-12  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java (eliminatedCount): Renamed to unknownClearanceEliminated to distinguish from gshUpEliminated.
+
+	* SSGrid.java (jump2Space()): Solute removed from the SSGrid, during a successful jump, by the Cell.accept() method, not by its caller.
+
+	* SS.java (EC,Hepatocyte): Constructors need their SSGrid rather than their SS as parent.
+	(describe()): Output the new gshUpEliminated to the log file.
+
+	* LiverNode.java (gshUpEliminated): Track Solute eliminated through the gshUp (NAC), gsh threshold increase mechanism.
+
+	* Hepatocyte.java (parent): Change from SS to SSGrid.  SS properties access through myGrid.ss.
+	(accept()): Override Cell.accept() to include a test for increasing GSH Threshold in response to a Solute with the "gshUp" property.  Adds the value of gshUp to the gsh_threshold.
+
+	* EC.java (parent): Changed from SS to SSGrid.  SS properties accessed through myGrid.ss.
+
+	* DeathHandler.java (scheduleDeath()): SS properties now access through cell.myGrid.ss.
+
+	* Cell.java (parent): Changed parent from SS to SSGrid.  Renamed appropriately.  This is to support modifying the SSGrid's Solute list within the Cell.accept(), rather than within whatever called Cell.accept().  And that change was made to allow this hack that the new NAC Solute raises GSH Threshold and is immediately destroyed.
+	(accept()): Move setObjectLocation() call inside this method.
+	(SS properties): Are now accessed through myGrid.ss.
+
+2015-02-09  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java (rng): Change to compRNG to make it clear where it came from.
+
+	* SampledCompartment.java (step()): Base event ordering on ISL.action_order.
+
+	* SSGrid: Use ss.compRNG rather than walking over to lobuleRNG.
+
+	* SS.java (fillSpaces()): Change "rng" to compRNG to make it more obvious where the pRNG came from.
+	(compRNG): Use compRNG rather than walking all the way over to the lobuleRNG.
+
+	* ReactionHandler.java (rhRNG): Rename for readability.  Change "random" to "rng" to avoid confusion with SimState.random.
+
+	* Lobule.java (lobuleRNG): Rename for readability.
+	(step()): Base event order off ISL.action_order.
+
+	* InnerSpace, LiverNode: Use bcRNG rather than random.
+
+	* ISL.java: Use local pRNG handle "bcRNG" rather than SimState.random. Order actions using ISL.action_order.  Main model uses ISL.action_order.  Submodel events use ISL.action_order+1.  ISL.isDone() uses +700 (i.e. 800).
+
+	* EC, Hepatocyte: Use cellRNG.
+
+	* DeliveryMethod, Dose: Use lobule.lobuleRNG.  Base event ordering off ISL.action_order.
+
+	* DeathHandler.java (cell.rng): Change cell.cellRNG.
+
+	* Cell.java (scheduleRelease()): Use ISL.action_order for event ordering.
+
+	* BindingHandler, Cell, Compartment (rng): Rename for readability.
+
+	* AbstractISLModel.java (ACTION_ORDER): Change to action_order and make mutable.
+	(buildActions()): schedule isDone at ISL.action_order+1.
+
+2015-02-03  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryMethod.java (estimateTotal()):  Extend the scope of refMaxSolute to handle the case where the 2nd dose contains solute entries where bolusRatio == 0 and ∄ any entries in that dose that are bindable with rxnProb > 0.  I.e. it makes no sense to have empty bolus entries that will never be dynamically constructed, from any dose.  But it might makes sense that the 2nd dose would have such entries.  As long as a previous dose has an entry that satisfies: bolusRatio > 0, bindable == true, rxnProb > 0, refMaxSolute will be non-null.
+
+2015-02-02 gepr <gepr@tempusdictum.com>
+
+	* Observer.java, BatchControl.java, ControlParams.java: Merged bkp's switch to turn on/off reaction product sampling.  Added a new boolean parameter (measureRxnProducts) to control whether or not to measure rxnProduct and  produce rxnProduct files.
+
+2015-01-29  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java (jump2Space()): merge bkp's 2014-01-13 isl-is bug fix -- Fixed a bug where Solutes could not enter acellular grid points unless that grid point contained zero Solutes.  Also update copyright.
+
+
+
+	vvvvvvvvvvv isl-is branch dev vvvvvvvvvvvvvv
+	
+
+2015-08-19 Dorian Lombard <lombarddorian@gmail.com>
+
+	* KupfferCell.java: Added handleToxicMediator(), handleProtectiveMediator(), 
+	addToxicMediator(), addProtectiveMediator() functions. 
+        * Lobule.java: Added inducesToxcicMediatorThreshold and inducesProtectiveMediatorThreshold
+        * LobuleParams.java: Added inducesToxcicMediatorThreshold and inducesProtectiveMediatorThreshold
+
+2015-04-22 bkp <b.p@berkeley.edu>
+
+	* Dose.java (bolusStep()): Changed how dosing works with bolusEntry. Now, the 
+	amount of each Solute that will be dosed is equal to bolusRatio*initial_pool. 
+	(Initial pool is set in bolus-dose-function.js.) This is true regardless of 
+	whether bolusRatios sum to 1. Thus, initial_pool controls the baseline for the 
+	total dose, not necessarily the size of the total dose. This allows multiple doses 
+	of different sizes. Fixed a bug where the trimming/filling of Solutes after 
+	rounding errors had logic problems in the for loops.
+
+2015-04-22 bkp <b.p@berkeley.edu>
+
+	* Hepatocyte.java (handleDownRegulation()): Allowed down-regulation properties to 
+	be specified differently based on EnzymeGroup type.  EnzymeGroups can specify 
+	their own values for drRate, drRemove, and/or drReplenish in metabolic.properties.  
+	If they don’t, it uses the default values found in isl.properties.
+
+2015-04-22 bkp <b.p@berkeley.edu>
+
+	* SampledCompartment.java (distribute()): Added a very coarse-grain mechanism
+	whereby LPS within the pool can directly affect the metering rate for Solutes that
+	specify the parameter VdChange. If the # of LPS objects exceed LSPthreshold (set 
+	to 100), then the probability of removing Solutes decreases by a factor of 
+	VdChange.
+
+2015-04-14 bkp <b.p@berkeley.edu>
+
+	* SampledCompartment.java (distribute()): Refactored to allow Solute-type-specific
+	sampleRatio.  If a Solute type specifies property sampleRatioFactor, then its
+	effective sampleRatio becomes sampleRatio*sampleRatioFactor. distribute() loops 
+	through every single Solute and checks its effective sampleRatio. If pRN < that
+	number, that Solute is pushed.
+
+2015-03-31 bkp <b.p@berkeley.edu>
+
+	* Cell.java (createEnzymeGroups()): New function that creates the appropriate 
+	EnzymeGroups for that Cell. This function was made because all Cell types should 
+	do this as part of their init(). Other parts of init() are Cell type-specific.
+
+	* KC.java: Added init() to create EnzymeGroups.
+
+	* Hepatocyte.java, EC.java: Revised init() to utilize Cell’s createEnzymeGroups.
+
+	* ISL.java: Calls KCs’ init().
+
+2015-03-10 bkp <b.p@berkeley.edu>
+
+	* Enzyme.java: deleted.
+
+	* Binder.java: deleted.
+
+	* EnzymeGroup.java: New class that replaces Binder/Enzyme. It has properties that 
+	are similar in structure to a Solute. It has a type (name), capacity, initial 
+	capacity, base binding probability, bind cycles, list of accepted Solutes that it 
+	can bind to, a list of currently bound Solutes, and a list of other properties. 
+	Solutes can bind to and be metabolized by an EnzymeGroup. Multiple Solutes can 
+	bind the same EnzymeGroup. The probability of binding is a function of how many 
+	Solutes are already bound.
+	* MetabolicEnvironment.java: New class that contains information about the 
+	EnzymeGroups at the whole-model level. It tells Cells which EnzymeGroups to 
+	include and has a master list of the different types of EnzymeGroups. This is 
+	similar to how DeliveryMethod contains information about the Solutes in different 
+	doses. It calls MetabolicParams.loadParams() to set its parameters.
+	* MetabolicParams.java: New class to load parameters related to enzymes and 
+	metabolism. It’s very similar to DeliveryParams.java.
+
+	* ISL.java: Creates and initializes a new MetabolicEnvironment. The information 
+	stored here is then used by Cells to create the appropriate EnzymeGroups.
+
+	* Cell.java: New member variable ArrayList<EnzymeGroup> “groups” that contains one 
+	of each appropriate type of EnzymeGroup. New member variable int “initialCapacity” 
+	that remember the Cell’s default initial capacity for each EnzymeGroup. 
+	ScheduleRelease()now takes both a Solute and EnzymeGroup parameters and removes 
+	that Solute from the bound list. Added getAllBoundSolutes() function that returns 
+	an ArrayList<Solute> of all Solutes bound somewhere in that Cell. Added boolean 
+	isBound(Solute s) that returns whether Solute s is bound somewhere in that Cell. 
+	Added int getTotalCapacity() function that returns the sum of capacity for all 
+	EnzymeGroups in that Cell. Implementation for getBindingProbability() now uses 
+	calculation from binding_probability_script.js.
+
+	* bind_prob_script.js: New script used in Cell’s implementation of
+	getBindingProbability() (a method in BindingInfo.java) that calculates probability 
+	of binding based on the number of Solutes already bound in that Cell (“# bound 
+	Solutes”).  In “stepwise” mode, probability is constant (equal to bindProb) unless 
+	# bound Solutes = capacity, in which case probability is zero. In “linear” mode, 
+	binding probability is equal to bindProb * [(capacity - # bound Solutes) / 
+	iniitalCapacity]. This function is linear w.r.t. # bound Solutes. The line is 
+	shifted up/down as “capacity” changes. However, the slope is always constant, 
+	equal to bindProb / initialCapacity. Note that capacity doesn’t forcibly prevent 
+	Solutes from binding. Rather, when # bound Solutes = capacity, the binding 
+	probability will be zero. (This could change based on function modes other than 
+	“stepwise” and “linear.”)
+
+	* Lobule.java: Added instance of binding_probability_script.js.
+
+	* Hepatocyte.java: Uses parent.bindmin|max to determine the initial capacity used 
+	by each EnzymeGroup type. There is now a new copy of ReactionHandler for each 
+	EnzymeGroup type.
+
+	* Hepatocyte:handleDownRegulation(): Refactored to use capacity instead of Enzyme 
+	counts. The module is also now EnzymeGroup-specific.
+
+	* EC.java: Found and fixed a bug that created multiple instances of 
+	degradationHandler. Added init() function because MetabolicEnvironment had to be 
+	loaded before EC could create its EnzymeGroups. (Note: Hepatocytes were already 
+	initialized after MetabolicEnvironment was loaded.)
+
+	* BindingInfo.java: Refactored to match new class types. ScheduleRelease() now 
+	needs identity of both Solute and EnzymeGroup.
+
+	* CellInfo.java: Removed getNumEnzymesAtInit().
+
+	* BindingHandler.java: Refactored to follow new mechanisms. Loops through each 
+	unbound Solute, then through each EnzymeGroup that can bind that Solute. Only the 
+	first matching EnzymeGroup gets a chance to bind Solute.
+
+	* EIHandler.java: Refactored to follow new mechanisms. Accumulator increases for 
+	each bound Solute (in all EnzymeGroups). Only EnzymeGroups for which inducible = 
+	TRUE can undergo induction. Bail early only if the sum of capacities of 
+	“inducible” EnzymeGroups exceeds queue size.
+
+	* ELHandler.java: Refactored to follow new mechanisms. Accumulator increases for 
+	each bound Solute (in all EnzymeGroups). Only EnzymeGroups for which inducible = 
+	TRUE can undergo elimination. Queue is cleared only when all “inducible” 
+	EnzymeGroups are at or below their initial capacity.
+
+	* ReactionHandler.java: Refactored to follow new mechanisms. Loops through each 
+	EnzymeGroup, then through each bound Solute. EnzymeGroups for which metabolic = 
+	FALSE are skipped.
+
+	* SS.java: Removed bindProb and bindCycles because they are now EnzymeGroup-
+	specific.
+
+	* SSParams.java: Removed bindProb and bindCycles because they are now EnzymeGroup-
+	specific.
+
+	* SSGrid.java: Refactored one line to use Cell’s isBound(Solute s) function.
+
+	* HepSpace.java: Refactored one line to use Cell’s isBound(Solute s) function.
+
+2015-01-27 bkp <b.p@berkeley.edu>
+
+	* Hepatocyte.java (handleDownRegulation()): Bails early if there is too much
+	elimination scheduled. Also rearranged checking of the three conditions.
+
+2015-01-27 bkp <b.p@berkeley.edu>
+
+	* Cell.java: Ensured only unbound Solutes can be removed by degradation handler.
+
+2015-01-22 bkp <b.p@berkeley.edu>
+
+	* EC.java: Allowed EC to run degradationHandler().
+
+	* Hepatocyte.java: Allowed Hepatocyte to run degradationHandler().
+
+2015-01-13 bkp <b.p@berkeley.edu>
+
+	* Observer.java, BatchContro.java, ControlParams.java: Added a new boolean 
+	parameter (measureRxnProducts) to control whether or not to measure rxnProduct and 
+	produce rxnProduct files.
+
+2014-01-13 bkp <b.p@berkeley.edu>
+
+	* SSGrid.java (jump2Space()): Fixed a bug where Solutes could not enter acellular
+	grid points unless that grid point contained zero Solutes.
+
+
+2014-01-13 bkp <b.p@berkeley.edu>
+
+	* SS.java (fillSpaces()): Now adds KupfferCells in addition to ECs in eSpace.
+
+	* SSParams.java: Added new parameter (kcDensity) to control density of
+	KupfferCells.
+
+2014-01-09 bkp <b.p@berkeley.edu>
+
+	* Hepatocyte.java: Added new P450 down-regulation mechanism to the actionShuffler
+	that removes Enzyme when there is enough Cytokine present.
+
+	* LobuleParams.java: Added 3 new parameters for P450 down-regulation:
+	drReplenish, drRemove, and drRate.
+
+	* Lobule.java: Added 3 new parameters for P450 down-regulation:
+	drReplenish, drRemove, and drRate.
+
+2014-01-09 bkp <b.p@berkeley.edu>
+	
+	* KupfferCell.java: New Cell type that can produce Cytokines in response to
+	Solutes for which property inflammatory = true.
+
+	* Cell.java (handleDegradation()): New method added that can remove Solutes
+	ontaining property “pDegrade.”
+
+	* LobuleParams.java: Added 3 new parameters for inflammation:
+	inflammatoryStimulusThreshold, cytokineThreshold, and exponentialFactor.
+
+	* Lobule.java: Added 3 new parameters for inflammation:
+	inflammatoryStimulusThreshold, cytokineThreshold, and exponentialFactor.
+
+
+
+	^^^^^^^^ isl-is branch dev ^^^^^^^^^^^^^^^^^^^
+
+
+
+2014-10-15  gepr  <gepr@tempusdictum.com>
+
+	* ReactionInfo.java: Renamed MetabolismInfo to ReactionInfo.
+
+	* ReactionHandler.java: Renamed MetabolismHandler to ReactionHandler.
+
+	* SSParams.java: Delete old P_METPROB static variable and
+	commented out code referring to it.
+
+	* MetabolismInfo.java(getRxnProbMap()): Rename metProb to rxnProb.
+
+	* MetabolismHandler.java: Changed metProb to rxnProb and metabolite to rxnProduct.
+
+	* Hepatocyte.java: Change metProb to rxnProb.  Changed variable
+	names from "damage" to "ampedSolute" to reflect the move away from
+	the keyword "damage".
+
+	* DeliveryParams.java(loadParams()): Change the code that does the
+	property testing from metProb and metabolites to rxnProb and
+	rxnProducts.
+
+	* DeliveryMethod.java(estimateTotal()): Replaced the hack that set
+	the maximum "Metabolite" solute equal to the maximum "Compound"
+	solute.  Now it sets the maximum amount for any solute with
+	bolusRatio = 0 to the maximum amount for the first solute that's
+	bindable and has a nonzero reaction probability.  It's still a
+	hack because if 2 reactive solutes are in the bolus, these will
+	adopt the 1st one, which may not be appropriate.  But it's better
+	than the hard-coded hack that was there.
+
+	* DeathHandler.java: Rename "damage" to "death" where appropriate.
+
+2014-10-14  gepr  <gepr@tempusdictum.com>
+
+	* constant-conc-function.js, ei-gradient-function.js: Remove
+	dependence on the nashorn JavaImporter, which is broken as of Java
+	8u40.
+
+	* bolus-dose-function.js: Clean up old commented out code.
+
+2014-10-07  gepr  <gepr@tempusdictum.com>
+
+	* bolus-dose-function.js: Removed dependence on Java's StrictMath
+	due to strange behavior of the Java 8 JavaScript engine "nashorn".
+	The error was __noSuchProperty__ because it could not find
+	StrictMath.exp() funtion after 3 invocations of the script.  Only
+	a problem using Java 8.  Java 7 worked fine.
+
+	* Lobule.java: Use generics.  Make an IVar COLT/JET PRNGWrapper
+	permanently available to support the new ClassUtils.shuffle(),
+	which replaces Bag.shuffle(). Remove unneccessary casts.
+
+	* Injectable.java, SS.java: solutes changed from Bag to ArrayList.
+
+	* ISL.java: Use static ModelStatus.STARTED instead of IVar status.STARTED.
+
+	* Dose.java, Vas.java: Use generics.  solutes changed from Bag to
+	ArrayList. Use new ClassUtils.shuffle() instead of Bag.shuffle().
+
+	* Compartment.java, IntroCompartment.java, LiverNode.java,
+	SampledCompartment.java: Use generics. solutes changed from Bag to
+	ArrayList.
+
+	* Body.java: Use static class name Vas.VasType rather than instance dereference.
+	solutes changed from Bag to ArrayList.
+
+	* AbstractISLModel.java, BolusEntry.java, Cell.java,
+	DeathHandler.java, DeliveryParams.java, Hepatocyte.java,
+	LobuleParams.java, Solute.java, Tube.java, RefModel.java: Use
+	generics type specifiers in response to -Xlint.
+
+2014-08-19  gepr  <gepr@tempusdictum.com>
+
+	* Lobule.java(init()): Print path length per zone summary info to log file.
+
+2014-08-15  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java: Rename retiredSolute to passedSolute throughout.
+	(eliminatedCount): New IVar keeping track of how many Solute are abandoned.
+	(constructor): Initialize eliminatedCount.
+	(accept()): Reroute BILE solute to be abandoned, rather than go into passedSolute.
+	Increment eliminatedCount when Solute is abandoned.
+	(describe()): Print out the number eliminated each cycle to help demonstrate conservation.
+
+	* Body.java(getAvailableSolute()): Rename retiredSolute to passedSolute.
+
+2014-08-01  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java(accept()): Fix unknownClearance bug.  When these solute
+	were designated as being cleared by this mechanism, I skipped the
+	main body of the CV and sent them directly to the retiredSolute
+	structure.  But it's the retiredSolute structure that feeds the
+	Body compartment.  So, unknownClearance only affected the output
+	measures of the lobule (output fraction or extraction ratio).
+	These "cleared" solute are no abandoned to be swept up by the
+	garbage collector.
+
+2014-07-29  gepr  <gepr@tempusdictum.com>
+
+	* DeathHandler.java(run(), deathEvent(), death_stop): Wrapped the
+	death event in a TentativeStep so that it can be removed.
+	DeathHandler.run() is kept in the actionShuffler until Cell.die()
+	is called. (So no more changing from discrete time to discrete
+	event.) The P_inh probability is now used inside run() to check
+	whether a TenativeStep.stop() should be called to inhibit
+	necrosis.  P_inh is calculated the same as before.
+
+2014-07-28  aks  <drandrewksmith@gmail.com>
+
+	* DeathHandler.java(scheduleDeath()): Change death delay to
+	uniform from gaussian prng distribution.
+	
+2014-07-24  gepr  <gepr@tempusdictum.com>
+
+	* DeathHandler.java: Change inhTypes from a list to a map
+	containing Inhibition type name => inhibition potency.
+	(getCount()): Deleted since inhibition types and death types are
+	now handled differently.
+	(getInhibitorCount()): Now returns a Map instead of an ArrayList.
+	(deathEvent()): Parse the inhibitor type map to apply the potency
+	values.
+
+2014-07-17  gepr  <gepr@tempusdictum.com>
+
+	* DeathHandler.java: DIGESTED_MATERIAL is a preliminary
+	placeholder added to compensate for when necrosis has been
+	triggered but the Damage2 is eliminated before the death event.
+	It is used in the calculation of the inhibition probability.
+	(getCount(), getDamageCount(), getInhibitorCount()): New methods
+	for repeated need to count the number of inhibitors and damaging
+	solute objects.
+	(run()): Move inhibition logic to the death discrete event, which
+	involved calling a DeathHandler method rather than calling
+	Cell.die() directly.
+	(scheduleDeath()): New.  When necrosis is triggered, DeathHandler
+	removes itself from the regularly scheduled actionShuffler of the
+	parent cell and turns into a discrete death event, which checks
+	for inhibition at the time the event executes.
+	(deathEvent()): Method called by the anonymous Steppable that is
+	the death event.
+
+2014-07-10  gepr  <gepr@tempusdictum.com>
+
+	* Lobule.java(constructor, init()): Put script variables using the
+	scope rather than the engine.
+
+	* Hepatocyte.java(getResources()): Put script variables with scope
+	rather than directly with the engine (global).
+
+	* Dose.java(script): Each Dose now has its own ScriptEval.
+	(calcDose(), constantConcStep(), bodyInfusionStep()): Use local
+	IVar script.
+
+	* DeliveryMethod.java([bolus_dose|constant_conc]_script,
+	dose_scripts[], init(), estimteTotal()): Replaced single script
+	engine context with multiple contexts to keep one dose from
+	interfering with another.
+
+2014-07-09  gepr  <gepr@tempusdictum.com>
+
+	* DeathHandler.java(determineDeathTypes()): Fix bug where
+	deathTypes are determined solely by the presence of the
+	"causesDeath" parameter, without checking to see if the value of
+	that parameter is "true".
+	(determineDeathInhTypes()): New method.
+	(construcor): Set inhTypes.
+	(DEATH_STATES,death_states): New enum to track the state of the
+	cell: alive, dying, inhibited.  alive -> dying = f(damage count),
+	dying -> inhibited = f(inh_count).
+	(run()): Count necrosis inhibiting solute and use that to
+	determine whether or not to stop() the tentative death_event.  The
+	major change is that now the DeathHandler continues to execute
+	every cycle until the cell.die() method is called.  Before, the
+	DeathHandler was removed from the actionShuffler immediately upon
+	successful scheduling of the cell.die() method.
+
+2014-07-08  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(elInhibTypes,init()): store the solute types
+	that inhibit EL for retrieval by the ELHandler.
+
+	* ELInfo.java(getELInhibTypes()): New method in the interface so
+	ELHandler can calculate the EL inhibition factor.
+
+	* ELHandler.java(el_inhib_types): New ivar to store solute types
+	that inhibit EL.
+	(queueEL()): Subtract the ELInhibitFactor from the number of
+	enzymes to eliminate before spreading them across the queue.
+	(getELInhibFactor()): New method to count the solutes the cell
+	contains that inhibit EL and calculate the inhibition factor.
+
+	* CellInfo.java(getSolutes()): New method in the interface so
+	ELHandler can calculate the EL inhibition factor.
+
+	* Vas.java(accept()): Hack in a "mechanism" for
+	"unknownClearance".  If a prng draw is <= Solue.unknownClearance,
+	then "clear" that solute and route it directly to the
+	retiredSolute list.
+
+2014-07-01  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java (useBody): Make public so it can be used by DeliveryMethod.
+
+	* DeliveryMethod.java (init()): Only create the
+	constant_conc_script if deliveryType != bolus.
+	(estimateTotal()): Reset "started = false" in the script after
+	calling it to estimate the total dose.  This allows us to handle
+	one-time instantaneous boluses just from the JavaScript side.
+
+2014-06-30  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (init()): If mp <=0.0, then don't create the
+	metabolites production map.
+
+	* DeliveryParams.java (loadParams()): Change test assertion to
+	accommodate Solute where bindable = true, yet there's no
+	metabolites production map (if metProb[Start&Finish] <= 0.0).
+
+2014-06-12 aks <drandrewksmith@gmail.com>
+
+	* DeathHandler.java: x033 code for validation
+
+2014-05-26 aks <drandrewksmith@gmail.com>
+
+	* DeathHandler.java: added Beta distribution for death delay
+
+2014-05-22 aks <drandrewksmith@gmail.com>
+
+	* DeathHandler.java: modified death delay rng distribution from uniform to gaussian
+
+2014-04-07  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java: Make IVar "body" public.
+
+	* Compartment.java(getSolutes()): Abstract method implemented
+	differently depending on ComaprtmentType.
+
+	* Body.java: Remove unused imports.
+
+2014-04-02  gepr  <gepr@tempusdictum.com>
+
+	* constant-conc-function.js: Simply use the maximum dose, as in
+	most previous experiments.  Can replace with a function if/when
+	needed.  Alpha parameter is now "constant_conc_max".
+
+	* ISL.java(initConstituents()): Transform the cycleLimit into ISL
+	time before calling delivery.init().
+
+	* Dose.java(alpha,beta,gamma): Delete.  Use contents of
+	bolus-dose-function.js.
+	(constructor): Remove alpha, beta, gamma.
+	(calcDose()): Refactor to use bolus-dose-function.js.
+	(constantConcStep(),bodyInfusionStep()): Refactor to always use
+	the constant-conc-function.js rather than the alpha parameter.
+
+	* DeliveryParams.java(ALPHA,BETA,GAMMA): Delete.  Use
+	bolus-dose-function.js script from now on.
+	(loadParams()): No longer read useConstantConcFunction, alpha,
+	beta, or gamma.
+
+	* DeliveryMethod.java(bolus_dose_script): New script to calculate
+	the bolus dose, similar to the way we calculate the
+	constant-conc-function.js.
+	(useConstantConcFunction): Delete.  We will always be using the
+	constant-conc-function.js when using the infusion use case.
+	(init()): Change formal type of maxTime from long to double to
+	better match the use of the scripts to calculate doses.
+	Initialize the bolus-dose-function.js using a boolean "started" to
+	set parameters the first time through the script and "prdraw" to
+	send the script a psuedo-random number with which to select a rate
+	constant, uniformly, between the min and max rate constant bounds.
+	(estimateTotal()): Change formal parameter type from long to double.
+
+2014-04-01  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java(type => vasType): to avoid confusion with Compartment.cType.
+
+	* SampledCompartment.java(constructor): Set cType = CompartmentType.POOL.
+
+	* Lobule.java(init()): Change Vas.type to Vas.vasType to avoid
+	confusion with Compartment.cType.
+
+	* IntroCompartment.java(constructor): Change formal parameter
+	types in and out from Vasa to Compartment and Injectable,
+	respectively.
+
+	* ISLParams.java(useIntro, introSample): New parameters.
+
+	* ISL.java(useIntro,introSample,introCompartment): New parameters
+	to tell whether to inject the dose into an IntroCompartment or
+	not.
+	(initConstituents(), buildActions()): Use the IntroCompartment if
+	parameters say to.
+
+	* Compartment.java(cType): Add possibility for setting a
+	compartment's type.  This isn't used in any methodical way
+	throughout the code, only in these new Body/Intro features.
+
+	* Body.java(constructor): Change formal types for input and output
+	from Vas to Compartment and Injectable, respectively.  Now we test
+	to see if the input is a Vas and if so, whether it's of
+	VasType.OUT, and if so we set the convenience IVar "centralVein".
+	Otherwise, we know we have an introComparment injecting us, which
+	means we don't need to draw solute out of our input.
+	(resetInput()): New input.  Circular constructors of Body and
+	IntroCompartment require is to do something like this, to reset
+	the Body's input.
+	(getAvailableSolute()): allow for both cases, being injected by an
+	introCompartment or drawing solute out of the CV.
+
+2014-03-31  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java: LiverNode now implements LiverNodes so remove it from
+	here.  Implement Injectable.
+	(constructor): pass in and use pRNG.
+
+	* SampledCompartment.java: New base class for IntroCompartment and
+	Body, reflecting how distribution is done from these compartments.
+	I.e. sampled portion of a panmictic pool.
+
+	* SSGrid.java: LiverNode.GRID => CompartmentType.GRID.
+
+	* SS.java(BILE): Change to CompartmentType and describe as a "QUEUE".
+	(throughout): Pass in and use a pRNG rather than going to the
+	lobule for it.
+
+	* Lobule.java(init()): Pass pRNG to the Vasa and SSes.
+
+	* LiverNode.java: Now extends Compartment and implements
+	LiverNodes.
+	(constructor): Pass in a pRNG.
+
+	* IntroCompartment.java: New class to provide a panmictic
+	compartment between the bolus and the body, not yet used.
+
+	* InnerSpace.java(advanceCore()): LiverNode.GRID moved to
+	CompartmentType.GRID.
+
+	* ISL.java(initConstituents()): Reflect changes to Body
+	constructor.
+
+	* Compartment[Type].java: Repurpose to act as a base class for all
+	compartments including liver nodes (Vas & SS) as well as the Body
+	and the new IntroCompartment.  Use CompartmentType to distinguish
+	between GRID, QUEUE (BILE), and POOL.
+
+	* Body.java: Demoted to subclass of the new SampledCompartment and
+	moved most functionality there, except the part that's different
+	from the new IntroCompartment.  Supports inserting yet another
+	compartment between the bolus and the Body.
+
+2014-03-24  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java(buildActions()): Fix bug where we tried to schedule the
+	Body when useBody = false.
+	(updateOutputs()): Handle the case when centralVein.outputs ==
+	null now that lobule.step() is a full blown event.
+
+	* constant-conc-function.js: Rename "continual_dose" to
+	"constant_conc".
+
+	* Vas.java(deficits -> distributed, getDistributed()): Support new
+	Injectable interface and similar methods in new Body class.  This
+	data structure plays 2 roles: 1) it remembers the amount of solute
+	distributed to the lobule this cycle and 2) tells the Doses in the
+	"infusion" use case how much solute to create in order to keept he
+	PV concentration constant.
+	(stepPhysics()): Stock the "distributed" data structure with the
+	recently moved solute so that "infusion" and "bolus" use cases
+	work the same across useBody = true or false.
+
+	* Lobule.java(step()): promoted to discrete event as opposed to
+	being called directly from within ISL.step().
+
+	* Injectable.java: New interface for similar behavior of PV and
+	Body w.r.t. Dose.
+
+	* ISLParams.java(useBody, bodySample): New parameters specifying
+	whether to use a (mouse) body and how many solutes to move from
+	the body to the pv each cycle.
+
+	* ISL.java(useBody,body,bodySample): New IVars specifying whether
+	to use a (mouse) body, the handle for the Body, and how much
+	solute to pull from the Body and send to the Injectable target
+	each cycle.
+	(initConstituents()): DeliveryMethod is initialized with either
+	the PV or the Body.
+	(buildActions()): Schedule the Body.  Move the lobule.step() from
+	the ISL.step() and schedule the lobule as an independent event.
+	Then schedule ISL.step().
+	(updateOutputs()): Use PV.getDistributed() to support output
+	fraction and extraction ratio measures, rather than accessing
+	intra-PV IVars.
+
+	* Dose.java(constructor): Receive an Injectable, which will be
+	either the PV or the Body, depending on whether useBody = true.
+	(stopInfusion()): New method to encapsulate particulars about how
+	we handled the PV versus the Body when stopping an infusion.
+	(step(), constantConcStep(), bodyInfusionStep()): Handle the 2
+	non-bolus conditions corresponding to the PV vs. the Body.  The PV
+	uses a "constant concentration" infusion where the amount of
+	solute in the PV is kept constant.  The Body simply accepts an
+	infinite amount of new drug.
+
+	* DeliveryParams.java(continual -> infusion):
+	(continual -> constantConc): changed to better distinguish between
+	a continuing bolus versus an infusion.
+	(loadParams()): We now need to send the injection target to the
+	Dose() constructor, where the target is an Injectable.  Both the
+	PV and the Body implement that interface.
+
+	* DeliveryMethod.java(continualDose -> bolus): IVar to keep track
+	of whether it's a bolus or an infusion dosing scheme.
+	(useContinualDoseFunction -> useConstantConcFunction): Changed to
+	better reflect what it means.
+	(constructor): Change formatting to be more readable.
+	(continual -> infusion): Changed to better distinguish a
+	continuing bolus versus an infusion.
+	(step()): Encapsulate particulars related to how a dose is
+	delivered into the Dose.stopInfusion() method.
+
+	* Body.java: New singleton to represent the (mouse) body.  This is
+	really just a wrapper for a Bag of solute, some of which will flow
+	into the portalVein.  The sample is taken using
+	rng.nextInt(pool.numObjs), which should ensure a well-mixed character.
+
+2014-03-20  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java: Move infusion/continual logic from here to
+	Dose.continualStep().  Move infusion flag (continualDose) from
+	here to DeliveryMethod.
+
+	* Hepatocyte.java: Remove comments bloating the output log.
+
+	* DeliveryMethod.java(continualDose): New variable to assist in
+	the scheduling and stopping of the infusion dose, as well as
+	distinguishing infusion from bolus use cases in the unified dosing
+	logic.
+	(start()): Continual/infusion dosing now happens the same way as
+	bolus dosing, except the continual Dose object calculates what
+	dose to inject differently and reschedules itself until
+	DeliveryMethod.step() tells it not to.  So start() schedules two
+	events, the Dose.step(), at the time when the infusion starts, and
+	the DeliveryMethod.step(), at the time when the infusion stops.
+	Bolus is unchanged.
+	(step()): This event sets Dose.continueDosing to false and
+	(critically) zeros out the "deficits" collection inside the
+	portalVein, the contents of which is a side-effect of the way
+	doses are handled, and is used by the ISLExtRatioObs measure.
+
+	* AbstractISLModel, ISL, Cell, DeathHandler: Use schedule
+	orderings more to place Doses first in the schedule as part of
+	unifying dosing.  dose=0, model=1, observers=2, isdones=3,
+	batch=4, mcclock=5
+
+	* Dose.java: Renamed BolusDose => Dose to reflect refactoring to
+	unify dosing.
+	(step(), continualStep(), bolusStep()): Use different methods
+	depending on the use case. continualStep() based on the deficit
+	from the infusion concentration ("alpha" from the bolus entries).
+	bolusStep() based on the output of the usual function (typically
+	just an impulse of "alpha" instantaneous).
+
+2013-12-31  gepr  <gepr@tempusdictum.com>
+
+	* DeathHandler.java(run()): Split time to schedule death into the
+	current cycle plus that resulting from the pRNG draw for clarity
+	and debugging.  Catch the return value from schedulOnce() and only
+	remove the DeathHandler() action if successful.  Throw an
+	exception if it failed.
+
+2013-12-20  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java(deathDelay[Min|Max]): New parameters specifying
+	the bounds of a uniform pRNG for how far in the future (in cycles)
+	the die() method should be scheduled.
+
+	* DeathHandler.java(DEATH_DELAY_[MIN|MAX]): New static variable
+	for how long (in cycles) between when a Hepatocyte crosses its
+	death_threshold and the die() method is called.
+	(run()): Schedule the call to Hepatocyte.die() according to a
+	uniform pRNG draw.
+
+2013-12-10  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java(P_DEATH_RANGE): New parameter indicating the PV-CV
+	range for the death threshold.  Sets a class variable in DeathHandler.
+
+	* SS.java(deadHepatocytes): Index the dead cells for convenience.
+
+	* Hepatocyte.java(dist_pv, dist_cv): Promote these to instance
+	variables.
+	(init()): Add the DeathHandler() as an action.
+	(die()): Callback for DeathHandler(). Removes all the actions from
+	the shuffler and tells the SS to mark this cell dead.
+
+	* DeathHandler.java: Handles the death logic (conflating necrosis
+	and apoptosis) in response to too many death causing solute
+	objects.
+
+	* CellInfo.java(getDistanceFrom[PC]V()): New getter methods for
+	distances from the portal and central veins.
+
+2013-12-05  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.jave (addSolute()): replaced "if (sType.equals("Damage"))" with 
+	"if (s.hasProperty("Amplify"))" because Damage is now Damage1 and Damage2, both both have 		the "Amplify" property.
+
+2013-11-14  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java (addSolute()): added Damage amplification mechanism to 
+	addSolute(Solute s) when Solute s = Damage, as pseudocode:
+	if (Damage)
+     		if (Amplify)
+         		choose random integer from [0,20] uniform distribution
+         		make n Damage 
+         		add n+1 Damage to arrays (+1 for the original damage)
+     		else
+         		add Damage to arrays
+      		end
+	else
+      		GSH depletion and bile removal 
+	end
+
+	Since Damage does not deplete GSH and not removed in bile I separated those mechanisms 		from the Damage amplification mechanism. This may cause problems later. Also, I had to 		duplicate solutes.add(), parent.solutes.add(), and parent.hSpace.setObjectLocation(). 		There is probably a better way to code this mechanism.
+
+2013-10-16  bkp  <b.p@berkeley.edu>
+
+	* Added BindingHandler.java, a mechanism module for the binding mechanism. It 
+	uses one info interface: BindingInfo.java.
+
+	* BindingInfo.java: now includes a method to schedule release of Binder, since 
+	this is expected to be implemented differently by other users using different 
+	model frameworks. Also includes accessors for binding probability and a list of
+	Solutes.
+
+	* MetabolismInfo.java: renamed from Metabolizer.java.
+
+	* Cell.java: Now Cell implements BindingInfo, rather than Hepatocyte.
+
+	* Rearranged some of the state information in the info interfaces. Accessors
+	for bolus entries, metabolism probability map, and metabolism production map moved
+	from CellInfo to MetabolismInfo.
+
+2013-09-24  gepr  <gepr@tempusdictum.com>
+
+	* Lobule.java(init()): log.info() the min, max, mean, and median
+	lobule lengths, which are just sums of the min, max, mean, and
+	medians of the SS lengths in each zone.
+
+	* Hepatocyte.java(init()): Test the value of the metProbGradient
+	parameter [linear|sigmoid].  Defaults to linear.  Replace explicit
+	linear gradients for production rate and gsh_threshold with a call
+	to the LinearGradient.eval().
+
+2013-09-11  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(init()): Fix bug in calculation of dist_cv which
+	prevented it from ever being 0.
+	Cast dist_pv and dist_cv to double to get fractional results.
+	(getGSHDepletion()): Getter to support measuring the accumulator.
+	(addSolute()): Change (gsh_accumulator > gsh_threshold) to ">=".
+
+2013-09-10  gepr  <gepr@tempusdictum.com>
+
+	* SSParams.java(GSH_DEPLETION_*): Read new paramters from
+	delivery.properties.
+	(loadParams()): GSH_DEPLETION_RANGE is a tuple, designed so that
+	the first (x) is larger than the second (y).  The first is
+	intended to map to cells at the PV.  The second is intended to map
+	to cells at the CV.
+
+	* Hepatocyte.java(GSH_DEPLETION_*, setGSHDepletion()): New class
+	variables and setter for GSH (intracellular glutathione) depletion
+	mechanism. If a solute depletes GSH, then it adds
+	GSH_DEPLETION_INC to an accumulator.  When that accumulator
+	crosses a threshold, the effective bileRatio for that solute is
+	zeroed and all of that metabolite is placed inside the cell.  The
+	GSH_DEPLETION_RANGE is intended to go from large to small,
+	e.g. [2,0] and be inversely mapped to the cell's position in the
+	lobule.
+	(init()): Set the gsh_threshold based on the GSH_DEPLETION_RANGE.
+	(addSolute()): Test whether the solute depletes GSH.  If so, check
+	whether the accumulator > threshold.  If not, set bileRatio = 0;
+	then test against bileRatio and addSolute() as normal.  Increment
+	the accumulator.
+
+	* MetabolismHandler.java(Constructor): Changed exception handlers
+	so that they no longer hide exceptions.
+
+2013-07-18  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java(jump2Space()): Fixed bug that prevented a Solute
+	from moving into a grid point with other Solute objects already
+	present.
+	(moveMoore()): Change SSGrid.Dir.W back to SSGRid.Dir.In.
+	Previous "fix" was an error given the organization of the probV
+	vector, which is {E,W,Out,In,NE,N,NW,SW,S,SE} so that lateral,
+	northward, and southward movements can be handled together.  Wrap
+	solute scale in StrictMath.floor() to ensure there is room for a
+	whole number of Solute.
+
+2013-07-10  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java(constructor, set[Inward|Outward]Grid()): Move
+	[outward|inward]Grid settings to setters in order to allow
+	post-construction assembly, mostly to accommodate the new SoD
+	switch.
+	(setProbV()): Default and special case functions to call
+	SSGrid.setProbV() with varying parameters.  Default uses
+	[forward|lateral]_bias.
+	(moveMoore()): Fixed typo where SSGrid.Dir.In was used but
+	SSGrid.Dir.W should have been used.
+
+	* SSParams.java(ssUseSoD): New parameter.  If true, place an extra
+	grid between the ESpace and the HepSpace.
+	(*JumpProb): Delete obsolete.
+	(flow[Rate]): Rename from flow to flowRate.
+
+	* SS.java(setGeometry()): Refactor how we wire the intra-SS grids
+	together to add a switch for using (or not) an extra Space of
+	Disse grid. Use new default and special case SSGrid.setProbV().
+
+	* SS, SSParams([forward|lateral]_bias,flow,ecdens,hepdens): Move a
+	few parameters that are not used very often, and only in the
+	construction of SSes from the SS class to the SSParams singleton.
+	This reduces the bloat of the SS class.
+
+2013-07-05  gepr  <gepr@tempusdictum.com>
+
+	* SS.java(sod, getSoD(), hSpace, setGeometry(), stepPhysics())
+	(describe()): Refactor to include an extra solute object grid
+	between the EC space and the Hep space.
+
+	* SpaceOfDisse.java: Renamed to HepSpace.java.
+
+2013-05-24  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryParams.java(loadParams()): Change the metabolites map so
+	that 2 numbers are specified for each metabolite, one at the PV
+	and one at the CV.  The actual value used is interpolated based on
+	the Hepatocyte's position between the PV and CV.  Both the values
+	at the PV and the values at the CV must sum to 1.0.
+
+	* Hepatocyte.java(productionMap, init()): Add a productionMap so
+	that the amounts of metabolite that are produced can vary as a
+	function of distance from PV-CV.
+
+2013-05-23  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(init()): Change to use metProbStart,
+	metProbFinish.
+
+	* DeliveryParams.java(loadParams()): Change metabolism
+	probabilities specification for metabolite types to use 2 values,
+	a start and finish.  Then interpolate between them using position
+	of the Hepatocyte within the PV-CV distance.  E.g. if the
+	hepatocyte is 1/2 way between the PV and CV, metProbStart = 0.0,
+	and metProbFinish = 1.0, then it's mebProb for that solute will be
+	0.5.
+
+	* ISL.java(initConstituents()): Initialize Hepatocytes
+	independently, after we load the DeliveryMethod.
+
+	* Hepatocyte.java: Expanded metabolismProb to a per Hepatocyte
+	HashMap mapping metabolite types to metabolism probabilities.  So
+	each Hepatocyte's metabolismProb can be different and each
+	metabolite type can have a different probability.
+	(init()): New method.  In order to initialize the metabolism
+	probabilities based on distance from the PV and CV, we have to do
+	the initialization after the DeliveryMethod is instantiated and
+	loaded from delivery.properties.  So, this init() method is called
+	by the SS after that happens.
+	(handleMetabolism()): Now do a lookup for the metabolismProb for
+	that metabolite type.
+
+	* SSParams.java(loadParams()): metabolismProb moved to
+	DeliveryParams as a metabolite type property.
+
+	* DeliveryParams.java(loadParams()): Throw an exception if
+	bindable && !metabolismProb.
+
+	* SS.java(metabolismProb): Moved to metabolite properties.
+
+2013-05-22  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java(canItLeave()): New method to encapsulate criteria by
+	which we determine whether or not a solute can leave a cell.
+	Basically, if the cell == null, the solute is not bound, the
+	solute can cross membranes, or it is to be transported
+	out. Placing the transportOut clause at the end of the OR
+	conjuction should minimize the computational load added by this
+	additional test.
+	(flowInward(), flowOutward(), moveMoore()): Use the new
+	canItLeave() test.
+
+	* SpaceOfDisse.java: New subclass of SSGrid in order to override
+	the criteria by which we determine whether a solute can leave a
+	cell or not.  This implements the special case for Metabolites A &
+	B, which transport out of the Hepatocyte but cannot partition into
+	any cells.
+
+	* SS.java(setGeometry()): Use the new SpaceOfDisse subclass of
+	SSGrid.
+
+2013-05-20  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(constructor): Add x,y position in the SS so that
+	the initial number of enzymes can be computed based on distance
+	from the CV and distance from the PV.  Call setLoc() from the
+	constructor instead of having the client call them separately.
+
+	* LiverNode.java(postPathLength): New IVar used to calculate a
+	cell's distance from the CV.
+
+	* SS.java(setGeometry()): Do not call fillSpaces() here.  Instead
+	call them from Lobule.java after the network is defined.
+	(fillSpaces()): Assert that [prior|post]PathLength are set.  Use
+	the new Hepatocyte() constructor that requires the x,y position of
+	the cell in order to calculate distance from CV and PV and use
+	that to initialize the number of Enzymes.
+
+	* Lobule.java(init()): Find set the SS.postPathLength = the mean
+	of the SS lengths in the next zone down to the CV.  Do this so
+	that the Cell can calculate its distance from the CV as well as
+	the PV.  Move the call of SS.fillSpaces() to here to be sure it's
+	done after SS.[prior|post]PathLength are set.
+
+2013-05-14  gepr  <gepr@tempusdictum.com>
+
+	* SSGrid.java(flowInward(), flowOutward(), moveMoore()): Add an if
+	clause preventing !membraneCrossing solute from leaving a cell as
+	well as entering one.
+
+2013-05-10  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(handleMetabolism()): Read new "metabolites"
+	property, which presents a map indicating whether and what type of
+	metabolites are produced when metabolizing this solute, even if
+	this solute is a metabolite of another solute. The map is
+	name=>probability, where the probabilities are cumulative.
+	E.g. A=>0.25,B=>0.5,C=>0.25 means that if the pRNG draw is <=0.25,
+	type A is created.  If draw ∍ (0.25,0.75] => type B.  And draw ∍
+	(0.75,1.0] type C is created.
+
+	* BolusEntry.java(bindable): New ivar, arguably superfluous, to be
+	passed into every solute created.  Added as an ivar rather than a
+	property to indicate it's more fundamental status as a property of
+	all solute.
+
+	* BolusDose.java(solution): Make public so new CountMetabolite
+	measure can gain access to BolusEntries.
+	(step()): Send BolusEntry.bindable to Solute constructor.
+
+	* DeliveryParams.java(BINDABLE): New parameter to indicate whether
+	a solute can be bound by binders, including enzymes.
+	(string): New property type.  Not currently used.
+	(map): New property type.  Used for specifying the types of
+	metabolite that can be produced from a solute.
+	(metaboliteBolusEntry): Obviated.  We now need access to multiple
+	BolusEntries for multiple metabolite types.
+	(loadParams()): Read metabolite map, including a call to trim() in
+	order to avoid having to test for substrings without whitespace.
+	Validate metabolite map atios add up to 1.0.
+
+	* DeliveryMethod.java(doses): Make public so it can be used by new
+	CountMetabolite measure.
+
+	* Vas.java(stepPhysics()): BolusEntry.ratio changed to
+	BolusEntry.bolusRatio to make its purpose more clear.
+	Pass BolusEntry.bindable into Solute constructor.
+
+	* Cell.java(handleBinding()): Use direct isBindable() getter for
+	checking whether we can bind this solute.
+
+	* Solute.java(isBindable()): New instance variable to test for
+	whether the solute can be bound by binders, including enzymes.
+	Replaces previous, less direct mechanisms.
+	(setProperty()): New method to allow setting an individual
+	property rather than just an entire property map.
+
+2013-04-12  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java(countTypes()): Moved to CollectionUtils to make it more
+	meaningful for other classes.
+
+	* Cell.java(solutes): Publizize this so the CountSolute measures
+	can measure it.
+
+2013-03-22  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(queueEL()): Fix typo where elimination used the
+	enzyme induction rate instead of the elimination rate.
+
+2013-02-13  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java(stepPhysics()): Fix an interesting artifact of infusion
+	use case where PV distributes Marker only one cycle, then Compound
+	only the next cycle, with sporadic mixed distribution in some
+	cycles.  Shuffling the solutes data structure prior to
+	distribution fixes that.  Perhaps a more efficient alternative
+	might be to sprinkle the newly constructed solute instances across
+	the solute data structure when they're inserted.
+
+2013-02-04  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java: Fix bug where multiple calls to Hepatocyte
+	methods were being placed on the actionShuffler (schedule).
+
+	* Lobule.java(constructor): Push max_time down into EI gradient
+	script so that we can decrease the slope by a specified amount.
+
+	* ei-gradient-function.js: Push max_time down into script scope so
+	that we can reduce the slope of the EI gradient based on max_time.
+	Also change names of variables coming from Java to be more
+	concise/convenient.  And change the effective_yrange so that it
+	decreases over time, rather than increases.
+
+2013-01-16  gepr  <gepr@tempusdictum.com>
+
+	* LobuleParams.java: Remove EI gradient parameters.  They're now
+	embedded in the JavaScript.
+
+	* DeliveryMethod.java(init()): Create a ScriptEval instance for
+	the continual-dose-function script. Push the continual_dose_max
+	attribute down into the script context.
+
+	* Lobule.java: Replace Java Gradient with a JavaScript script.
+	Remove SSEIGradYRange, ssEIGradShape, eiGradient object, and the
+	getEIGradient() method.
+	(constructor): Init the script with the file name. The file name
+	is hardcoded to assert that the script is a part of the source
+	code for the model, though the actual contents of the script file
+	is more like a parameter.
+
+	* Vas.java(stepPhysics()): Call to continual_dose_script.eval()
+	now only passes the model time without the dose.alpha value for
+	the max.  That max value is passed in soon after the parameters
+	are loaded.
+
+	* ei-gradient-function.js: New script to replace the compiled Java
+	Gradient.java.  This will allow us to play around with the
+	function as a parameter to the simulation, rather than having to
+	compile it each time we want to try out a new function.
+
+	* Hepatocyte.java(queueEL(), induceEnzymes()): Call new javascript
+	script rather than compiled Java code to calculate the EI and EL
+	gradients.
+
+	* continual-dose-function.js(continual_dose_max, model_time):
+	Change variable names to match common eval() caller and reflect
+	their status as model parameters.
+
+2013-01-10  gepr  <gepr@tempusdictum.com>
+
+	* DeliveryParams.java: Added useContinualDoseFunction parameter
+	and changed constant to continual.  Also removed the "delivery"
+	prefix for these parameters to reflect that they're now in their
+	own file.
+
+	* DeliveryMethod.java(useContinualDoseFunction): New parameter to
+	specify whether to call a JavaScript script to determine the
+	concentration in the PV or to use a constant.  Changed
+	constantDose to continualDose throughout.
+
+	* Vas.java: Changed constantDose to continualDose throughout to
+	reflect that we now allow the amount of solute in the Vas to be
+	regulated by a function rather than a constant.
+	(stepPhysics()): Add logic to test the useContinualDoseFunction
+	parameter to determine whether to call a JavaScript script to set
+	the concentration versus using the dose.alpha parameter value
+	directly.
+
+	* continual-dose-function.js: New JavaScript script to facilitate
+	using a function, instead of a constant for the continual dose
+	infusion use case.
+
+2013-01-08  gepr  <gepr@tempusdictum.com>
+
+	* ISL.java(initConstituents()): No longer send parameter db to
+	DeliveryMethod.
+
+	* DeliveryMethod.java(init()): Read our own delivery.properties
+	rather than isl.properties.
+
+2013-01-07  gepr  <gepr@tempusdictum.com>
+
+	* Lobule.java(step()): Synchronize the stepping of the PV and CV
+	so that PV preceeds the other liver nodes and CV follows them.
+	This helps ensure conservation of mass.
+
+	* Vas.java(outputs): Keep track of outputs, here, to avoid faulty
+	comparisons between input and output.
+	(stepPhysics()): Keep track of solute input into the lobule
+	("deficits") according to explicit type, rather than blanket
+	integer.
+	(describe()): Include deficits (PV) and outputs (CV) in the
+	standard output description.
+
+	* ISL.java(updateOutputs()): Invert extraction ratio from
+	output/input to input/output.  Use outputs kept track of in the
+	CV, rather than using the contents of the solutes data structure.
+
+	* Cell.java(accept()): Limit number of solute objects at any grid
+	point to "scale".
+
+	* SSGrid.java(moveMoore()): Limit the number of solute objects at
+	any single grid point to "scale" number of objects.
+
+2012-12-24  gepr  <gepr@tempusdictum.com>
+
+	* Vas.java: Hacked to handled constant dosing.  When solute is
+	distributed out, it is immediately (before control leaves the
+	method) refilled.  The trigger is a new constantDose boolean
+	that's poked by the DeliveryMethod when the infusion should stop.
+
+	* DeliveryParams.java: Renamed BolusParams to DeliveryParams.
+	DELIVERY_PREFIX, DELIVERY_TYPE, CONSTANT_TYPE, INFUSION_STOP_TIME,
+	BOLUS_TYPE: All new parameters to handle constant vs. bolus type
+	delivery.  Refactored loadParams() function to handle all 3 cases:
+	constant, distinct bolus constituents, repeat bolus constituents.
+
+	* ISL.java: New state (inputs) to allow for an infusion measure
+	("extraction ratio"), defined as solute in divided by solute out.
+	(getSoluteIn()): Analogous to getOutputs().  Should resolve the
+	names at some point.
+
+	* DeliveryMethod.java: Rename Bolus to DeliveryMethod to be more
+	meaningful.  (deliveryType, doseRepeats, numDoses, doseTimes,
+	infusionStopTime): Expose more of the dosing info to the Delivery
+	method so we can accommodate both infusion and perfusion (constant
+	vs. bolus) dosing.  Refactor all the code accordingly.
+	(start()): If CONSTANT_TYPE delivery, then simply schedule
+	DeliveryMethod to stop the infusion at the infusionStopTime.  If
+	BOLUS_TYPE delivery, schedule the doses at the specified times.
+
+	* Hepatocyte.java(handleMetabolism()): Rename Bolus to Delivery.
+
+	* BolusDose.java: Rename Dose to BolusDose to accommodate constant
+	and bolus delivery types.
+	(step()): Change dose(time) in accordance with new scheduling
+	tactic.  Rather than schedule Bolus for some time in the future,
+	which schedules Dose immediately, we merely schedule BolusDose
+	directly, for some time in the future.  Hence we now log the
+	"firstTime" through the code.
+
+2012-12-13  gepr  <gepr@tempusdictum.com>
+
+	* LobuleParams.loadParams(): Allow negative shifts.
+	Fix bug where lobule.acircmin was being set to bcircmin.
+
+	* Lobule.init(): Avoid linking nodes in successor to predecessor
+	zones.  Prevents some long cycles.
+
+2012-11-09  gepr  <gepr@tempusdictum.com>
+
+	* LiverNode.java(distribute()): Distribute to each SS based on
+	distWeight*original number of solute rather than a reduced number
+	of solute after distributing to each output node.  The
+	verification symptom was that despite how large the SSes were, not
+	all the solute would flow out of the PV in once cycle.
+
+2012-11-08  gepr  <gepr@tempusdictum.com>
+
+	* Lobule.java(init()): Use the shifts for SS geometry.
+	(step()): Shuffle the Bag of nodes before stepping them.
+
+2012-11-05  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java: Invert bindProb test (was: draw > bindProb), now:
+	(draw < bindProb).
+
+2012-10-10  gepr  <gepr@tempusdictum.com>
+
+	* Solute, Cell: Add an integer id for each solute and cell.
+
+	* AbstractISLModel, BolusParams, Bolus, Cell, Solute, BolusEntry,
+	ref/RefModel, Vas, ISL, Lobule: Changed HashMap to LinkedHashMap
+	to force deterministic ordering.
+
+
+2012-09-07  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* InnerSpace.java(constructor): Include advanceCore() in the
+	shuffler to avoid bias against core movement.
+	(flow()): No longer need to over ride SSGrid.flow().
+
+2012-09-06  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* SS.java(tryCore(), tryRim(), accept()): New methods to allow an
+	incoming solute to be preferentially placed in the core or rim,
+	depending on that solute's "core2Rim" property.
+
+	* ISLParams, ISL(scale, updateOutputs()): New IVar to implement
+	the scale parameter, which maps the number of solute objects to
+	the number of molecules in the referent.  Technically, this is a
+	multiplier on the observation and compensates for the
+	discretization that results from integer valued compound amounts.
+	Another way of looking at it is as a multiplier for the fraction
+	collector.  Since the fraction collector collects samples (drops)
+	over some continuous time, it discretizes the output of the
+	referent into cumulative bins.  The "scale" parameter allows us to
+	change the discretization without explicitly changing
+	stepsPerCycle.  The fraction collected at any one observation can
+	be thought of as the "average" over a given amount of time and the
+	scale multiplies that average that many times, as if we divided up
+	that bin into that many more frequent observations.
+
+2012-09-05  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* SSGrid.java(moveMoore()): Prevent solute from exiting an SS
+	directly from an eSpace or hSpace.
+
+	* BileCanal.java(flow()): distribute() method might return a null
+	ArrayList, now.  Test for that.
+	* InnerSpace.java(advanceCore()): Ditto.
+	* SSGrid.java(moveMoore()): Ditto.
+
+	* LiverNode.java(distribute()): Changed inferior sample with
+	replacement combined with a try limit with a list shuffle, then
+	walk This will distribute as much solute as possible each time
+	it's called.  The previous failed to distribute to all nodes
+	because those nodes never arose in the random draw.  Also, avoid
+	allocating the return value ArrayList if it's not needed.
+
+2012-09-04  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(induceEnzymes()): Change log.warn threshhold to
+	10 times the maximum number of binders a cell can be initialized
+	with and cap the number of enzymes to induce at 10 times that max,
+	in any one cycle.
+
+2012-09-04  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(induceEnzymes()): Increasing the accumulator by
+	the amount of enzymes that would otherwise be induced can still
+	(under some parameter settings) lead to an exponential runaway
+	increase in enzymes.  For example, when the resource gradient has
+	high curvature so that CV hepatocytes induce lots more than PV
+	hepatocytes, and metabolism is low, allowing more compound to sit
+	bound for longer.  The inherent problem is that the number of
+	enzymes to be induced is exponentially increased by the gradient.
+	To limit this effect, I changed the mechanism to increment the
+	accumulator by the same relaxation amount used to decrement it
+	when no compound is present.  Since this is a linear increase, the
+	numbers go to infinity much slower in these circumstances.  I also
+	added a log warning telling the user that the parameters result in
+	runaway EI.
+	(queueEL()): To make the EL parallel with EI, I now decrement the
+	elimination process by the elimination relaxation increment.  This
+	produces a similar "momentum" to the elimination relaxation.
+	I.e. if the hepatocyte needs to eliminate many enzymes, but lots
+	of EL is already scheduled, it will stay in a "need to eliminate"
+	state longer, perhaps scheduling more elimination after the
+	scheduled elimination shrinks enough.
+
+2012-08-31  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(induceEnzymes()): Add a computational limit
+	similar to that for elimination.  The limit is still based on the
+	# of enzymes in the cell.  But rather than just return after doing
+	nothing, we increase the EI accumulator by the amount of the # of
+	enzymes we would normally schedule.  This extends the excitation
+	time for this hepatocyte so that more EI is more likely to happen
+	later.  But it avoids the memory hog of allocating all those ints
+	and array spaces it takes to schedule EI in the future.
+
+2012-08-30  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(queueEL()): The implemented EL mechanism runs
+	away under some conditions, namely if the elrate is slow enough so
+	that the Enzyme doesn't see enough elimination.  It continues to
+	queue more elimination.  The elimQueue grows large enough to
+	consume the heap.  To block the runaway, I put in an upper limit
+	on the queue size (if elimQueue.size() > binders.size()).  It doesn't
+	make biological sense, but should keep the program from crashing.
+
+2012-08-29  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Bolus.java(estimateTotal()): Since there is no Metabolite in the
+	initial dose, the output fraction of Metabolite is
+	undefined/nonsensical.  Here we simply set the total Metabolite
+	equal to the total Compound (calculated), since only Compound is
+	metabolized into metabolite.
+
+	* SSGrid.java(moveMoore()): Move handling of the exitingRim list
+	inside the loops over X and Y of the grid.  This fixes an obscure
+	bug where Solute stayed in the exitingRim data structure as it's
+	moved around, leading to mismatches between intracellular lists
+        and the grids.
+
+	* Hepatocyte.java(handleMetabolism()): 2nd part of a 2 part bug
+	fix.  Typo.  The location of the new Metabolite was being set to
+	the Cell's <X,X> instead of <X,Y>.
+
+	* Cell.java(setLoc()): 1st part of a 2 part bug fix.  Solute
+	seemed to be stuck in the DisseSpace forever.  Turned out when an
+	intracellular Solute was being placed into an SSGrid location, it
+	uses the Cell's location.  I had not set the X value of that
+	location in setLoc().
+
+2012-08-28  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* SSGrid.java: Change movement draw comparisons to look more like
+	math membership in intervals (e.g. (low <= x < high)).
+
+	* InnerSpace.java(coreOut()): Fix bug that tested the random draw
+	<= probV(Out), rather than draw in [W,Out].  This gave the solute
+	a MUCH higher chance of moving outward than it it should have.
+
+2012-08-27  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* LiverNode.java(distribute()): The initial distribution from the
+	PV was limited by the way we incremented the "tries" variable in
+	the loop.  It was incremented every time through the loop
+	... i.e. every time any solute was passed to an SS.  Hence, only
+	10 SSes were getting solute each iteration.  Changing that to
+	increment tries only when no solute was moved drastically
+	increased the flow out of the PV.
+
+	* SSGrid.java(setProbV()): Changed from instance to class method
+	to handle the peculiar InnerSpace, which has the core as its inner
+	space.  Add new lateral bias as a parameter.
+
+	* SSParams.java(turbo, ssLateralBias): Renamed turbo to forward
+	bias.  New parameter lateral bias to bias movement inward to inner
+	spaces or outward to outer spaces.
+
+	* SS.java(turbo): Renamed "forward_bias" to be more semantically
+	informative.
+	(setGeometry()): Pass in the new lateral_bias argument.  Changed
+	setProbV in SSGrid to be static, which means passing in the inner
+	and outer grids for each space as arguments.  This exacerbates the
+	problem of construction of the grids.  The code needs to be
+	redesigned to be cleaner.
+
+2012-08-23  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* ISL.java(isDone()): Execute up till cycleLimit, not including
+	the limit.
+
+	* SSGrid.java(moveMoore()): Fixed a bug wherein solute within
+	cells that exits the rim (partitions out of the cell then exits
+	the SS), was not removed from the old cell's solutes list.
+
+2012-08-15  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java: Turn off metabolism, ei, and el at the
+	actionShuffler rather than inside the methods.  It should save a
+	little compute time and be more readable.
+
+	* Cell.java: Make binders public so it can be accessed by
+	Observations.
+
+	* SS.java: Make cells list public so it can be accessed by
+	Observations.
+
+	* Hepatocyte.java: Remove debug logging.
+
+	* AbstractISLModel, data/CSVDataModel, ref/RefModel: Change output
+	type from Double to Number to allow for other types of output.
+
+2012-08-14  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* SS.java: New ivars for enzyme elimination.
+
+	* Hepatocyte.java(constructor): New ivar to keep track of the
+	number of enzymes at init.  Enzyme elimination uses this as a
+	lower bound.  Add another action the shuffler to handleEL().
+	(handleEL(), eliminateEnzymes(), queueEL()): New methods for
+	enzyme elimination.  Works analogous to EI.
+
+2012-08-13  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* LiverNode.java(priorPathLength): New ivar to hold the
+	(approximate) path length from the PV to the inlet of this SS.
+	The current implementation uses the average SS length of the
+	predecessor zone, but could later mean the average of an SS'
+	inputs or perhaps some more explicit graph walk.  This is here as
+	a hybridization of the ABM.  A true ABM would implement a
+	BloodResource that is slowly eaten away by whatever it touches in
+	the predecessor grid point.
+
+	* SS.java(s2e, e2s, e2d, d2e): Comment out until/if we need them.
+
+	* Lobule.java(nodesInZone): Specified that it will only contain SS.
+	(init(), getSSLengthStats()): Complicate the data structure so
+	that it will hold stats on the whole lobule and each zone.  This
+	makes the approximate estimation of the pathlength for any grid
+	point inside an SS easier.
+
+	* Hepatocyte.java(induceEnzymes()): Add in the gradient as a
+	component in the number of enzymes to induce.  This basically
+	implements an inverse relation between the resource amount at this
+	place in the path from PV to CV (which goes from large to small
+	exponentially) and the number of enzymes to induce in response to
+	the number of compound present.  The design dictates a direct
+	relationship between the resource and the amount of enzymes to
+	eliminate.  That implementation is next.  This will allow us to
+	simulate a difference in priority whether a hepatocyte is
+	periportal or perivenous without hardcoding that into the
+	hepatocyte.  I.e. we could move a hepatocyte and it would change
+	its behavior.  But it doesn't conserve the resource, the two
+	calculations will be independent, allowing us to discover whether
+	it should be conserved or not.
+
+2012-08-09  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java(handleEI(), createEnzymes()): New methods for
+	EI.
+
+	* Cell|Hepatocyte.java(actionShuffler, iterate()): To avoid
+	artifacts in bind, metabolism, and EI events due to a fixed order,
+	add an actionShuffler Bag to Cell that can be added to by
+	subclasses and shuffled at each execution.  We now use this twice,
+	once in the SSGrid and once in the Cells.
+
+	* SSParams.java(eiResponse): New parameter to govern the intensity
+	of the EI in response to the solute present.
+
+	* SS.java(ei_[thresh|rate|response_factor]): Although these are
+	constant across the Lobule now, they may vary by zone or SS later.
+
+	* Lobule[Params].java(ssEIGrad[YRange|Shape|Asymptote]): These
+	variables belong in the Lobule since they require measures over
+	all the SS.
+	(init()): Calc min, max, mean, median for SS lengths just after
+	all the nodes are created.  Create the gradient that will be used
+	by the Hepatocytes in EI and EL.
+	(getSSLengthStats()): Use COLT to calc stats.
+
+2012-08-07  gepr  <gepr@red.red.dontexist.com>
+
+	* SSGrid.java(moveMoore()): Fixed bug where no solute ever left
+	the bottom of the SSGrid.  Was using the toroidal y so that solute
+	wrapped to the top of the grid.  Now if it's beyond the bottom, an
+	attempt is made to distribute it to the next SS.
+
+2012-08-06  gepr  <gepr@red.red.dontexist.com>
+
+	* SSGrid.java(flowInward(), flowOutward()): ProbV structure
+	changed to be cumulative.
+
+	* SSParams.java(loadParams()): promote turbo to double to avoid
+	garbage.
+
+2012-08-03  gepr  <gepr@red.red.dontexist.com>
+
+	* BileCanal.java(flow()): Refactor for ease of reading.  Also
+	remove solute from tube after distributing them.
+
+	* Tube.java(getTube()): For inspection.
+	(advance()): Refactor to avoid duplicating some lists.
+
+	* Lobule.java(init()): Disallow zero length SS in both types a and
+	b.
+
+	* Vas.java(getRetired(), getRetiredCount()): For inspection.
+
+	* InnerSpace.java(advanceCore()): Forgot to remove Solute from
+	tube entries after distributing them.
+
+2012-08-02  gepr  <gepr@red.red.dontexist.com>
+
+	* Tube.java(advance()): Fix duplicate entries in Tube lists.  List
+	wasn't cleared after adding those from previous lists.
+
+	* SSGrid.java(flowShuffler): IVar.  Each SSGrid (and sub-classes)
+	will have a flowShuffler to shuffle the order in which flow
+	actions happen.  This should mitigate against artifacts that might
+	come from having, e.g., flowOutward() always precede moveMoore(),
+	etc.
+	(flow()):  Use the flowShuffler.
+	(flowInward()): Everywhere - Track solute within cells with the
+	SparsGrids so that the free solute within cells moves just like
+	solute outside the cells.
+
+	* Hepatocyte.java(iterate()): Fix bug where bound structure was
+	edited while being iterated. Remove solute from hSpace grid when
+	it's metabolized.  Add new metabolite to hSpace grid.
+
+	* InnerSpace.java(getCore()): Make core show up in inspector.
+	(constructor): Add flow from core to rim as a Runnable() in the
+	flowShuffler.
+	(flow()): Use super's flow rather than writing our own.  The flow
+	from core to rim should be handled by the super since the
+	constructor added it.
+
+	* Cell.java(myY,myX): Keep track of location for convenience when
+	interacting with celgrids and BileCanal.
+
+2012-07-31  gepr  <gepr@red.red.dontexist.com>
+
+	* Tube.java: New class to reuse code between innerSpace core and
+	BileCanals.
+
+	* SSGrid.java(probV): Make probV an instance variable rather than
+	a class variable so they can be different for each space.  The
+	probabilities for movement (moore, inward, outward) are still in
+	error since not having an inward or outward space to move to does
+	NOT increase the probabilities for moving within.  But this change
+	increments toward that and allows for the [eh]Space to have 0.0
+	bias whele the innerSpace has a "turbo" bias.
+	(moveMoore()): Can now be overridden to provide custom
+	probabilities, depending on geometry.
+
+	* Compartment.java: New method.  Hack to cover for the lack of
+	extensible Enums.  This is used to distinguish between
+	distribution to [ieh]Spaces vs. BileCanals.
+
+	* Vas.java(countTypes()): New code reuse method.
+
+	* LiverNode.java(distribute()): Finally cache distWeights, as
+	originally intended.
+
+	* SS.java: Add BileCanals.
+	(setGeometry()): Change formal parameters to accept circ and
+	length rather than PRNG distribution parameters.
+	Use bias of 0.0 for [eh]Space.
+	(accept()): Include a Compartment type (GRID vs. BILE) to
+	distinguish between solute flow into the [ieh]Spaces
+	vs. BileCanal.  Propagating the formal parameter Compartment down
+	through distribute() and push() is irritating, but a reasonable
+	solution.
+
+	* Lobule.java(type[AB]GammaDist): New COLT random distributions
+	for setting the length of the SS types.
+
+	* BileCanal.java: New class to accept and propogate some
+	Metabolite (some also goes back into the Cell).
+
+	* Hepatocyte.java(iterate()): Implement metabolism.
+
+	* BolusParams.java: Immortalize the Metabolite bolus entry so we
+	can more easily create new ones within Hepatocytes.
+
+	* InnerSpace.java(core): Change core from type array to an
+	instance of the new class Tube, which contains an array.  This
+	allows us to use a common implementation for the core and the
+	BileCanal.
+	(advanceCore()): Avoid bugs when flowRate >= length-1.  Push list
+	shifting into the Tube class.
+
+	* Cell.java(setYPos()): New method for keeping track of a cell's y
+	position so that they can install things into the BileCanal at the
+	right spot.
+	(iterate()): Don't bind Metabolite.
+
+	* Solute.java(getType()): Getter for inspectors.
+
+2012-07-30  gepr  <gepr@red.red.dontexist.com>
+
+	* SSGrid.java(moveMoore()): Fixed duplicate entries of solute in
+	solute grid as well as Cell.solutes when it moves into a Cell via
+	the moveMoore() method.
+
+2012-07-24  gepr  <gepr@red.red.dontexist.com>
+
+	* SS.java: Add bound and total solutes inside cells to
+	description.
+
+	* Cell.java: Fix scheduling now+bindCycles bug.
+
+	* Hepatocyte, EC: Add Binders and Enzymes.
+
+	* SSGrid.java: Remove solute from a cell when it moves.
+
+2012-07-23  gepr  <gepr@red.red.dontexist.com>
+
+	* SS(pm,pb,bc): Change to readable variables metProb, bindProb,
+	bindCycles.
+	(fillSpaces()): Add ECs and Hepatocytes to a common cell bag,
+	which will shuffle prior to execution by the SS.
+
+	* Cell.scheduleRelease(): New method to create an anonymous
+	stepper for binder releases.
+
+	* Hepatocyte, Cell, EC, SS.stepBioChem(): Add Binders and binding.
+
+	* AbstractISLModel, ISL, RefModel: Fix mason vs. ISL time and
+	cycle.  We were mixing them by using scheduleRepeating and
+	scheduleOnce sometimes with ISL times and sometimes with MASON
+	times.  Each model is responsible for incrementing it's cycle
+	variable.  Cycle basically means MASON time.
+
+	* SSGrid.java(flowxyz(), moveMoore()): Check for the presence of
+	cells in the celGrid and if the solute is bound inside a cell,
+	then don't move it.
+	(moveMoore()): Changed grid parameter from just the solute grid to
+	the whole SSGrid so we can check for the presence of cells.  Also
+	don't move all the solute at 1 grid point at the same time.  Move
+	them individually.  (This is largely moot because there is
+	supposedly only 1 solute at any given grid point.  But that may
+	change at some point and we don't want this code to break when it
+	changes.)
+
+2012-07-20  gepr  <gepr@red.red.dontexist.com>
+
+	* ref/RefModel.java(getTime()): Use BatchControl time.
+	(step()): Ditto.
+
+	* AbstractISLModel.java(parent): Make public so Data and Ref
+	models can use.
+
+2012-07-19  gepr  <gepr@red.red.dontexist.com>
+
+	* AbstractISLModel.java: Reformatted getters to be more readable.
+
+	* ref/RefModel.java(constructor): Get cycleLimit from
+	BatchControl.
+
+	* ISLParams.java(loadParams(): Moved query for cycleLimit to
+	BatchControl.
+
+	* data/CSVDataModel.java(buildActions()): New override to avoid
+	scheduling step() and isDone().  The data model doesn't need to
+	step since it's just a table lookup.
+	(comments): Moved some comments to a new "notes" file.  Deleted
+	some obsolete comments.
+
+	* ISL.java, CSVDataModel, RefModel(constructor): Refine parent
+	type to BatchControl since that's all it will ever be anyway.
+
+2012-07-17  gepr  <gepr@red.red.dontexist.com>
+
+	* Vas.java(stepPhysics()): Removed strange/flawed for loop for
+	retiring solute in the output Vas.
+
+	* LiverNode.java(distribute()): Fixed an issue where solute would
+	always be distributed to the same outlet node, the first one in
+	the list.  This isn't exactly a bug, but leads to bad behavior in
+	some situations.  For example, if there is a 3 node cycle and
+	solute keeps being passed into the cycle, the solute might never
+	escape.
+	(push()): Remove the unnecessary tries loop.
+
+	* SSGrid.java(getRimBottomSoluteLocation()): Verification method
+	to watch how solute at the outlet of a SS moves.
+
+2012-07-13  gepr  <gepr@red.red.dontexist.com>
+
+	* SSGrid.java(getLoc1stSolute(), get1stSolute(): methods to help
+	verify that solute is moving correctly within the grid.
+	Stop using and remove non-toroidal translate() method.
+
+2012-07-12  gepr  <gepr@red.red.dontexist.com>
+
+	* SSGrid.java: Extend SparseGrid2D instead of AbstractGrid2D so
+	that all SS grids can share code.
+	(flow(), flowOutward(), flowInward(), moveMoore()): Add outward,
+	within grid, and inward flow methods.
+
+	* InnerSpace.java: Extend SSGrid instead of SparseGrid2D so that
+	code for moving solute can be shared.
+	(failsConstraints()): Removed method ... no longer needed.
+
+	* SS.java(grids): Link grids as in objc isl, a linked-list
+	extending outward and inward.
+	(fillSpaces()): New method to fill the spaces with EC and
+	Hepatocytes.
+
+	* InnerSpace.java(getRingCount(), getInnerSpaceCount()):
+	Convenience methods so that these derived measures will show up in
+	the MASON Inspectors.
+	(moveSolute()): Refactored solute movement to fix a duplicate
+	pointer bug.
+
+	* LiverNode.java(distribute()): Refactored solute movement to fix
+	a bug where solute was not being deleted from predecessor SS when
+	it moved to successor SS.
+	(linksTo()): Convenience method for determining whether this node
+	links to a target node.
+
+	* Lobule.java(init()): After creating the SSs and hooking them up,
+	set the probV in the SSGrid based on the turbo bias value inside
+	the first SS.
+
+	* SSGrid.java(probV): new IVar to hold a probability vector.  This
+	is different from the objective-c ISL in that it doesn't set a
+	base Moore neihborhood, then iteratively solve for conditional
+	probabilities for more complex spaces.  It simply assumes the same
+	probabilities for simpler spaces as if they were the most complex
+	case.  E.g. the probability of moving laterally in the core should
+	be combined with that of remaining where you are, since there are
+	no lateral neighbors.  Likewise, there is no In move in the core.
+	So, the chances of moving Out are smaller than they should be.
+
+2012-07-05  gepr  <gepr@tempusdictum.com>
+
+	* AbstractISLModel.java(imports): Change to more readable access
+	to library classes.  E.g. Use sim.engine.Steppable instead of just
+	Steppable.
+	(outputNames): New IVar to hold a static version of the solute
+	tags.  It gets these from the isl.properties file.  New types can
+	be added dynamically, but they will not show up in the output log.
+
+	* data/CSVDataModel.java: All output maps changed from
+	<Object,Double> generics to <String,Double>.
+
+	* ISL.java(initConstituents()): Initialize the output names so we
+	can write the header for the log file.  Note that the actual data
+	structure is dynamic.  So new types can appear at run-time.  But
+	they will not be logged in the log file.
+	(getTime()): Cache and return the model time, converted from MASON
+	to ISL.
+	(step()): Cache the model time.  Update the outputs and
+	outputFraction, which is sent to the measurement object.
+	(updateOutputs()): Calculates the outputs HashMap (1 entry for
+	each type of solute) and the outputFraction.
+
+	* Bolus.java(init()): Pass in the maxTime so we can calculate the
+	maxSolute for output fraction calculation.
+	(estimateTotal()): New code to cache the maximum total solute and
+	maximum solute of each type.  Each dose can have a different ratio
+	in the solution.  So, the amount is added across all doses.
+
+2012-07-02  gepr  <gepr@tempusdictum.com>
+
+	* AbstractISLModel.java(setCycleLimit()): Add log.debug.
+	(isDone()): Simplify code.
+
+	* Vas.java(accept()): Init solutes Bag when necessary.
+
+	* LiverNode.java(push()): Add debug log statement.
+
+	* ISL.java: Add getters and setters so IVars will show up in
+	inspectors.
+	(maxSolute): hack so that nodes in viz will show color changes.
+	(buildActions(), isDone()): DE schedule isDone() for every cycle.
+	Add re-scheduler for isDone().
+
+	* InnerSpace.java(failsConstraints()): Use numObjectsAtLocation()
+	instead of counting return from getObjectsAtLocation() to avoid
+	testing for a null pointer.
+
+	* SS.java: Add getter and setters for more IVars so they'll show
+	up in the inspectors.
+	(accept()): implement accept behavior.  Accept a solute if there's
+	an empty place in the InnerSpace grid or the circumference is big
+	enough (and empty).
+
+2011-08-11  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* ref/RefModel.java(timeStop): 60.0 -> 100.0.  Not sure it
+	matters.
+	(setCycleLimit(200)): 200 -> 400.
+
+2011-08-10  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* AbstractISLModel.java: Demoted to Steppable.
+	(ModelStatus.FINISHED): Added new state to distinguish between
+	STOPPED and FINISHED.  We may want this to stop and start models,
+	pl;us it matches the semantics of "stop()" and "finish()".
+	(Constructor): demoted to Steppable.
+	(parent): IVar to keep track of the SimState.
+	(finish()): Set status to FINISHED.
+	(doLoop()): Remove.
+
+	* ref/RefModel.java(constructor): RefModel demoted from SimState
+	to Steppable.
+	(doLoop()): Removed.  Stand alone runs will be handled by
+	BatchControl.
+
+	* ISLParams.java(STEPS_PER_CYCLE): Added to calculate cycleLimit.
+	(loadParams()): cycleLimit set to protected in AbstractISLModel.
+
+	* data/CSVDataModel.java(constructor): Use SimState param instead
+	of seed as part of demotion from SimSTate to Steppable.
+	(getInterpolatedOutputs()): clamp row to 0 and max to avoid
+	worrying about whether or not CSVDataModel.step() is called to
+	change the row.
+	(isDone()): New method to test against time inside the data rather
+	than rows in the data table.
+	(main()): Removed.  Stand alone runs will be controlled through
+	BatchControl.
+
+	* ISL.java(cycleLimit): Redundant with super class.
+	(stepsPerCycle): Need to calculate cycleLimit.
+	(constructor): Demoted to Steppable.
+	(isDoneStepper): New IVar to reschedule the isDone() method.
+	(buildActions()): Added DE schedule of isDone().
+	(step()): Check status before trying to reschedule.
+	(mason2IslTime(), isl2MasonTime(), diffTime()): Make static for
+	Main scheduling.
+	(isDone()): Add logic for testing cycle against cycleLimit.
+	(doLoop()): Remove to demote from SimState to Steppable.
+
+	* InnerSpace.java(moveSolute()): ISL demoted from SimState to
+	Steppable, so random has to be parent.random.
+
+	* Bolus.java(estimateTotal()): Use long parameter to reflect
+	change to long cycleLimit in ISL.
+
+2011-06-24  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* AbstractISLModel.java(doLoop()): Stole from sim.engine.SimState
+	so I could catch and rethrow any exceptions properly to give more
+	debug info.
+
+	* SSGrid.java(log): Switch to slf4j logger.
+
+	* Vas.java(log): Switch to slf4j logger.
+
+	* ISL.java(log): Switch to slf4j logger.
+	(pd): Split parameter databases out, one for batch_control, one
+	for isl to support stand-alone execution of the ISL.
+	(ISL()): New constructor for stand-alone ISL, where it executes as
+	its own SimState.  Another constructor is used when executed as a
+	child of the BatchControl.
+	(initConstituents()): Inits moved out of constructor to support
+	the two modes of execution: master and sub-model.
+	(buildActions()): Schedule 1st event for ISL.  Start the Bolus.
+	(step()): Change from using a repeating schedule event to
+	continually rescheduling a one-time event.
+	(main()): Used for stand-alone ISL.
+
+	* InnerSpace.java(log): Switch to slf4j logger.
+
+	* LiverNode.java(getSolutes()): Getter so the property will show
+	up in the MASON GUI.
+	(log): Switch to slf4j logger.
+
+	* SS.java(log, SS(), setGeometry()): Switch to slf4j logger, which
+	requires splitting out the construction fo the constituents so
+	that we can assign the same logger to them.
+
+	* Bolus.java(log): Switch to slf4j logger.
+	(init(), start()): Manipulation of the schedule fails until after
+	it's been constructed (after "start()" is called.  So I split
+	scheduling the first event out of the init() method.
+
+	* Lobule.java(log): Switch to slf4j logger.
+
+2011-06-23  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* ISL.java(ISL()): Pass the whole parent SimState in, then
+	overwrite both the pRNG and the schedule for myself with that of
+	the parent.  This should allow us to use the sub-model as its own
+	simulation with one constructor and as a child with another
+	constructor without changing our sim code.
+
+2011-06-21  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* data/CSVDataModel.java(import sim.engine.*): Provide explicit
+	imports to make the code more readable.
+
+	* ISL.java: Extend AbstractISLModel to promote this to a MASON
+	simulation in its own right.  Remove additional pRNG used to avoid
+	using the default one.  Replace default pRNG instance with the one
+	passed into the constructor.
+	(default constructor): Override so that the default signature from
+	the super class is not used.  We do this to require replacement of
+	the default pRNG.
+	(constructor): No longer pass in the entire state.  Only pass in
+	the pRNG from the caller.
+	(constructor): Send "this" instead of the caller's state to the
+	bolus object.
+	(buildObjects(), buildActions(), getOutputFraction())
+	(getOutputs(), getOutputNames(), getTime()): Provide
+	implementations for these in order to accomodate Ken's Swarm-like
+	structure for CSVDataModel.
+
+	* InnerSpace.java(moveSolute()): Use default random ivar for pRNG.
+
+2010-04-01  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* ISLParams.java: New class to load model-level params.
+
+	* Dose.java(calcDose()): Move this to a function so ISL can call
+	it at construction.  Provides maxSolute for coloring nodes.
+
+	* ISL.java(cycleLimit): Instance variable to determine when to
+	stop the simulation.  Taken from the parameter file.
+	(maxSolute): Cached instance variable to color the nodes
+	appropriately.
+
+	* Bolus.java(estimateTotal()): New method to estimate the total
+	dosage to be administered.
+
+2010-03-09  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* SSGrid.java: New class to replace previous GridA and GridB
+	classes.  ESpace and Space of Disse are now instances of SSGrid.
+
+	* Dose.java(step()): Set Solute properties when Dose creates them.
+
+	* BolusParams.java(loadParams()): Add bileRatio parameter.
+
+	* LiverNode.java: Moved most logic from Vas to superclass because
+	all LiveNodes will have some form of it.
+
+	* InnerSpace.java: Subclass from SparseGrid2D since it's a
+	fundamentally different type of grid than the others due to the
+	core.
+
+	* SS.java: Add the 3 spaces/grids as instances of the new
+	SSGrid.java.
+
+	* Cell.java(accept()): Changed from place() method to handle
+	Solute going into Cells.
+
+2010-03-09  glen  <gepr@tempusdictum.com>
+
+	* Solute.java(*Propert[y|ies]()): New methods to handle Solute
+	properties.
+
+2010-02-24  glen  <gepr@tempusdictum.com>
+
+	* Dose.java: Implement Steppable so that Doses can be events.
+	Bolus now schedules them.
+	(Dose()): Remove >0 constraints from dosage params beta and gamma
+	to support impulse dosing.
+	(squirt()): Changed to step().  Implement impulse dosing.
+
+	* BolusParams.java: Remove >0 constraint from beta and gamma
+	dosage parameters to support impulse dosing.
+
+	* ISL.java(step()): Change discrete time bolus.step() to discrete
+	event.
+	(mason2IslTime(), isl2MasonTime(), diffTime()): New methods to
+	translate between MASON's schedule time to the ISL model's time.
+
+	* Bolus.java(step()): Schedule Dose events rather than walking the
+	doses and executing them here.
+
+2010-02-23  glen  <gepr@tempusdictum.com>
+
+	* Bolus.java: Added SimState to init() so Bolus events could be
+	scheduled.
+
+	* Lobule.java: Added back link to the ISL model for access to the
+	isl2MasonTime() and mason2IslTime() functions.
+

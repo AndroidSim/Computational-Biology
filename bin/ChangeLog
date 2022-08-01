@@ -1,0 +1,1263 @@
+2021-08-16  aks   <drandrewksmith@gmail.com>
+
+    * cmp-MandorE-plot.r: for use.frames = T, the scales of the plot (i.e. min max of x-axis and y-axis) are adjusted for each data. Also, added the mobile object name to the main title of the plot.
+
+2021-08-04  aks   <drandrewksmith@gmail.com>
+
+    * compare-exps.sh: released memory by unsetting the arrays holding the data per Hepatocyte filenames. Minor line change to get correct number of experiments after deleting those that are empty or don't exist. Also, added comparison plots for bound intracellular mobile object amounts.
+    * dataperH-inband.r: added bound mobile object measurement for reduction.
+    * inextra-inband.r: added bound mobile object measurement for reduction.
+
+2021-07-26  aks   <drandrewksmith@gmail.com>
+
+    * compare-exps.sh: added comparison plots of measurement per Hepatocyte data files. The added code is "copy-n-paste" for expediency; however, a loop over measurment or other implementation could be better done at a later time.
+
+2021-07-20  aks   <drandrewksmith@gmail.com>
+
+    * linkprep.sh: added check for whether the cfg files directory in the "exp" directory is empty or not, and if the directory contains .properties.
+    * compare-exps.sh: added check for whether experiment directories exist and or whether they are empty.
+    * run.sh: added classpath to new bsg library ./lib/bsg-r1437.jar
+
+2021-07-12  aks   <drandrewksmith@gmail.com>
+
+    * cmp-MandorE-plot.r: added a new comparison plot script, which is similar to Github cmp-plot.r that compares 1) the same measurement over many experiments. However, this script also can compare the following plot scenarios:
+    2) different measurements in the same experiment
+    3) different measurements over different experiments
+    4) same measurement in the same experiment. 
+However, the last two plot scenarios are not very useful (especially 4).
+
+2021-07-07  aks   <drandrewksmith@gmail.com>
+
+    * param-measure-plot.r: added ability to use frames for multiple plots.
+    * calc-Body-AUC.r: added check if there is no data availabe for the AUC calculation using half-peak value.
+
+2021-07-06  aks   <drandrewksmith@gmail.com>
+
+    * param-measure-plot.r: modified to make 2D (parameter vs measurement or measurement vs measurement) plots or 3D (parameter vs parameter vs measurement) plots. The argument passed is a data frame where the column names are the axis labels (i.e. parameter names and/or measurement names), and each column contains a set of values.
+    * plot-slice.r: removed a couple "print" and "quit" lines that prevented distance slices to plot.
+
+2021-06-29  aks   <drandrewksmith@gmail.com>
+
+    * calc-Body-AUC.r: added a option to use data from peak to end cycle or half peak to end. Some Body profiles with low clearance can not use half peak because there is not data to be used (i.e. the simulation ends before half peak is reached). Also, added to error catching or try-catch blocks for both the nonlinear exponential model fits. Finally, condensed the output of all 3 AUC calculation results in a matrix, which is then written to a .csv file.
+
+2021-05-25  rck
+	* compare-exps.sh: Changed from "data" to "nodata" for plotting clearance files. This change is due to variation- the measurement calculation does involve negative values because clearance = d(entries-exits)dt. Exposure and totalamt will not be negative and thusly do not need to be changed.
+
+2021-05-07  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r, calc-exposure.r, calc-totalamt.r: fixed a bug by adding a code block to check whether the mininum band distance is > than the maximum distance in which there are vHPCs.
+
+2021-05-03  aks   <drandrewksmith@gmail.com>
+
+    * run.sh: fix bug introduced when merging branches/islj-siggrad/bin by changing classpath from "./lib/bsg-r1437.jar" back to "./lib/bsg-r1331.jar" to work with the previous library. The new bsg library is in branches/islj-siggrad.
+    * plot-contour.r: removed unnecessary line.
+    * param-measure-plot.r: new plotting script to plot 2D and contour plots of experimental parameter and measurement values.
+
+2021-04-26  aks   <drandrewksmith@gmail.com>
+
+    * calc-AUC.r, integrate.r: minor cosmetic changes.
+    * calc-Body-AUC.r: new script to calculate the area-under-the-curve (AUC) of just the Body temporal profiles. The calculation is done in 3 ways: 1) discrete quadrature as the inner product of two vectors, or a discrete cumulative sum, 2) adaptive quadrature using R integrate() function with definite limits, 3) adaptive quadrature using R integrate() function with Infinite upper limit. For 2) and 3) the integrand is an exponential function fitted to the section of the Body profile from the time-at-half-peak-value to the end time of the simulation.
+
+2021-04-19  aks   <drandrewksmith@gmail.com>
+
+    * calc-totalamt.r: fixed bug where "Time" column was divided by the average number of vHPCs for the total amount per vHPC measure.
+    * calc-clearance.r: added calculation for the clearance per vHPC measure.
+    * calc-exposure.r: added calculation for the exposure per vHPC measure. Refactored some basic tasks.
+
+2021-03-18  aks   <drandrewksmith@gmail.com>
+
+	* rxnfield.r: changed trial number initialization to get the correct number of MC trials when looping over input files.
+	* create-xyz.r: now works with raw "enzymes" files.
+	* find-xpt.r: removed outputting the plot of the intersection point.
+	* dataperH-inband.r: now works with raw "enzymes" files.
+	* calc-totalamt.r: added calculation of total amount per vHPC and this output to a file.
+
+2021-03-15  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: updated usage and output messages.
+	* calc-totalamt.r: updated usage and output messages, and eliminated derivative output file.
+	* redlib.sh: added calc-totalamt.r script to post move reduction with clearance and exposure script calls.
+	* calc-bulk-avg-gradient.r: modified the command line arguments. Made the formation of output data structures more efficient .
+	* pmetabdcvdpv.r: added axis labels to reaction probability plot. Also, added average over all reaction probabilities as a comparison to output from script calc-bulk-avg-gradient.r.
+	* compare-exps.sh: added total amount output files to plot.
+	* create-xyz.r: added ability to read raw rxnprod files as a measurement. 
+
+2021-03-04  aks   <drandrewksmith@gmail.com>
+
+	* run.sh: changed bsg-r1331.jar to bsg-r1437.jar
+
+2021-03-03  aks   <drandrewksmith@gmail.com>
+
+	* pmetabdcvdpv.r: added the average of the reaction probabilities at each distance, either dCV or dPV, to the plot of all reaction probabilities. Also, added the creation of a barplot of the amount of vHPCs at each distance, similar to the output of plot-hcounts.r in the Github repository.
+
+2021-02-22  aks   <drandrewksmith@gmail.com>
+
+	* pmetabdcvdpv.r: changed output per trial .csv filename to avoid overwriting the same filename from hpcrpstats.r. Moved plotting out of the trial loop, and fixed bug that previously plotted duplicate data. Also, renamed some variables and fixed progress bar.
+
+2021-02-17  aks   <drandrewksmith@gmail.com>
+
+	* create-xyz.r: added "enzymes" and "rxnprod" as measurements.
+	* find-xpt.r: modified to work for Culture width or SS length of 1.
+	* calc-totalamt.r: new script to caculate the total amount of mobile objects in the system (either Mouse or Culture) as body/media + intra + extra + celladj.
+	* calc-clearance.r: removed clearance calculation involving "traps" and the calculation of total amounts of mobile objects.
+
+2021-01-31  aks   <drandrewksmith@gmail.com>
+
+	* find.xpt.r: added ability to plot the cumulative fraction of vHPCs at each distance over all trials.
+	* pmetabdcvdpv.r: new script to extract the enzyme group reaction/metabolism probability, dCV and dPV distances for each vHPCs from the experimental .json files. The script is based on "hpcrpstats.r" and does similar calculations that "hpcrppdstats.r" does. However, plotting the reaction probabilites over dCV or dPV have been added to this script.
+
+2020-12-07  aks   <drandrewksmith@gmail.com>
+
+	* integrate.r: new script that calculates the integral by quadrature of the inputted data file. This script pairs with derivative.r.
+	* calc-AUC.r: new script that calculates the area-under-the-curve (AUC) for the inputted data file and time interval. Currently, this script does essentially the same calculation as integrate.r but with a specified time interval instead of the entire profile.
+
+2020-12-03  aks   <drandrewksmith@gmail.com>
+	
+	* linkprep.sh: modified exit status for when experiment directory to link does not exist.
+	* start-exps.sh: added conditional within experiment loop to check if linkprep.sh executed with or without errors.
+
+2020-11-18  aks   <drandrewksmith@gmail.com>
+
+	* plot-slice.r: modified to plot either a distance (measure vs time) or time (measure vs distance) slice.
+
+2020-11-09  aks   <drandrewksmith@gmail.com>
+
+	* create-xyz.r: fixed a bug in the measurement and events per vHPC calculation with divisions involving 0.
+	* plot-slice.r: check for data existence and number of plots to determine multi-frames; modified filenames for multi-frame plots.
+
+2020-10-07  aks   <drandrewksmith@gmail.com>
+
+	* plot-slice.r: if use.frames = true, then plots of all data files are in individual frames so as to be compared in one window.
+	* plot-contour.r: added same functionality for use.frames = true as in plot-slice.r above.
+	* create-xyz.r: added function to calculate derivative with time.
+	* derivative.r: modified read.csv function to correctly read the column names when reading the input .csv file.
+
+2020-09-30  aks   <drandrewksmith@gmail.com>
+
+	* plot-slice.r: minor changes to the plot before use.frames code.
+	* plot-contour.r: minor changes to the plot, and code readability.
+
+2020-09-27  aks   <drandrewksmith@gmail.com>
+
+	* plot-slice.r: added average calculation over an inputted time interval for the slice (previously was set at max time) and changed the barplot x-axis labels to be easier to read.
+	* create-xyz.r: reduced the measurements to the three most important for the current experiments to save time in creating the matrices.
+
+2020-09-17  aks   <drandrewksmith@gmail.com>
+
+	* plot-slice.r: initial working version of the script using code for making bar plots within plot-hcounts.r in the Github repository.
+
+2020-09-16  aks   <drandrewksmith@gmail.com>
+
+	* plot-contour.r: replicates the previous contour plots from plot-xyz.r, as intended, and still kept additional functionality for more complicated 3D surface plots.
+	* plot-slice.r: parses and reads data file, and added logic for the actual plotting.
+	* create-xyz.r: added some comments containing alternate, and possibly useful, code.	
+
+2020-09-11  aks   <drandrewksmith@gmail.com>
+
+	* plot-contour.r (new): script to make a contour plot of 3D data structured as a matrix with space (i.e. bands) vs time vs measurements (or events). The matrix is inputted from a file as an argument. This script has the same functionality as plot-xyz.r without forming the data structure that is plotted.
+	* plot-slice.r (new): script to make a 2D plot by taking a "slice" of the 3D data matrix as inputted for plot-contour.r. The slice is either time vs measurements (or events) or space vs measurements (or events).
+
+2020-09-10  aks   <drandrewksmith@gmail.com>
+
+	* create-xyz.r: added calculation of time vs band vs event (and events per hepatoctye) matrix and statistics. Also, updated the calculation of the time vs band vs measurement (and measurement per hepatocyte) matrix. 
+
+2020-09-08  aks   <drandrewksmith@gmail.com>
+
+	* create-xyz.r: fixed a bug in the loop over bands and separated the calculation of the number of hepatocytes per band so as to be used for both measurements and events. Also, started the calculation of the average and standard deviation of events and events per vHPC.
+
+2020-09-02  aks   <drandrewksmith@gmail.com>
+
+	* create-xyz.r: added the measure per vHPC data structure, average and standard deviation, for output to a file that can be used for spatial plotting.
+
+2020-08-28  aks   <drandrewksmith@gmail.com>
+
+	* create-xyz.r (new): script to calculate the time vs band vs measurement matrix used by plot-xyz.r to make spatial plots.
+	* rename-link-exps.sh: if renamed directory exists, then delete it, before creating it again when renaming files in the -reduced directory. This is because files can be added to the -reduced directory after initially run from other scripts.
+
+2020-08-06  aks   <drandrewksmith@gmail.com>
+
+	* layer-outext-ratios.r (new): this script replaces layer-extraction.r, but includes the output fraction estimation calculation.
+
+2020-07-30  aks   <drandrewksmith@gmail.com>
+
+	* layer-extraction.r: new script to calculate an estimate of the extraction ratio for Layer 0, closest to the PV.
+
+2020-07-28  aks   <drandrewksmith@gmail.com>
+
+	* hpcdiststats.r: added statistics of the sum dPV+dCV for each hepatocyte. These calculations are useful for the unified gradient.
+
+2020-07-21    <gepr@mia.c.ucsf-generic.internal>
+
+	* linkprep.sh: No more JavaScript. So, *.js link code is bit rot.
+
+2020-07-13  aks   <drandrewksmith@gmail.com>
+
+	* compare-exps.sh: added clearance files for plotting.
+	* plot-exps.sh: new script to plot all files from an experiment for each experiment (i.e. no comparison as in compare-exps.sh)
+
+2020-07-01  aks   <drandrewksmith@gmail.com>
+
+	* get-bands.sh: modified to conform to the new format of the reduction scripts.
+	* plot-xyz.r: restored to original working copy after some code duplication.
+
+2020-05-21  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: modified so that now the AUC calculation in performed on the amount of vCompounds only in the Body compartment; whereas previously it was performed on the total amount of vCompounds in the model system, i.e. Body + extra + celladj + mobileObject or intra.
+
+2020-05-13  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: changed filename format of output files to be consistent with other output files.
+	* calc-exposure.r: changed filename format of output files to be consistent with other output files..
+	* compare-exps.sh: modified to accept the filename change from the calc-exposure.r script.
+	* dcvdpv.r: modified to accept the filename change from the calc-exposure.r script.
+
+2020-05-06  aks   <drandrewksmith@gmail.com>
+
+	* link-prep.sh: added block to check if experiment directory exists in "exp" directory, and if not throw error.
+	* calc-clearance.r: deleted line used for debugging.
+	* run.sh: deleted commented out lines that are no longer used.
+
+2020-04-30  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: added clearance calculation using area under the curve (AUC), where the concentration vs time curve is the total amount of vCompound in the model system, i.e. Body + extra + celladj + mobileObject or intra. Also, an experimental "rate of removal" calculation as summation of the absolute value of the derivative (difference) of the total amount curve from the maximum to the time endpoint.
+
+2020-04-20  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: simpler script, and now a single calculation of clearance as d(entries - exits)/dt or (Entrance events/Dose)/cycle – (Exit events/Dose)/cycle, but without being scaled by "Dose".
+	* dcvdpv.r: bug fix when reading new filenames for exposure.
+
+2020-04-16  aks   <drandrewksmith@gmail.com>
+
+	* calc-exposure.r: 1) slightly new measure for exposure, 2) output measures using both entries and celladj, and 3) works on "<exp>-reduced" directory.
+	* calc-bulk-avg-gradient.r: removed some unnecessary calculation.
+	* Hcounts-avgsd.r: corrected the number of input arguments check.
+	* dcvdpv.r: modified to accept the filename change from the calc-exposure.r script.
+	* redlib.sh: moved the calc-exposure.r calculation to the post move banded block.
+
+
+2020-04-09  aks   <drandrewksmith@gmail.com>
+
+	* Hcounts-avgsd.r, redlib.sh: modified so that no file containing Hepatocyte counts is generated if distance range of a band is outside the distance range of the whole Lobule (Hcounts-avgsd.r), or if the Hepatocyte count is 0 (hcounts-inband.r within redlib.sh), which also indicates this situation.
+
+2020-04-05  aks   <drandrewksmith@gmail.com>
+
+	* calc-bulk-avg-gradient.r: fixed bugs that occurred during construction of the tabular output report, and added plot generation for both the gradient and vHPC fractions used to calculated the bulk average gradient.
+	* link-experiments.sh: deleted because replaced by link-exps.sh.
+
+2020-04-02  aks   <drandrewksmith@gmail.com>
+
+	* calc-bulk-avg-gradient.r: added sigmoid and exponential gradient support and some exposition. Also, print out the bulk avg gradient at a table.
+
+2020-03-30  aks   <drandrewksmith@gmail.com>
+
+	* calc-bulk-avg-gradient.r: calculates the average gradient value for a certain parameter that varies over distance (i.e. PV to CV) over the whole liver. This average = sum over all distances of((value of gradient vs distance) x (fraction of vHPCs vs distance)).
+	* calc-clearance.r, find-xpt.r: appended "quit()" to bottom of script.
+
+2020-03-18  aks   <drandrewksmith@gmail.com>
+	
+	* dcvdpv.r: test for existence of files before calculating band ratio to avoid an error in reduce-exps.sh which terminates execution.
+	* redlib.sh: changed "cleanexp" to "exp" because "cleanexp" is not defined in this script.
+	* reduce-exps.sh: added space for readability.
+
+2020-03-11-11:08  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Bump the BSG library version, which includes the new ExpGradient, which replaces the old rsrc-gradient-function.js.
+
+2020-02-12  aks   <drandrewksmith@gmail.com>
+
+	* compare-exps.sh: modified the section on finding bands to compare so that only the dPV and dCV bands that are common across all experiments are plotted instead of exiting if all bands are not the same. The is specifically relevant to the context = culture experimental setup.
+
+2020-01-10  aks   <drandrewksmith@gmail.com>
+
+	* find-xpt.r: added condition in while loop searching for intersection point that prevents a following "subscript out of bounds" error. This error happens near the end of a seach with no intersection point being found and the search index exceeding the number of distances. The situation was found for context = culture because the two lines [dCV,avg(vHPCs)] and [dPV,avg(vHPCs)] are the same.
+
+2020-01-06-13:08  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* reduce-event-data-inband.r: Add a skip/next mechanism when there are no such events in the entire experiment. Delete bit rot "totalEvent" data structure.
+	Adjust some indentation to use only spaces.
+
+2020-01-04  aks   <drandrewksmith@gmail.com>
+
+	* redlib.sh: removed the unnecessary Hsums-Dist-MC.r script because the output files of Hcounts-avgsd.r contain this calculation.
+	* Hsums-Dist-MC.r: fixed placement of parenthesis in writing csv file that unnecessarily printed data to standard output.
+
+2020-01-03  aks   <drandrewksmith@gmail.com>
+
+	* hcounts-inband.r, compare-exps.sh, Hsums-Dist-MC.r: added changes made in commit 1305 to branch islj-gshexo
+	* rename-link-exps.sh: added check for pre-existence of renamed directory and extra options in link command (ln) for relinking to directories and verbosity
+	* reduce-event-data.r, reduce-event-data-inband.r: condensed statistics for individual trials and whole experiment into one file. Corrected miscount for total, avg, stddev of event statistics within banded data.
+
+2019-11-29    <gepr@mia.c.ucsf-generic.internal>
+
+	* compare-exps.sh (plot): Fix bug where plot types ("raw", "data", "nodata) were not actually used.
+
+2019-11-26-11:19  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* reduce-band.sh: Add a condition test for the existence of the *-reduced directory to allow us to run reduce-band.sh even if we haven't yet run reduce-exps.sh.
+	* redlib.sh (post_mv_banded): Fix typo.
+	* redlib.sh (post_mv_whole): Use warn() instead of error() for the find-xpt.r script because it's not a workflow critical script. 
+	* redlib.sh (warn): Add a warn() function for non-critical script failures.
+
+2019-11-19  aks   <drandrewksmith@gmail.com>
+
+	* compare-exps.sh: added -L option to find command so it follows symbolic links when getting band data.
+
+2019-11-16    <gepr@mia.c.ucsf-generic.internal>
+
+	* reduce-band.sh (usage()): Fix usage statement.
+
+2019-11-11    <gepr@mia.c.ucsf-generic.internal>
+
+	* eg-inband.r: Add test to avoid writing an empty file when there are no EGs in the given band.
+	* dataperH-inband.r: Add test for existence of HsumbandMC to avoid script failure when there were no Hepatocytes in that band.
+	* calc-clearance.r: Add test for the existence of the traps within band data file to avoid script failure when there were no traps in that band.
+
+2019-09-06-17:21  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* compare-exps.sh (cmpBandsInDir()): New function to further modularize the script and avoid cut-n-pasted code.
+
+2019-09-05-09:39  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* compare-exps.sh: Refactor to query the 1st <exp>-reduced subdirectory to get the bands to compare, rather than having them hard-coded at the top of the script. The script now exits with a failure if the 2nd, 3rd, ... experiments have not been reduced with the same bands as the 1st experiment.
+
+2019-09-03-13:14  gepr  <gepr@zareason-mediabox5330>
+
+	* redlib.sh, reduce-exps.sh, reduce-band[s].sh: Carved out functions in the reduce-exps.sh script so they can be used from other scripts. In particular, so we can use reduce-band.sh to reduce only a single band, specified on the command line.
+
+2019-08-14-12:18  gepr  <gepr@tempusdictum.com>
+
+	* hpcrpstats.r: Prepend the experiment name to the output files.
+	* hpcrppdstats.r: (hpcrppd = HPC RxnProb Per Direction) New JSON reduction script to aggregate values for the RxnProb ∀ vHPC @ ∀ dPV, ∀ dCV, separated into files ∀ EnzymeGroup.
+
+2019-08-14  gepr  <gepr@zareason-mediabox5330>
+
+	* hpcrpstats.r: New JSON reduction script to calculate aggregate values for the RxnProb (abbrev. "rp", "reaction probability") values ∀ vHPC, ∀ EnzymeGroups.
+	* hpcdiststats.r: Rename from jsoncalc.r to hpcdiststats.r to be more meaningful.
+
+2019-07-18  gepr  <gepr@tempusdictum.com>
+
+	* ssgeom.r (usage): Remove calls to colSums2(), which seem to have been removed from matrixStats.
+	* plot-xyz.r: Merge from ^/branches/islj-ALTrelease. Add source("misc.r") exception handler.
+	* hcounts-inband.r: Unofficial hcount script used the wrong interval (min,max] instead of [min,max). Official Hcount scripts were right.
+	* compare-exps.sh,reduce-exps.sh (MIDBAND): Merge from ^/branches/islj-ALTrelease (mainly to add the dCV∈ midzonal band). Add exception handling for the MIDBAND calls.
+	* Hcounts-avgsd.r, Hsums-Dist-MC.r: Test for band slices that return 0 results or only 1 column.
+
+2019-07-11-10:41  gepr  <gepr@tempusdictum.com>
+
+	* Hcounts-avgsd.r, Hsums-Dist-MC.r, calc-clearance.r, calc-exposure.r, dataperH-inband.r, derivative.r, eg-inband.r, eg-preproc.r, fextract.r, find-xpt.r, hsol-inband.r, inextra-inband.r, plot-xyz.r, ratio.r, rxnfield.r: Add tryCatch() and an informative error around the source() command for our internal library.
+
+2019-07-10-15:33  gepr  <gepr@tempusdictum.com>
+
+	* reduce-exps.sh: Add usage() and error() functions. Call error() for script failures.
+	* compare-exps.sh: Add warn(), usage(), and error() functions.  Add warn() and error() calls for file existence and plot script failures.
+
+2019-07-01-10:28  gepr  <gepr@tempusdictum.com>
+
+	* reduce-exps.sh (ssgeom): Add SS geometry stats to standard reduction workflow.
+	* compare-exps.sh (RAWMASTATUS): Change default plot to not include raw data, only moving averages.
+	(exposure): Change exposure plots from raw data to avg.
+
+2019-06-26-17:28  gepr  <gepr@tempusdictum.com>
+
+	* ssgeom.r: Reduction/derivation script for new SS Geometry measure.
+
+2019-05-22-11:59  gepr  <gepr@tempusdictum.com>
+
+	* calc-clearance.r, calc-exposure.r, derivative.r, fextract.r, plot-xyz.r, ratio.r: Use the new ma.check() in GitHub/scripts/misc.r instead of cut-n-paste code to test for moving average window length and return a shorter, odd-valued, window value.
+
+2019-05-21-10:01  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: Deleted. All plotting should go through the GitHub/scripts.
+	* compare-exps.sh: Replace cmp-by-col.r for "raw" plots with GitHub/scripts/cmp-plot.r. Options for cmp-plot.r are "raw", "data", and "nodata". But because some plots should ALWAYS use raw, the options provided at the beginning of compare-exps.sh are limited to "data" versus "nodata". I.e. a moving average with the raw data and a moving average without the raw data.
+	Fix enzyme direction-based plots which were broken with the previous commit.
+
+2019-05-14-12:19  gepr  <gepr@tempusdictum.com>
+
+	* find-xpt.r, Hcounts-avgsd.r, reduce-exps.sh: Removed crossover point calculations from Hcounts-avgsd.r and added them to find-xpt.r. Now call find-xpt.r from reduce-exps.sh.
+	* eg-preproc.r: Renamed from eg-dPV.r and now reduces dCV data as well.
+	* ei-groups.r: Deleted. Was only relevant for the old EG outputs that wrote a file for each EG.
+	* Hcounts-avgsd.r, Hsums-Dist-MC.r, eg-inband.r: Add a direction (d[CP]V) argument to avoid useless computation.
+	* *.r, reduce-exps.sh: Clean up the experiment arguments so that if the user accidentally adds a trailing slash to the experiment directory, the scripts will ignore it. The solution also might handle executing the scripts from somewhere other than the parent directory of the experiment directories. But I didn't test that.
+
+2019-05-10-12:45  gepr  <gepr@tempusdictum.com>
+
+	* plot-xyz.r: Add missing Time-stamp.
+	* calc-clearance.r, cmp-by-col.r, derivative.r, ratio.r: Add test and warning for short series, lower than MA.WINDOW.
+
+2019-04-29-10:19  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Bump BSG library from 1074 to 1220.
+
+2019-04-17-10:11  gepr  <gepr@tempusdictum.com>
+
+	* compare-exps.sh: Add the "-avg" to the end of the extra input files.
+
+2019-03-21-14:46  gepr  <gepr@tempusdictum.com>
+
+	* reduce-exps.sh (EXPs): Call both the whole Lobule script and the per-direction script.
+	* reduce-event-data.r: Fix usage.
+	* reduce-event-data[-inband].r: Streamline functionality by passing the diretion as a command-line arg.
+
+2019-03-18-15:00  gepr  <gepr@tempusdictum.com>
+
+	* hcounts-inband.r: Change terminal output to be more like CSV output.
+
+2019-03-18-11:58  gepr  <gepr@tempusdictum.com>
+
+	* reduce-exps.sh: Change several scripts to take the direction of the distance band as a required argument.
+	* compare-exps.sh: Remove default band from peri-central code block.
+	* calc-clearance.r, dataperH-inband.r, inextra-inband.r: Add <dCV|dPV> as a required  parameter to avoid wasteful computation.
+	* body-avg.r, extra-avg.r: Replace body-avg.r and extra-avg.r with a combined coarse-comparment.r for all 3 body, extra, and intro.
+
+2019-02-25-11:39  gepr  <gepr@tempusdictum.com>
+
+	* pc-to-mz.r: Loop over the types of data this script processes, cellajd and hsolute for now.
+	* cmp-by-col.r: Shorten title to just the experiment name because the titles were unreadable when very long.
+
+2019-02-21-14:47  gepr  <gepr@tempusdictum.com>
+
+	* reduce-bands.sh: A (perhaps temporary) version of reduce-exps.sh that only reduces data for the band given on the command line.
+	* pc-to-mz.r: New script to compare a PC band to a mid-zonal band.  The output of find-xpt.r is used to define a band around the xpt for the midzonal band.
+	* find-xpt.r: Add test for graphics subdir. Add code to write xpt data to a file.
+
+2019-02-15-15:48  gepr  <gepr@tempusdictum.com>
+
+	* dcvdpv.r: Add command line arguments for dPV and dCV bands so that switching bands is easier.
+	* cmp-by-col.r: Clean up file names.
+
+2019-02-07  aks   <drandrewksmith@gmail.com>
+
+	* plot-xyz.r: added ability to plot moving averages of the data, and changed background to black. 
+
+2019-01-22-10:11  gepr  <gepr@tempusdictum.com>
+
+	* Merge ^/trunks/islj into ^/islj-ssf in prep for reintegration into the trunk.
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv merged from ^/trunks/islj into ^/branches/islj-hepn vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+2019-03-07  aks   <drandrewksmith@gmail.com>
+
+	* plot-xyz.r: added the ability to plot necrotic and nectrig data (can easily be expanded for stressed data).
+
+2019-02-16  aks   <drandrewksmith@gmail.com>
+
+	* compare-exps.sh: added midzonal band for comparison.
+
+2019-02-15  aks   <drandrewksmith@gmail.com>
+
+	* reduce-exps.sh: added midzonal band for reduction. Also, cleaned and added reduction descriptions.
+
+2019-01-18  aks   <drandrewksmith@gmail.com>
+
+	* cmp-by-col.r: fixed output filename to include the band information and modified for more flexible parsing of the input filename.
+
+2019-01-17  aks   <drandrewksmith@gmail.com>
+
+	* cmp-by-col.r: fixed bug for use with many band files: the band format, i.e. dCVE[0,5), is not parsed out from the input file name; therefore, leading to long output file names that, even with the hash, are still too long
+
+2019-01-15  aks   <drandrewksmith@gmail.com>
+
+	* get-bands.sh: Deleted some unnecessary echo statements and added exposure calculation for dCV bands.
+	* plot-xyz.r: If the first argument, xpt, = 0 only dCV bands are plotted. If xpt = maxd, the second argument, then only dPV bands are plotted. Otherwise, a 2-section, one with dPV bands and the other with dCV bands, combination of bands is created and then plotted. Also, added some comments and combined plot file type and xyz type into one code block to individually specify plot attributes.
+
+2019-01-10  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: commented out some unnecessary lines.
+	* dataperH-inband.r: fixed error for one-distance bands for vHPC counts.
+	* find-xpt.r: output maximum distance and check -reduced dir exists.
+	* get-bands.sh: new script to reduced data for a series of bands [min,max,step]. This is meant to be used with find-xpt.r to divide the vLobule into 2 sections: from PV to intersection pt and from CV to intersection pt.
+	* plot-xyz.r: new script to make either contour or surface plots with one axis being a series of bands obtained from get-bands.r and one axis being time.
+
+2018-11-28  aks   <drandrewksmith@gmail.com>
+
+	* Hcounts-avgsd.r: modified to output a data structure, which contains the average vHPCs for all distances of both directions dCV and dPV, to a file that is used by find-xpt.r. 
+	* find-xpt.r: new script to find the intersection point of the avg vHPC curves for dCV and dPV. It requires a file from Hcounts-avgsd.r
+
+2018-11-21-16:49  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-11-14  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: because clearance is a derived measurement, the script now assumes the exp-reduced directory exists. Total concentration = hsolute + celladj. Commented out some lines.
+	* reduce-exps.sh: added calc-clearance.r at the bottome of script under derived measures.
+
+2018-11-07  aks   <drandrewksmith@gmail.com>
+
+	* Hcounts-avgsd.r: the tabular data in the output files now contains both the average and standard deviation over all MC trials of the sum of vHPCs for that band.
+
+2018-11-02  aks   <drandrewksmith@gmail.com>
+
+	* cmp-by-col.r: changed titles of panels to be entire filename instead of just the experiment name (entire filename = experiment name + banded-measure name)
+	* calc-clearance.r: changed moving average window to = 181.
+
+2018-11-01  aks   <drandrewksmith@gmail.com>
+
+	* derivative.r: new script that calculates the derivative wrt time for each data file
+	* ratio.r: new script that calculates the ratio for each pair of data files, with the first of the pair being the numerator and the second the denominator.
+
+2018-10-31  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: changed output file names and deleted some unnecessary commented out code.
+
+2018-10-30  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: calculates both bulk (whole vLobule) and band (dCV and dPV ranges) intrinsic clearance, CLint.
+
+2018-10-29-14:33  gepr  <gepr@tempusdictum.com>
+
+	* compare-exps.sh (n): Exposure plots used the wrong data files as input.
+
+2018-10-29  aks   <drandrewksmith@gmail.com>
+
+	* calc-clearance.r: new script to calculate clearance.
+	* dcvdpv.r: removed some comments.
+
+2018-10-25  aks   <drandrewksmith@gmail.com>
+
+	* fextract.r: fixed error where moving average time window is greater than the number of time data points.
+
+2018-10-16  aks   <drandrewksmith@gmail.com>
+
+	* dcvdpv.r: modified to changed "Inf" values to "NA" values so those will be removed during plotting.
+
+2018-10-16-13:39  gepr  <gepr@tempusdictum.com>
+
+	* dcvdpv.r: Quickly hacked script to generate dCV/dPV ratios for entry-based exposure and hsolute. It should be refactored to be more like the other scripts as time permits.
+	* reduce-exps.sh (EXPs): Use the new dcvdpv.r script on each experiment directory.
+
+2018-10-12  aks   <drandrewksmith@gmail.com>
+
+	* compare-exps.sh: modified to read exposure filename change.
+
+2018-10-08  aks   <drandrewksmith@gmail.com>
+
+	* Hcounts-avgsd.r: added band distance values to output filename.
+	* Hsums-Dist-MC.r,dataperH-inband.r: changed output filenames to better match other output filenames, specifically putting dCV or dPV before band distance values.
+	* reduce-exps.sh: added new filename changes above for exposure calculation.
+
+2018-10-07  aks   <drandrewksmith@gmail.com>
+
+	* Hcounts-avgsd.r: changed format of the output data row names because of an error for experiments with 1 MC trial.
+
+2018-10-01  aks   <drandrewksmith@gmail.com>
+
+	* dataperH-inband.r: deleted if block that checks if "There is only 1 Monte Carlo trial present." and then quits.
+	* Hsums-Dist-MC.r: fixed error in "colnames" function if used on data for one MC trial.
+	* Hcounts-avgsd.r: new script that calculates the average and standard deivation of the the vHPC numbers for the whole vLobule or with a dCV and dPV distance band.
+	* reduce-exps.sh: added Hcounts-avgsd.r script to reduction workflow.
+
+2018-09-21-09:37  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Upgrade to MASON 19, compiled with Java 10. Note that I had to change the MASON javac args from "-target 1.5 -source 1.5" to "-target 1.6 -source 1.6".
+
+2018-09-20  aks   <drandrewksmith@gmail.com>
+
+	* inextra-inband.r, dataperH-inband.r: added a check if the minimum distance used for the band is greater than the maximum distance of the data. If true, then the distance direction, either dCV or dPV, is skipped. This was easier for inextra-band.r than dataperH-inband.r because of the loop of MC trials. Therefore, it may be better to rewrite dataperH-inband.r for efficiency and readability (maybe like body-avg.r?).	
+
+2018-09-19  aks   <drandrewksmith@gmail.com>
+
+	* compare-exps.sh: added plotting (using cmp-by-col.r) of exposure files generated during experimental reduction. The plot files are in the "g-exposure" directory.
+
+2018-09-18  aks   <drandrewksmith@gmail.com>
+
+	* dataperH-inband.r: modified to only calculate the average and standard deviation of data per vHPC, i.e <data/vHPC>i (i over MC trials), which is used for exposure.
+	* reduce-exps.sh: Hsum-Dist-MC.r added so the output files of the vHPC sums over distance bands and MC trials are included in the reduced directory.
+
+2018-09-12  aks   <drandrewksmith@gmail.com>
+
+	* Hsum-Dist-MC.r: new script that calculates the sum of Hepatocytes for each dPV and dCV distance bands over all MC trials.
+
+2018-09-11  aks   <drandrewksmith@gmail.com>
+
+	* calc-exposure.r: new script that is just the reduction part of plot-exposure.r in the Github repository (i.e. without the plotting)
+	* reduce-exps.sh: calc-exposure.r has been added to output the exposure files to the reduced directory (i.e. exp-reduced) during standard reduction of raw output files from an experiment.
+
+2018-09-11  aks   <drandrewksmith@gmail.com>
+
+	* rename-link-exps.sh: new script that combines rename-exps.sh and link-exps.sh so that the resulting link can be used for compare-exps.sh. This does not replace either rename-exps.sh or link-exps.sh as those can still be used separately; however, this is specifically supposed to be used for compare-exps.sh downstream.
+
+2018-09-07-17:05  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: Add digestified fileName when comparing so many experiments the fileName length goes over 255 characters.
+
+2018-09-05-09:49  gepr  <gepr@tempusdictum.com>
+
+	* compare-exps.sh (n): Add overlooked dPV MIT plots.
+
+2018-08-30-12:41  gepr  <gepr@tempusdictum.com>
+
+	* compare-exps.sh,reduce-exps.sh (P[PC]BAND): Add 2 more standard bands, PPBAND and PCBAND to run every time.
+
+2018-08-23-10:33  gepr  <gepr@tempusdictum.com>
+
+	* body-avg.r, dataperH-inband.r: Add logic to allow for single MC experiments.
+
+2018-08-01-14:59  gepr  <gepr@tempusdictum.com>
+
+	* reduce-exps.sh (EXPs): Include a call to dataperH-inband.r for the default band of [0,100).
+
+2018-07-27-12:06  gepr  <gepr@tempusdictum.com>
+
+	* valplot.r: Add SM to title. Make legend more informative for all 3 cases. Use CV-based RADIUS as the default. Read Dose from <prefix>/cfg/delivery.properties.
+
+2018-07-26-15:28  gepr  <gepr@tempusdictum.com>
+
+	* valplot.r: Removed redundant arguments. Updated the usage text. Parameterized DOSE and MAGIC numbers.
+
+2018-07-25-13:42  gepr  <gepr@tempusdictum.com>
+
+	* valplot.r: Update to use the new file structure.  Add a new "MinMax" option to "Average" and particular sucrose profiles like "s_at".
+
+2018-07-19  aks   <drandrewksmith@gmail.com>
+
+	* dataperH-inband.r: renamed MeasureHPC-inband.r to this script.
+	* utility shell scripts: replaced "experiments" with "exps", renamed "analyze-experiments.sh" to "reduce-exps.sh", and within these files replaced "analysis" with "reduced" to maintain a consistent workflow (no broken dirnames).
+
+2018-07-17-13:21  gepr  <gepr@tempusdictum.com>
+
+	* compare-experiments.sh (body.csv to body-avg.csv): Fix script to accommodate the new filename broken by the last checkin.
+
+2018-06-28  aks   <drandrewksmith@gmail.com>
+
+	* body-avg.r: modified the calculation of the average over all MC trials (output same as before), and to also output the standard deviation.
+
+2018-06-20-11:33  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: Add the ability to plot all the columns in the 1st experiment listed, even if that column does not exist in the remaining files.
+
+2018-06-05  aks   <drandrewksmith@gmail.com>
+
+	* MeasureHPC-inband.r: script similar to inextra-inband.r but ouputs many different statistics on different Solutes within Hepatocytes, such as Solute(all MC trials)/MC trial and Solute(all MC trials)/HPC(all MC trials) for both a distance band and whole lobule, and avg and stddev (Solute/HPC) for each time across all MC trials. Also, The HPC counts for whole lobule and within distance band are outputted for each trial and each distance.
+
+2018-06-04-14:27  gepr  <gepr@tempusdictum.com>
+
+	* analyze-experiments.sh: Parameterize the band.  Call the hcounts-inband.r script.
+	* hcounts-inband.r: Averages, across trials, the number of Hepatocytes within the specified band.
+
+2018-06-01-10:43  gepr  <gepr@tempusdictum.com>
+
+	* compare-experiments.sh (n): Update to compare necrotic-d[CP]V∈[0,100) to match previous checkin for analyze-experiments.sh.
+
+2018-05-22-12:15  gepr  <gepr@tempusdictum.com>
+
+	* jsoncalc.r: Add time stamp. Clarify that IVar means "instance variable".
+	* cmp-by-col.r: Add the creation of a moving average (MA) and make it the default. Parameterize plotting the data along with the MA. Parameterize whether to plot to PNG or SVG.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ merge from ^/trunks/islj into ^/branches/islj-hepn ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^6
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv merge from trunk vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2018-05-21-16:20  gepr  <gepr@tempusdictum.com>
+
+	* analyze-experiments.sh: Call reduce-event-data-inband.r in [0,100) instead of reduce-event-data.r.
+	* nec[trig|rotic]-inband.r: Delete.
+	* reduce-event-data-inband.r: Replaces nec[trig|rotic]-inband.r.  Will also work for "stressed" after ^/branches/islj-hepn is reintegrated.
+
+2018-05-21-14:23  gepr  <gepr@tempusdictum.com>
+
+	* analyze-experiments.sh, nectrig.r, necrotic.r, reduce-event-data.r: Replace nectrig.r and necrotic.r with reduce-event-data.r, since they are processed the same. reduce-event-data.r also works with the "stressed" state available only in ^/branches/islj-hepn so far.
+
+2018-04-22  aks   <drandrewksmith@gmail.com>
+
+	* link-experiments.sh, cmp-by-col.r: Reformatted the code, added clearer usage.
+	* rename-experiments.sh: Rewrote for different situations on the existence of analysis directories and/or files.
+	* necrotic.r, nectrig.r: Added more statistics for distances and separate statistics files for both the whole experiment and individual MC trials. Skip MC trial files containing no necrotic cells/nectriggers and print message if no MC trials contain necrotic cells/nectriggers.
+	* necrotic-inband.r, nectrig-inband.r: Skip MC trial files containing no necrotic cells/nectriggers and print message if no MC trials contain necrotic cells/nectriggers.
+
+2018-03-28  aks   <drandrewksmith@gmail.com>
+
+	* jsoncalc.r: changed recursive from true to false in list.files to avoid getting files within "cfg" directory within the raw output directory. 
+	* link-experiments.sh: new script to create a symbolic link between an experiment directory and a new directory to be used in the compare-experiments.sh script.
+	* compare-experiments.sh, rename-experiments.sh, start-experiments.sh: cleaned up unnecessary comments or code, and added headers.
+
+2018-03-22-10:38  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-03-15-11:56  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: Fix bug that caused script to fail with NA values in a column. The na.rm=T parameter was given to the outer call to max(), but was supposed to be given to the inner call to max().
+
+^^^^^^^^^^^^^^^^^^^^^^^^ merge from trunk ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2018-05-21-14:13  gepr  <gepr@tempusdictum.com>
+
+	* reduce-event-data.r: Generalize script to work with any index name (e.g. "Time" or "Time_of_NecTrig").  Incorporate additional statistics added to the trunk in rev 1119.
+
+2018-04-06-11:15  gepr  <gepr@tempusdictum.com>
+
+	* [analyze|compare]-experiments.sh: Include data reduction for the new stressed cell state files.
+	* necrotic.r, nectrig.r: Delete.
+	* reduce-event-data.r: New (copied, really) script to process all the event-based, cell state data (stressed, nectrig, necrotic) with one script.
+
+2018-03-14-12:42  gepr  <gepr@tempusdictum.com>
+
+	* nectrig-inband.r (ntPerdCV): New function to output a data file for necTrig versus mean dCV for the given band.
+
+2018-03-02-10:39  gepr  <gepr@tempusdictum.com>
+
+	* necr[trig|otic]-inband.r: Add test for the existence of any nectrig or necrotic events for the specified band.  If not, say so in the output. Also Δ Time_of_Necrosis → Time.  And correct the interval from [dMin,dMax] to [dMin,dMax).
+
+2018-02-23-09:52  gepr  <gepr@tempusdictum.com>
+
+	* compare-experiments.sh (entries, exits, rejects, traps): Add comparison script calls for the new data.
+
+2018-02-16-11:45  gepr  <gepr@tempusdictum.com>
+
+	* inextra-inband.r (filebases): Add EERT MITs.
+
+2018-02-06-16:30  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (bsg-r926.jar → bsg-r1074.jar): Use new bsg.util.CollectionUtils.countObjectsByType() and countObjectsOfType(). Also allows us to pass a List<String,Number> instead of an ArrayList<>.
+
+2018-01-08-09:49  gepr  <gepr@tempusdictum.com>
+
+	* Merge in islj-exloc, which adds a new measure (celladj) and adds functionality to the analyze- and compare-experiments.sh scripts.
+
+2018-01-05-10:29  gepr  <gepr@tempusdictum.com>
+
+	* inextra-inband.r, compare-experiments.sh (xcls→celladj): Change "eXtraCellular Location-Specific" (xcls) to "cell adjacent" (celladj), which better represents the measure since we're not measuring the InnerSpace or Bile.
+
+2018-01-04-11:09  gepr  <gepr@tempusdictum.com>
+
+	* compare-experiments.sh: Add Time-stamp: to identify the last time and user to edit the file.
+	Reorganize to avoid cut-n-paste code.
+	(move()): New function for moving graphics output to a measure-specific sub-directory (e.g. g-body).
+	(plot()): New function to select between cmp-by-col.r (raw) and cmp-movavg.r (avg).
+	* cmp-by-col.r: Add the ability to work with sub-directories by extracting the basename of files.
+	Replace print() statements with txtProgressBar.
+	SuppressWarnings(plot()) to avoid semilog warnings about 0 values.
+
+2018-01-03-15:23  gepr  <gepr@tempusdictum.com>
+
+	* inextra-inband.r: New script to reduce both hsol- and xcls- data.
+	* analyze-experiments.sh: Add header, timestamp, and script source trickery so you can execute from elsewhere.  Changed hsol-inband.r to inextra-inband.r, which reduces both the intraH (hsol) and the new xcls (eXtraCellular Location Specific) data.
+
+2018-01-02  aks   <drandrewksmith@gmail.com>
+
+	* necrotic-inband.r: new script to subset necrotic data based on a range of distances for both dCV and dPV. This script is similar to hsol-inband.r
+	* nectrig-inband.r: new script to subset necrotic data based on a range of distances for both dCV and dPV. This script is similar to hsol-inband.r
+
+2017-12-07-09:20  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: Change the way the data frames are accessed so that it's easier to slice out a 0:max.1 range of cycles.
+
+2017-11-16  aks   <drandrewksmith@gmail.com>
+
+	* compare-experiments.sh: added loop for "enzyme" files
+	* rename-experiment.sh: deleted
+	* rename-experiments.sh: renames multiple experiments
+
+2017-11-01  aks   <drandrewksmith@gmail.com>
+
+	* compare-experiments.sh: use cmp-movavg.r instead of cmp-by-col.r for comparison plots and added section to compare hsolute files.
+
+2017-10-25  aks   <drandrewksmith@gmail.com>
+
+	* deleted compare-all.sh, compare-body.r, compare-dead.r, compare-medium.r, compare-necrosis.r, compare-nectrig.r, compare-ofer.r, compare-rxn.r because not needed
+
+	* compare-experiments.sh: script to compare experiments and plot data. Updated comparison files to output filenames from data reduction and analysis of raw simulation output. Replaced the "compare" R scripts with cmp-by-col.r.
+
+	* rename-experiment.sh:	script to rename experiments from the output directory name containing time and date to something more informative about the experiment.
+
+2017-10-24-10:08  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: SEMILOG default FALSE → TRUE.
+	* fextract.r: Increase the PREWINDOW from 3 to 31.  It turns out even in the Body case, the negative bias from the discretization of the input versus the inherent smoothness of the output shows up in the long-term.
+
+2017-10-23-15:19  gepr  <gepr@tempusdictum.com>
+
+	* fextract.r (extRatio): Add a 3-point moving average to each MC trial raw[In|Out]put-????.csv in order to compensate for the pRandomized component execution order.
+
+2017-10-18-11:19  gepr  <gepr@tempusdictum.com>
+
+	* fextract.r: Rewrite to make the calculations from raw[In|Out]put-????.csv from the simulation, which no longer produces the derived outFract, extRatio, or doseFract.  Note that we're not generating doseFract with this script because it needs the maxSolute amounts for each Solute type, which is output in the log file.  So, it will be easy to do by hand if needed.
+
+2017-10-09-16:24  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: Add a semilog option as a constant in the script.
+
+2017-09-27-11:01  gepr  <gepr@tempusdictum.com>
+
+	* branches/islj-exf merged into trunk.
+
+2017-09-20-10:36  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh (linkup): Bring into line with trunk so that it reports unnecessary files in the target.
+
+2017-09-12-15:05  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh (report(), linkup()): Consolidate repeated code into a bash function and add warnings for missing files.
+
+2017-08-16-17:01  gepr  <gepr@tempusdictum.com>
+
+	* fextract.r: Move time-stamp into 1st 8 lines so it will be automatically updated.
+	(usage): Change "run" to "outFract" as the example.
+	(pm loop): Add a loop inside experiment loop to execute for all 3 profile measures "doseFract", "outFract", and "extRatio".
+
+2017-08-11-07:48  gepr  <gepr@tempusdictum.com>
+
+	* jsoncalc.r: Revert requiring the entire jsonlite library in favor of explicit namespace referencing just the one function.
+
+2017-08-10  aks   <drandrewksmith@gmail.com>
+
+	* hsol.r: changed "rxnProduct" to "hsolute" for totals calculation.
+
+	* analyze-experiments.sh: new script that runs most of the data reduction/extraction scripts for multiple experiments.
+
+	* start-experiments.sh: removed unnecessary curly braces expansion (possible slight speed increase).
+
+	* jsoncalc.r: added the line "require(jsonlite)"
+
+2017-08-08-16:20  gepr  <gepr@tempusdictum.com>
+
+	* jsoncalc.r: New script to calculate and print summary stats on hepinit-????.json files, both per trial and over all trials per experiment.  Note that the hepinit-????.json output reflect the (potentially false) instance variables inside the Hepatocyte objects.
+
+2017-07-31  aks   <drandrewksmith@gmail.com>
+
+	* hsol.r: added the calculation of total Solutes per total cell count and outputed the result to a file.
+
+	* compare-all.sh, necrotic.r, nectrig.r: updated these scripts.
+
+	* start-experiments.sh: add script that combines linkprep.sh and run.sh to start one or more experiments.
+
+2017-07-26  aks   <drandrewksmith@gmail.com>
+
+	* necrotic.r, nectrig.r: removed all the data processing into pre-assigned zones based on distance from CV.
+
+2017-06-15-15:26  gepr  <gepr@tempusdictum.com>
+
+	* eg-dPV.r, hsol-inband.r: Pull averaging function out of eg-dPV.r and put it in misc.r.  Call that new function (avgByColumn()) in a new script for hsol-inband.r, which uses the new hsolute-d[PC]V-????.csv.gz output files.
+
+2017-07-06-09:00  gepr  <gepr@tempusdictum.com>
+
+	* eg-dPV.r: Remove trailing slash from directory names.  Fixes a bug where if someone executes with eg-dPV.r directory/, it creates a file inside that directory starting with the '_' character.
+
+2017-05-24  aks   <drandrewksmith@gmail.com>
+
+	* merge --reintegrate islj-zb into trunk islj
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv from trunk merge into islj-zb vvvvvvvvvvvvvvvvvvv
+
+2017-04-21-11:56  gepr  <gepr@tempusdictum.com>
+
+	* necrotic.r, nectrig.r: Add call to unique() so that duplicate events are ignored.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ from trunk merge into islj-zb ^^^^^^^^^^^^^^^^^^^
+
+2017-05-11-10:12  gepr  <gepr@tempusdictum.com>
+
+	* rxnfield.r: Fix bug where an experiment with long SSes precedes an experiment with short SSes, preserved the maximum d[PC]V from the previously processed experiment.
+
+2017-05-02-16:29  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh (TGT_DIR): Add 2 tests to see if build/classes exists and if ../exp/* exists.
+	* everything: Replace rxnProduct with hsolute in all scripts because the old "rxnProduct" wasn't an accurate description of what the files contained.  There's now a new output file with "rxnprod" indicating the reaction product count.
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv from islj-drd vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2017-03-27-15:34  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: Add a y minimum so the plots don't always start at y=0.  Added minor.ticks.
+
+2017-03-27-14:59  gepr  <gepr@tempusdictum.com>
+
+	* eg-inband.r: New script to process the output of eg-dPV.r, which sums the EG capacities within a band.
+	* eg-dPV.r: Remove Time column before padding to avoid an extra (empty) time column. Renamed from ei-dPV.r.
+
+2017-03-24-16:20  gepr  <gepr@tempusdictum.com>
+
+	* ei-dPV.r: Refactor to work on separated enzymes-dPV-????.csv.gz output.  Now produces a file with the average EG.capacity for each dPV (within the band) and for each EG, averaged across all trials.
+
+2017-03-24-10:24  gepr  <gepr@tempusdictum.com>
+
+	* ei-dPV.r: 1st attempt at a d[PC]V-based enzyme data reduction script.
+
+2017-03-15-12:13  gepr  <gepr@tempusdictum.com>
+
+	* ei-groups.r: Refactor file names to better match the other data reduction scripts and be more compatible with https://github.com/BioSystemsGroup/scripts/blob/master/cmp-movavg.r
+
+2017-03-14-09:52  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh, run.sh: Change directory structure to put all *.properties, *.js, and *.json files in the build/classes/cfg directory.
+	* fextract.r: Renamed from islj-dr.r to better reflect that it's the specific data reduction to either the output fraction or the extraction ratio.  Output renamed to the simpler "profile".
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ from islj-drd ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv from islj-btr vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2017-02-27-11:08  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Bump from bsg-r905.jar to bsg-r926.jar to incorporate new deep copy methods in CollectionUtils.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ from islj-btr ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2017-01-17-16:53  gepr  <gepr@tempusdictum.com>
+
+	* rxn.r: Bump the index (from 5 to 6) for extracting the Solute type from the rxnProduct column header.
+
+2016-11-08  aks   <drandrewksmith@gmail.com>
+
+	* compare-all.sh: modified to compare more than two experiments and for other comparison plots, e.g. medium and nectrig.
+
+	* compare-medium.r: similar to compare-body.r but for medium output .csv files.
+
+	* compare-necrosis.r: similar to compare-dead.r
+
+	* compare-nectrig.r: similar to compare-necrosis.r but for the nectrig output .csv files.
+
+2016-11-02-16:44  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (bsg.jar): Bump to r905 for new BSG changes (using URLDecode for path names).
+
+2016-09-28-15:05  gepr  <gepr@tempusdictum.com>
+
+	* run.sh: Execute the Java process within the time command.
+	* body-avg.r: Eliminate extra "_" and "mean" in the filename.
+
+2016-09-08  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Use new bsg-r888.jar with fix to CollectionUtils.addIn().
+
+2016-08-22  aks   <drandrewksmith@gmail.com>
+
+	* ei.r, ei-groups.r, body-avg.r, islj-dr.r: modified to not average if the number of MC trials = 1.
+
+2016-08-18  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (bsg.jar): Bump from revision 843 to 882 to use new version of ScriptEval, which only loads JS scripts once, then subsequently calls the JS-defined eval() function.
+
+2016-08-08-10:18  gepr  <gepr@tempusdictum.com>
+
+	* nectrig.r: Copy of necrotic.r and process the same way.
+
+2016-06-30  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh: Add hepinit-*.json files to link preparation.
+
+	* body-avg.r: Modify so it'll process <exp directory>/(body|medium)-[0-9]+.csv files.
+
+2016-06-28-16:57  gepr  <gepr@tempusdictum.com>
+
+	* ei-groups.r: New script to process enzymes- files with the new EnzymeGroup names appended.
+
+2016-06-24  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Remove cfg directory from classpath.  It's now included in the build/classes directory via the ANT script.
+
+2016-06-10-15:43  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh (.properties): Change to more generic method for finding and linking .properties files.
+
+2016-05-28-13:35  gepr  <gepr@tempusdictum.com>
+
+	* necrotic.r: Renamed dead.r → necrotic.r.
+
+2016-04-28-15:21  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Add genson library for parsing JSON formatted parameters.
+
+2016-04-18  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (bsg.jar): Bump to new version.
+
+2016-04-12  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Upgrade BSG revision containing new exception thrown by ScriptEval.
+
+2016-03-30  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (bsg-r834.jar): Use new BSG library (MyInt → MutableInt).
+
+2016-03-09  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Include (temporary) relative path to the new bsg.util jar file.
+	(CLASSPATH): Change library dependency from another netbeans project to the bsg.jar file, checked out via the svn:externals property, which automatically checks out https://subversion.assembla.com/svn/bsg-ucsf/trunks/bsg/dist/bsg.jar, revision 826 and places it in islj/lib/bsg-r826.jar.  To see the svn:externals property, check out islj and issue the command "$ svn propget svn:externals islj/lib".
+
+2015-11-25  aks   <drandrewksmith@gmail.com>
+
+	* body-avg.r: changed to use 1 or more experiment directories
+
+2015-04-09  aks   <drandrewksmith@gmail.com> 
+
+	* compare-all.sh: modified to use changed filenames
+
+	* analog-sampling.sh: bash script to sample MC trials from a set of analog experiments creating a new analog.  This sampling is done according to the following logic:
+1) user inputs number of MC trials, nMC, and a file containing experiment dirs
+2) randomly select one experiment dir 
+3) from that exp dir, randomly select one MC trial, which contains
+   6 files (i.e. body, dead, enzymes, run, rxnProduct_zone_1_2, and 
+   rxnProduct_zone_3) 
+4) repeat nMC times
+5) put all sampled files into an output directory
+
+2015-04-01  gepr  <gepr@tempusdictum.com>
+
+	* compare-dead.r: Make axis labels readable by increasing their font size.
+
+	* cmp-by-col.r: Restrict plot comparisons to the columns available in the first file argument and to those columns that exist in all file arguments.
+
+2015-02-27  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh (javascripts): In order to accommodate allowing experiment-specific JavaScript dose scripts, Ι changed this script so that it uses the *.js files in the experiment directory as the index, and removes those in the classpath, if they exist.  If a script in the experiment directory does not exist in the current build/classes directory, an ignorable error is issued.  It then creates symbolic links to all those *.js files in build/classes/isl/model/.
+
+2015-02-24  gepr  <gepr@tempusdictum.com>
+
+	* cmp-by-col.r: more convenient comparison plot script.  E.g. cmp-by-col.r exp00?x_dead.csv
+
+2015-02-09  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Upgrade to MASON 18.
+
+2015-02-02  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (NANO): Use the "-" flag on the date format so the nanoseconds aren't padded with zeros.
+
+	* compare-rxn.r: Renamed from "met" for metabolite to "rxn" for reaction product.
+
+	* run.sh: Changed output directory to add nanoseconds /100k to make the name more unique.  This helps prevent duplicate directory names when scripting the execution of many experiments that might start at the same time.
+
+	* compare-ofer.r: Added a script to compare the output of islj-dr.r, analogous with compare-rxn.r and compare-body.r.
+
+2015-01-29  gepr  <gepr@tempusdictum.com>
+
+	* rxn.r: Change to accommodate new reaction product output filenames.
+
+2014-12-26  gepr  <gepr@tempusdictum.com>
+
+	* dead.r: Added an accumulating statdeadfilename so that all expDirs used are included in the data.frame.  Changed row.names to reflect 1 variable per expDir row.  Changed data.frame so that it contains all the variables for a single expDir in one column (rather than 2 cols).  Removed code to re-define the row.names for each expDir.  "cbind" each expDir onto the data.frame within the expDir loop.  Then write the stats for all the expDirs into 1 file after the loop.
+
+2014-12-23  aks   <drandrewksmith@gmail.com>
+
+	* dead.r: organized cell death statistics in a data frame and print to a file
+
+2014-12-19  aks   <drandrewksmith@gmail.com>
+
+	* dead.r: added determination of total dead per Zone by mean distance from CV
+
+2014-10-28  aks   <drandrewksmith@gmail.com>
+
+	* dead.r: added totals and statistics for cell deaths per Zone over Trials
+
+2014-10-25  aks   <drandrewksmith@gmail.com>
+
+	* dead.r: Zones were labeled wrong, 3 and 1 were switched.
+
+2014-10-20  aks   <drandrewksmith@gmail.com>
+
+	* dead.r: The cumulative cell deaths per zone are printed to a single file.
+
+2014-10-17  aks   <drandrewksmith@gmail.com>
+
+	* compare-all.sh: new script that runs compare-body.r, compare-dead.r, and compare-mets.r
+
+	* dead.r: sorted cell death data into Zones 1, 2, and 3, and nearPV and calculated 		cumulative cell deaths per zone.  The results for each Zone is printed to a separate file.
+
+2014-10-15  gepr  <gepr@tempusdictum.com>
+
+	* rxn.r: Moved met.r to rxn.r and changed variables to match the
+	change from metabolites to reaction products.
+
+2014-10-09  gepr  <gepr@tempusdictum.com>
+
+	* runSRControl.sh: New script to run the SRControl.
+
+2014-10-07  gepr  <gepr@tempusdictum.com>
+
+	* run.sh: Add SR.properties to list of files to copy to the output directory.
+
+	* linkprep.sh (PROP_FILES): Add SR.properties to the list of files to link.
+
+2014-08-14  gepr  <gepr@tempusdictum.com>
+
+	* dead.r: Insert Cumu_Dead as a column before Time_Norm.
+
+	* compare-body.r: Allow the script to run with just 2 arguments.
+
+2014-07-24  gepr  <gepr@tempusdictum.com>
+
+	* dead.r: Append normalized time and cumulative, normalized number
+	of dead cells to the output file.
+
+2014-07-09  gepr  <gepr@tempusdictum.com>
+
+	* montage.sh (DIR): Assemble plots from graphics subdirectory and
+	write the montage to that same directory.  Also name it
+	$file-eiel.png.
+
+	* ei-plots.r: Write plots to graphics subdirectory.
+
+2014-07-08  gepr  <gepr@tempusdictum.com>
+
+	* dead.r: Exit the script if there are no dead to count!
+
+2014-06-30  gepr  <gepr@tempusdictum.com>
+
+	* valplot.r: More changes to accommodate non-numeric read.csv
+	inputs.
+
+	* islj-dr.r: If one input is longer (e.g. DatModel), then truncate
+	it to the shorter series.
+
+2014-06-27  gepr  <gepr@tempusdictum.com>
+
+	* valplot.r: Change to Rscript but leave the old setR syntax in
+	place to help with debugging.
+	Convert dat.final from strings into numbers.
+
+2014-06-02  aks   <drandrewksmith@gmail.com>
+
+	* compare-dead.r: added Rscript and argv <- commandArgs(TRUE)
+
+	* compare-mets.r: added Rscript and argv <- commandArgs(TRUE)
+
+	* dead.r: modified to calculate mean dead per MC trial and std
+
+2014-04-17  aks   <drandrewksmith@gmail.com>
+
+	* islj-dr.r: - replaced "#! /bin/bash setR" with "#! /usr/bin/Rscript"
+		     - added "argv <- commandArgs(TRUE)" to read in command line arguments
+		     - replaced "read.csv(file = paste(d, f, sep="/"))
+		       with "read.csv(file = paste(d, f, sep="/"), colClasses = "numeric")"
+	
+	* dead.r: - replaced "#! /bin/bash setR" with "#! /usr/bin/Rscript"
+		  - added "argv <- commandArgs(TRUE)" to read in command line arguments
+		  - replaced "read.csv(file = paste(d, f, sep="/"))
+		    with "read.csv(file = paste(d, f, sep="/"), colClasses = "numeric")"
+
+	* ei.r: - replaced "#! /bin/bash setR" with "#! /usr/bin/Rscript"
+		- added "argv <- commandArgs(TRUE)" to read in command line arguments
+		- replaced "read.csv(file = paste(d, f, sep="/"))
+		  with "read.csv(file = paste(d, f, sep="/"), colClasses = "numeric")"
+
+	* met.r: - replaced "#! /bin/bash setR" with "#! /usr/bin/Rscript"
+		 - added "argv <- commandArgs(TRUE)" to read in command line arguments
+		 - replaced "read.csv(file = paste(d, f, sep="/"))
+		   with "read.csv(file = paste(d, f, sep="/"), colClasses = "numeric")"	
+
+	* body-avg.r: - replaced "#! /bin/bash setR" with "#! /usr/bin/Rscript"
+		      - added "argv <- commandArgs(TRUE)" to read in command line arguments
+		      - replaced "read.csv(file = paste(d, f, sep="/"))
+		        with "read.csv(file = paste(d, f, sep="/"), colClasses = "numeric")"
+
+2014-04-04  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh (SCRIPTS): Add bolus-dose-function.js.
+
+2014-03-24  gepr  <gepr@tempusdictum.com>
+
+	* linkprep.sh (SCRIPTS): Change continual-dose-function.js to
+	constant-conc-function.js... I don't know if/how to handle this if
+	ISLM and ISLJ are merged.
+
+2014-03-17  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (CLASSPATH): Remove jmf.jar.  Swap mason15 with mason17.
+
+2014-01-08  gepr  <gepr@tempusdictum.com>
+
+	* valplot.r: Change the "mean" data structure to a matrix so that
+	nrow() will work on it, to match the other data structures formed
+	through other use cases, e.g. single columns as opposed to a mean
+	of several columns.
+
+2014-01-07  gepr  <gepr@tempusdictum.com>
+
+	* compare-mets.r: Copy of compare-dead.r, plots column.1 (x-axis)
+	against column.2 (y-axis) from the *_metabolite_zone_?_?-?.csv
+	files.
+
+	* compare-dead.r: Put graphics in a graphics subdirectory.
+
+	* valplot.r: Use as.matrix() to resize data taken from the
+	datModel when it's shorter.  Also changd from length() to nrow()
+	for dat.final for size comparison and resizing experimental data
+	when its shorter.
+
+	* compare-dead.r: Add commented out plot command to use log="y".
+
+2013-11-14  aks   <drandrewksmith@gmail.com>
+
+	* isljdr.r: does the same as islj-dr.r but uses Rscript (instead of setR) and 
+	argv <- commandArgs(TRUE)
+	
+	* myei.r: does the same as ei.r but but uses Rscript (instead of setR) and 
+	argv <- commandArgs(TRUE)
+
+	* mymet.r: does the same as met.r but uses Rscript (instead of setR) and 
+	argv <- commandArgs(TRUE)
+
+	I made these new files instead of modifying the originals so others can still use the 		originals. However, this may no longer be necessary given recent R upgrades.
+
+2013-08-13  gepr  <gepr@tempusdictum.com>
+
+	* islj-dr.r: Add tryCatch() clause around matrix summation to
+	avoid having to type "q()" every time it fails.
+
+2013-05-22  gepr  <gepr@tempusdictum.com>
+
+	* met.r: Change the meat of the script into a function that is
+	called for each set of files (metabolite_1_2 vs. metabolite_3) and
+	for each zone.
+
+2013-05-20  gepr  <gepr@tempusdictum.com>
+
+	* met.r: Calculate average metabolite per cell per time, instead
+	of sum.
+
+2013-03-25 gepr <gepr@tempusdictum.com>
+
+	* farm.sh: Script to spread 1 ISLJ experiment across many machines.
+	* valplot-dist.r: Script to average run-[0-9]+.csv output.
+
+2013-01-16  gepr  <gepr@tempusdictum.com>
+
+	* run.sh (delivery.properties, continual-dose-function.js)
+	(ei-gradient-function.js): New properties file and new JavaScript
+	scripts now need to be logged as parameters.
+
+2012-12-13  gepr  <gepr@tempusdictum.com>
+
+	* valplot.r: Add prefix to needed parameters. (e.g. valplot.r x108
+	s_at x108/datModel.csv Marker x108_mean_profile_per_node.csv).
+
+2012-11-08  gepr  <gepr@tempusdictum.com>
+
+	* islj-dr.r: Turn off the graphics device so the X11 window
+	doesn't display.
+
+	* valplot.r: Variant of the single.r script from the Objective-C
+	ISL.  It simply plots the specified experimental vs. data series
+	and counts the similarity measure.
+
+2012-09-19  gepr  <gepr@tempusdictum.com>
+
+	* ei.r: Turn the device off so that the X window isn't invoked.
+	This helps run it over a slow network.
+
+2012-09-11  gepr  <gepr@tempusdictum.com>
+
+	* ei.r: Cleaned up the code and normalized the EI in each zone by
+	dividing the sum by the number of nodes in that zone.
+
+	* ei-plots.r: Script to EI plot data from a CSV file.
+
+	* montage.sh: Simple script to adjoin EI plots.
+
+2012-09-10  gepr  <gepr@tempusdictum.com>
+
+	* ei.r: Copied ei.r from the objective-c isl and modified to work
+	with the islj.
+
+	* setR: Setup script required to run R programs as shell scripts.
+	Put this in your path, then you can run ./islj-dr.r at the command
+	line.
+
+	* islj-dr.r: Added a script to average output fraction data from
+	several monte carlo trials.
+
+2012-08-29  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* run.sh (DIR): Add -Xmx6g to the java command so that we can run
+	large experiments.
+

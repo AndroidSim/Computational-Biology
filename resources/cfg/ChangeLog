@@ -1,0 +1,183 @@
+2020-07-01  aks   <drandrewksmith@gmail.com>
+
+	* isl.properties: 
+		explicitly specify the cellEnterExitProb for all cell types. 
+		Added "gamma distribution" to description of SS lengths (still needs more annotation).
+		Added new parameter "uniGradtype" to specify the type of unified gradient.
+		Added new parameter "uniGradrange" to specify the range of the unified gradient as 			<CV, PV>
+
+	* metabolic.properties: 
+		changed APAP production map to the validated or biomimetic fractions.
+
+	* types.properties: 
+		added cellEnterExitProb map to APAP
+		added cellEnterExitProb map to ALT
+
+2020-03-06-11:30  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* isl.properties (rsrcGradientScript*): Remove script related parameters.
+	* rsrc-gradient-function.js: Delete.
+
+2020-03-04-10:16  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* isl.properties (gshDepletionRange): Flip GSH gradient along with the flip in HepStruct.evalGradient() from a dPV base to a dCV base.
+	* metabolic.properties (<MOType>.rxnProb[Start|Finish]): Ditto.
+
+2019-11-19  aks   <drandrewksmith@gmail.com>
+
+	* type.properties: boolean property necroticRelease added to ALT from merge of branch islj-ALTrelease into trunk islj.
+
+2019-10-18    <gepr@mia.c.ucsf-generic.internal>
+
+	* isl.properties (exos, exoManhattanDist): Add parameters for controlling whether to use neighbor logic versus EXO messaging.
+
+2019-10-09-14:22  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* isl.properties (pEXO): Add pEXO = 0.0.
+	* batch_control.properties (measureHMobileObject): Δmeasure*Solute to measure*MobileObject.
+
+2019-09-05-09:41  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* hepstructspec.properties, isl.properties: Change the HepStruct to a 5-layer structure and the SS geometry parameters to halve the diameters and reduce the lengths accordingly.
+
+2019-07-18  gepr  <gepr@tempusdictum.com>
+
+	* *.properties: Bring in line with ALT experiment Mouse025dr.
+
+2018-03-12-10:11  gepr  <gepr@tempusdictum.com>
+
+	* batch_control.properties (takeNTSnaps): New parameter to take necrosis trigger snapshots or not.
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv merged from ^/trunks/islj into ^/branches/islj-hepn vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2019-03-04  aks   <drandrewksmith@gmail.com>
+
+	* type.properties (necroticRelease): boolean true/false parameter for the vCompount ALT to turn off or on the mechanism of releasing intracellular ALT on cell death.
+
+2019-01-22-11:15  gepr  <gepr@tempusdictum.com>
+
+	* types.properties (bodyXferTypes): Add an example of Solute type specific cellEnterExitProb.
+
+2018-11-21-16:51  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-09-06-12:10  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (cellEnterExitProb[s]): Change this parameter name to match that used in types.properties.
+
+2018-08-22-09:31  gepr  <gepr@tempusdictum.com>
+
+	* types.properties (cellEnterExitProb): Add optional parameter to vCompound properties to specify probabilities that override the model-wide property in isl.properties.
+
+2018-08-17-08:56  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (cellEnterExitProbs): Δ membraneCrossProb ∈ ℝ → cellEnterExitProbs ∈ Map<String,Double2D>, e.g. Hepatocyte => <1.0, 0.5> indicating the probability for entering a Hepatocyte = 1.0 and that for exiting = 0.5. Similar entries can be made for, say, ECs or KupfferCells.  The text strings "Hepatocyte" etc. must match the Java class name exactly because we use reflection to look it up.
+
+2018-06-12-07:51  gepr  <gepr@tempusdictum.com>
+
+	* types.properties: Add a new property "AmpRange" to specify the [min, max) for the uniform distribution for how many new Solute should be created. Following the convention everywhere else in the code, this interval is closed on the left and open on the right, i.e. it does not include the max.  Also note that the parser is tolerant to entering floats (e.g. AmpRange = <3.6, 6.1>). It will Warn the user in the log file that it will actually use AmpRange = [floor(min), ceil(max)).  So <3.6,6.1> will become [3,7).
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ merged from ^/trunks/islj into ^/branches/islj-hepn ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2018-02-13-11:22  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (membraneCrossProb): New parameter to specify a pRNG draw when a Solute tries to enter or exit any Cell. The code also allows for solute-specific, dynamic, membraneCrossProb property in types.properties.
+
+2018-02-13-09:06  gepr  <gepr@tempusdictum.com>
+
+	* batch_control.properties (measureMITs): New parameter to turn on/off the measurement of the MITs (membrane interaction types -- entries, exits, rejects, and traps).
+
+2018-02-12-12:11  gepr  <gepr@tempusdictum.com>
+
+	* build.prop (SVNVERSION): Change to using last changed, rather than global repository version #.
+
+2018-02-07-10:20  gepr  <gepr@tempusdictum.com>
+
+	* *.properties: Set default test case to match mdrp2acm000, the baseline for the PAP futile cycle work.
+
+2018-01-08  aks   <drandrewksmith@gmail.com>
+
+	* metabolic.properties: removed Enzyme Group ALTbinders
+	* isl.properties: added transportDelayMin and transportDelayMax
+
+2017-11-07-09:06  gepr  <gepr@tempusdictum.com>
+
+	* types.properties: Remove Repair Solute type because Repair is no longer a Solute object.
+
+2017-10-25  aks   <drandrewksmith@gmail.com>
+
+	* metabolic.properties: added Enzyme Group ALTbinders that binds ALT
+
+2017-10-09-10:21  gepr  <gepr@tempusdictum.com>
+
+	* hepinit-*.json: Change "zones" to "layers".
+
+2017-09-27-11:00  gepr  <gepr@tempusdictum.com>
+
+	* branches/islj-exf merged into trunk.
+
+2017-09-20-10:39  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties: Default bodyXferMod = 1.0 and ssLastLayerClamped=true.
+	* hepstructspec.properties: Return default to the Body/Lobule case so that the Culture case coerces it to 1 layer and we see the new warning.
+	* constant-conc-function.js: Delete.  It hasn't been used in a long time.
+
+2017-09-16  aks   <drandrewksmith@gmail.com>
+
+	* isl.properties: added parameters ALTmax (maximum amount of the Solute ALT to be released from a Hepatocyte) and ALTthreshold (the limit above which a Solute with membraneDamage = true, currently nMD, caused the Solute ALT to be released)
+
+	* types.properties: added Solute type ALT
+
+2017-09-13-09:35  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (useBody): Reintroduce useBody for the infusion into PV case.
+
+2017-09-08-16:33  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (context): New meta-parameter to constrain/coerce other parameter values and choose which transfer function is used from Body to HepStruct.
+
+2017-08-16-17:02  gepr  <gepr@tempusdictum.com>
+
+	* batch_control.properties (runFileBase): Delete because we're now running all 3 different profile measures "outFract", "doseFract", and "extRatio".
+
+2017-06-23-12:36  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties (drCapDelta,drPrDelta): Rename drDelta to drCapDelta and add drPrDelta, which is the amount by which the probability of reaction will be decremented or incremented as a function of the presence of "downRegulatedBy" Solute types.
+
+2017-06-21-16:03  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties (drDelta): New parameter specifying how much EG.Capacity to replenish or decrement for each event.
+
+2017-05-10-09:17  gepr  <gepr@tempusdictum.com>
+
+	* [hepstructspec|isl|metabolic].properties: Switch to a default parameter set for culture.
+
+2017-05-02-16:31  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties (rxnProdsToCount): New parameter indicating which Solute types to include in the rxn count.
+	* batch_control.properties (measureHSolute): measureRxnProducts → measureHSolute to better reflect the actual meaning.
+
+2017-04-14-15:28  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties: Options of fraction or extraction changed to doseFraction = output/max, outputFraction = output/input, or extraction = (input-output)/input.
+
+2017-04-05-13:43  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (ssLastLayer[Clamped|Circ|Length]): New parameters to indicate that the last layer (zone 2/III) is clamped to particular values.
+
+2017-03-22-11:19  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties (drInterval): Change drRate to drInterval to better match its usage.
+
+2017-03-17-16:02  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties (downRegulatedBy, downRegulated): Removed dynamic property "downRegulated".  Added hard property downRegulatedBy.  If ∄ downRegulatedBy or it's empty, then the EG isn't down regulated.
+	* isl.properties (dr[Rate|Remove|Replenish]): Moved to metabolic.properties.
+	* isl.properties (cytokineThreshold): Unused in the code so deleted.
+
+2017-03-14-09:55  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties: Distinguish between 2 map property types: map1d and map2d, for structures like APAP => 1.0 and APAP => <1.0,1.0>, respectively.  Change occured in Parameters mainly to read in Doses (and their ratios) separately from the SoluteTypes specified in the new types.properties.
+	* delivery.properties, types.properties: Split out Solute type parameters into their own properties file.
+

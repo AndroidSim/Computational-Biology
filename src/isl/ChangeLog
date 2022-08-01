@@ -1,0 +1,1254 @@
+2021-06-10  aks   <drandrewksmith@gmail.com>
+
+    * measurement/CountBoundIntraHPerSlice.java: new class to count all bound mobile objects within a cell.
+    * measurement/CountIntraHPerSlice.java (step method): removed previous code block (see below).
+    * measurement/Observer.java (scheduleHMobileObjectMeasure()): changed call to new measurement class, CountBoundIntraHPerSlice.
+
+2021-06-09  aks   <drandrewksmith@gmail.com>
+
+    * measurement/CountIntraHPerSlice.java (step method): added code block for the measurement to count all bound intracellular mobile objects.
+    * measurement/Observer.java (scheduleHMobileObjectMeasure()): added code block for the bound intracellular mobile objects measurement that schedules and formats the measurement for the ouput files.
+
+2019-08-13  gepr  <gepr@zareason-mediabox5330>
+
+	* io/HepInit.java: Promote the type for the elements read from JSON files from Integer to Object in order to allow [de]serializing deep structures like Maps.
+	(addHepatocyte()): Add the RxnProbMap (with stringified keys) to the JSON output. The map is ignored when reading the HepInits, but calculation of the RxnProb should be the same because it's a function of the d[CP]Vs in the JSON files.
+
+2019-06-26-17:30  gepr  <gepr@tempusdictum.com>
+
+	* measurement/SSGeom.java (Obs): New measure for SS geometry. For each trial, output a table of SS_Id, Layer, Circ(umference), and Length.
+	* measurement/Observer.java(init()): Add an SSGeom measure to the one-time observations.
+
+2019-06-25-16:50  gepr  <gepr@tempusdictum.com>
+
+	* measurement/GraphObs.java: New observable to measure graph properties. This version only writes an adj matrix.
+	* measurement/Observer.java: Add new observables section for observables that will only be executed once.
+	(step()): The first time through, execute the onceObservables list, then clear it.
+
+2018-11-21-16:52  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-04-06-11:16  gepr  <gepr@tempusdictum.com>
+
+	* measurement/[CountNecTrigs|CountNecroticCells]: Δ Time_of_[Necrosis|NecTrig] to Time for the header.
+
+2018-04-05-11:34  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Add new measure to CountStressedCells.
+	* measurement/CountStressedCells.java: New measure.
+	* measurement/CountHepState.java: New source observation, which provides data to the new CountStressedCells measure.  The other Hepatocyte state measures (CountNecroticCells and CountNecTrigs) will be refactored to also use this instead of iterating over the HepStruct nodes and reading the convenience structure there (e.g. SS.necTrigCells).
+
+2018-04-04-12:13  gepr  <gepr@tempusdictum.com>
+
+	* measurement/NecTrigSnap.java: Initialize to "normal" rather than empty.  Change from incrementing state (++ for each predicate) to enumerative states because often, a triggered Cell is no longer stressed, which made a triggered Cell measure as a stressed Cell.  Decrement the reported snapshot cycle to reflect the fact that measures execute after the model executes it's cycle++ increment.
+
+2018-04-03-09:10  gepr  <gepr@tempusdictum.com>
+
+	* measurement/NecTrigSnap.java: Change from iterating over HepSpace to iterating over a list of Hepatocytes. Add a 4th state: no Cell, normal, stressed, triggered, necrotic.
+
+2018-03-12-10:12  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Only schedule necTrig snaps when the takeNTSnaps parameter is true.
+	* measurement/NecTrigSnap.java (step()): Add logic to only take a snapshot if/when a necTrig state changes (new trigger or state change removing the trigger).
+
+2018-03-09-10:54  gepr  <gepr@tempusdictum.com>
+
+	* measurement/NecTrigSnap, Observer: New separately managed (does not inherit from Obs) measure for taking snapshots of SSes which contain Hepatocytes that have triggered necrosis.
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv merged from ^/trunks/islj into ^/branches/islj-hepn vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2018-08-22-09:32  gepr  <gepr@tempusdictum.com>
+
+	* io/Parameters.java (getProbVal()): Change boolean "validate" parameter to an enum that selects between 2 types of test, one that ensures the map2d values sum to 1.0 ("sums" test) and one that verifies all the elements of the map2d keys exist as Cell subclasses ("exists" test).
+
+2018-08-17-08:59  gepr  <gepr@tempusdictum.com>
+
+	* io/Parameters.java (getPropVal()): Add polymorph to specify whether "validation" should be done. In the case of the new cellEnterExitProbs, the numbers won't add to 1.0, so "validate = false".  But in the case of reaction products, "validate = true". Called without the validate argument assumes "validate = true".
+
+2018-03-23-09:41  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountIntraHPerSlice.java (ALTKEY): No need to add this to soluteTypes because it's listed in types.properties.
+
+2018-03-22-10:38  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-03-12  aks   <drandrewksmith@gmail.com>
+
+	* measurement/CountIntraHPerSlice.java: added a block to calculate the amount of ALT within Hepatocytes from the counter ALTamount through the method getALTAmount().
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ merged from ^/trunks/islj into ^/branches/islj-hepn ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2018-02-13-09:07  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Only install MIT measures if the new parameter measureMITs == true.
+
+2018-02-12-12:14  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountMITsPerSlice.java, Observer: New measure for "membrane interaction types" (MITs), extending CountIntraHPerSlice.
+	* measurement/CountCellAdj, CountLSS, CountIntraHPerSlice, Observer: Refactor location-specific measures to better handle SoluteType list and headers.
+
+2018-02-07-10:23  gepr  <gepr@tempusdictum.com>
+
+	* project-wide: New package isl.model.cell, affecting too many files to list.
+
+2018-02-06-16:32  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountCellAdj, CountExtraCellularSolute, CountIntraPerSlice (step()): bsg.util.CollectionUtils.countType[s]() → countObjects[By|Of]Type().
+	And Cell.solutes is no longer publicly visible.
+
+2018-01-08-09:51  gepr  <gepr@tempusdictum.com>
+
+	* Merge in islj-exloc, which adds a new measure (celladj) and adds functionality to the analyze- and compare-experiments.sh scripts.
+
+2018-01-05-10:30  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountCellAdj, CountXCLSS, Observer (CountLSS): Change "eXtraCellular Location-Specific" (xcls) to "cell adjacent" (celladj), which better represents the measure since we're not measuring the InnerSpace or Bile.
+
+
+2018-01-02-13:45  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (RxnProductCounts): Use a loop to avoid cut-n-paste code.
+	(CountSoluteInCompartment): 2 new measures to count amounts in PV and CV.  Perhaps temporary.
+	* measurement/Observer.java (soluteTypes): Promote to instance variable for use across more measures.
+	* measurement/Obs.java: Remove "abstract" qualifier, since it can be instantiated.
+	* measurement/CountXCLSS.java, Observer.java: New measure of extraCellular, Location-Specific Solute (XCLSS).  Only measures the Solute in the ESpace, SoD, and HepSpace, subtracting the intraCellular Solutes (both ECs and Hepatocytes).
+	* measurement/CountLSS.java (Obs): New intermediary (location-specific solute) to capture similarities between the new XCLSS and IntraH measures.
+	* measurement/CountIntraHPerSlice.java (CountLSS): Inherit from new intermediary parent to capture the similarities between IntraH and extraCellular-location-specific (XLS) Solute measures.
+
+2017-11-07-09:06  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountIntraHPerSlice.java (init()): Use the new static Strings for 'GSH_Depletion' and 'Repair'.
+	(step()): Hard code an entry for Repair, analogous to the other false Solute GSH_Depletion.
+
+2017-10-18-11:25  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ProfileMeasures.java (step(), derivedStep()): Move old code that calculates the derived measures out of the way (into derivedStep()) and change step() to measure input or output, depending on the VasType (IN or OUT).
+	* measurement/Observer.java (init()): Replace the 3 ProfileMeasures instances (outFract, doseFract, extRatio) with 2 ProfileMeasures instances, one that measures input and one that measures output.  Write these to the files raw[In|Out]put-????.csv.  A hard-coded boolean (rawIO=true) is used to preserve the code for the old code that outputs the derived measures, just for now in case we want to use them.
+
+2017-10-09-10:23  gepr  <gepr@tempusdictum.com>
+
+	* io/HepInit,measurement/Observer,measurement/view/[HepStruct|Node]View: Change "zone" to "layers" throughout.
+
+2017-09-13-09:36  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Test useBody before creating the Obs(ervation) for it.
+
+2017-09-01-15:18  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (chooseSoluteTypes()): allSolute moved from DeliveryMethod to ISL.
+
+2017-08-16-17:04  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ProfileMeasures.java (measureType): Add new enum for the profile measure types and change the constructor to use them.
+	* measurement/Observer.java (init()): Install 3 separate ProfileMeasures objects, one for each of "outFract", "doseFract", and "extRatio".
+
+2017-08-02-17:18  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Don't schedule CountHPerSlice since it's a one-time measure.
+	(chooseSample()): Delete.
+	* measurement/CountHPerSlice.java (step()): Throw a runtime exception if step() is called.
+	* measurement/CountHPerSlice.java (init()): Instead of piping the d[PC]V to a String directly, put it in an ArrayList<Integer> and sort it, then convert to String headers.
+	* measurement/CountIntraHPerH.java: Delete.
+
+2017-07-31-17:19  benoitb  <benoit.baillif@gmail.com>
+
+	* measurement/CountHPerSlice.java : Added to count the number of hepatocyte per dPV or dCV.
+	* measurement/Observer.java (init()) : Removed the use of the sampling function. Now, all hepatocytes are used in the output data. Added the feature to count the hepatocyte per slice using the new CountHPerSlice class.
+
+2017-07-26-12:21  benoitb  <benoit.baillif@gmail.com>
+
+	* measurement/Observer.java : Set sample_perc = {1, 1, 1} (Previous : {0.3, 0.3, 0.5}). Since now the hsolute files are organized per dPV, and no more per hepatocyte, these files can handle the data for all the hepatocytes.
+
+2017-07-18-15:55  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init(), scheduleHSoluteMeasure()): Calculate the list of sampledCells across all zones before scheduling the perSlice intraH Solute measure(s).
+
+2017-06-19-11:59  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (scheduleHSoluteMeasure()): Remove old intraHPerH measure (commented out, still available).
+
+2017-06-15-15:28  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (scheduleHSoluteMeasure()): Forgot to use the boolean "false" to measure with dCV instead of dPV.
+
+2017-06-15-10:06  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (scheduleHSoluteMeasure()): Used both IntraH measures and verified an aggregate over the PerH produced the same numbers as the PerSlice.
+	* measurement/CountIntraHPerSlice.java, CountIntraHPerH.java: Add new intra-H measure that aggregates Solute counts over a slice (dPV or dCV).  Reconfigure CountIntraHPerH so that commonalities between the two measures are more obvious.  If we keep the PerH measure, we'll want to insert a parent between them and the current parent Obs.
+
+2017-06-14  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (chooseSoluteTypes(), chooseSample()): New methods moved from CountSoluteInHs (now renamed CountIntraHPerH) since we want to decouple these choices from that particular measure.
+
+	* measurement/CountIntraHPerH.java: Rename from CountSoluteInHs to be more meaningful since the output is per Hepatocyte.  And make room for a new intraH measure.
+	(init()): Change method signature to accept the list of sampled Cells and the relevant Solute Types, now determined by Observer.
+
+2017-05-10-09:20  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java: Include a reaction field for dCV.  Also change the output file name to include dCV or dPV.
+	* measurement/GetRxnProdCount.java: Polymorphs for either dPV or dCV using the isl.model.Vas.VasType as the mode switch.
+
+2017-05-02-16:33  gepr  <gepr@tempusdictum.com>
+
+	* measurement/GetRxnProdCount,Observer: New measure to measure how many of particular Solute types are created by ReactionHandler.
+	* measurement/CountSoluteInHs,Observer,BatchControl,ControlParams: rxnProduct → solute to better reflect what this measures.
+
+vvvvvvvvvvvvvvvvvvvvvvvv from islj-zb vvvvvvvvvvvvvvvvvvvv
+
+2017-04-20-16:43  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountExtraCellularSolute.java: Fixed bug where I forgot to add in CV.solutes.  Also included CV.passedSolute in the count.
+
+2017-04-18-14:39  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ProfileMeasures.java: Add comment about the 3 Δ types of profile measure.
+	* measurement/Observer.java: Add the new CountExtraCellularSolute measure.
+	* measurement/CountSoluteInHs.java: Renamed from CountReactionProducts.
+	* measurement/CountExtraCellularSolute.java: New measure that counts extracellular Solute by subtracting intracellular Solute from the combined Solute in the SSes and the Vasa.
+
+2017-04-17-14:31  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer, ISL[Fraction|ExtRatio]Obs, ProfileMeasures: Replace both ISLFractionObs and ISLExtRatioObs with new ProfileMeasures.
+	(DOSE_FRACTION): No longer mulitply by scale.
+
+2017-04-17-10:33  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ISLExtRatioObs.java: For input, use the ISL's "inputs" IVar, which should be correct regardless of context (liver vs. culture) and where Dose is being injected.
+
+2017-04-14-15:30  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java(init()): Add option for [dose|output]Fraction and extraction.
+	* measurement/ISLExtRatioObs.java: Change extraction to be (input-output)/input, implement outputFraction = output/input.
+
+^^^^^^^^^^^^^^^^^^^^^^^ from islj-zb ^^^^^^^^^^^^^^^^^^^^^^
+
+vvvvvvvvvvvvvvvvvvvvvvv from islj-drd vvvvvvvvvvvvvvvvvvvvv
+
+2017-03-24-10:27  gepr  <gepr@tempusdictum.com>
+
+	* measurement/[ISLEnzymeObs|Observer]: Add option to index EG data based on d[PC]V, writing to different files.  Also write records for every time step to simplify the data reduction process.
+
+2017-03-22-11:26  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java: Pass the Cells selected by ReactionObs to the EnzymeObs.
+	* measurement/ISLEnzymeObs.java: Change from writing 1 file per EG and indexed by zone to a single file indexed by dPV:dCV:EG, where all the capacities at each dPV:dCV and for any given EG are summed.  Also only write the data if it's changed.
+	* measurement/EventObs.java: getDistanceFrom[PC]V() → getD[PC]V(boolean).  Shorten the method name and add a boolean if true, use the actual d[PC]V, false ⇒ use the possibly fake one read from hepinit json files.
+	* measurement/CountReactionProducts.java(init()): Change to return the ArrayList<Hepatocyte> so the same Cells can be measured for the enzyme group capacities.
+
+2017-03-17-16:04  gepr  <gepr@tempusdictum.com>
+
+	* io/Parameters.java: Added the new type "string list".  E.g. downRegulatedBy = Cytokine; APAP
+
+2017-03-15-12:14  gepr  <gepr@tempusdictum.com>
+
+	* io/Propertied.java: Forgot to add the new Propertied superclass for Solute[Type] and EnzymeGroup.
+
+2017-03-14-10:20  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountReactionProducts.java(init()): Use separated SoluteTypes from Dose info.
+	* io/Parameters.java: Move from isl.measurement.view to isl.io.  Distinguish 2 types of map, map1d and map2d, for reading in structures like APAP => 1.0 and APAP => <1.0,1.0>, respectively.
+	* io/HepInit.java: Remove import to old location of Parameters (isl.measurement.view.Parameters).  Parameters is moved to isl.io.
+	* *.properties, *.js: Moved to resources/cfg.
+
+^^^^^^^^^^^^^^^^^^^^^^^ from islj-drd ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+vvvvvvvvvvvvvvvvvvvvvvv from islj-btr vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2017-02-24-09:06  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java: Delete all references to context and useBody.
+	* delivery.properties (bodyXferTypes): New parameter specifying which Solute types transfer from the Body to the PV.
+	(scriptLocation, scriptParams, scriptInputs): Deleted. Now hard-coding the transfer function in Java.
+	* isl.properties (bodyXferRate, bodyXferMod, recirculate): New parameters for the transfer function from Body to PV of the form: δ = bodyXferMod * |Body| * (1 - e^(-rt)).
+	* (useBody, context, flushCulture, flushEfficiency, flushInterval): Deleted.
+
+^^^^^^^^^^^^^^^^^^^^^^^^ from islj-btr ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2017-02-16-16:25  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java: Raise sample_perc for CountReactionProducts to {0.3,0.3,0.5}.  Add logic to init() so that if there are > 3 layers/zones, subsequent zones will use the last value.
+
+2017-01-17-16:56  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountReactionProducts.java: Add dCV to rxnProduct column headers.
+
+2017-01-17-16:55  gepr  <gepr@tempusdictum.com>
+
+	* *.properties, hepinit: Change to match a reasonably close calibration to PLoS-CB, which used an older iteration.
+
+2016-12-05  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties: Deleted binding probability script and related parameters.
+
+2016-11-17-14:22  gepr  <gepr@tempusdictum.com>
+
+	* [delivery|metabolic].properties: Move rxnPro[bd] from delivery.properties to metabolic.properties.  Include a sample EnzymeGroup for APAP⇒PAP. Remove the "bindable" and "metabolic" properties because they are implied (or not) by the other metabolic.properties.
+
+2016-10-26-16:44  gepr  <gepr@tempusdictum.com>
+
+	* [delivery|metabolic].properties: New entries for PAP.  Also tests new ordering property.
+
+2016-10-22  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): use new (static variable) path for accessing the MetabolicEnvironment.
+
+	* [isl|metabolic].properties: Move bindersPerCell[Max|Min] from isl to metabolic properties.o
+
+2017-04-27 aks <drandrewksmith@gmail.com>
+
+	* delivery.properties: added an "ALT" Solute. if this Solute is not present then the ALT release mechanism is not active. 
+
+	* isl.properties: added features "ALTmax" and "ALTthreshold" for the ALT release mechanism
+
+
+2016-09-08  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountSoluteInCompartment.java (Obs): Copy solute map from target, since Compartments now use integer counts of solute, rather than a list of Solute objects.
+
+	* (isl|delivery|metabolic).properties: Approximate match to PLOS MGNZ experiments.
+
+2016-08-08-10:19  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (flushCulture, flushEfficiency, flushInterval): New parameters to control how the Culture Medium is flushed.
+
+2016-07-13-16:22  gepr  <gepr@tempusdictum.com>
+
+2016-07-13-16:18  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Add CountNecTrigs measure to output to nectrig-????.csv.
+
+	* measurement/CountNecroticCells, EventObs, CountNecTrigs (EventObs): Demoted CountNecroticCells under new super EventObs to support the new sibling CountNecTrigs.
+
+2016-06-30  gepr  <gepr@tempusdictum.com>
+
+	* io/HepInit.java (hepatocyte_records): Change from {id,dPV,dCV} tuple to a map id→{dPV,dCV} to support repeatability.
+
+2016-06-28  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Add context=LIVER condition for measuring the Body.  Add new measure for the contents of the Cutlure Medium.
+
+2016-06-24  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountReactionProducts.java(init()): Use h.getDistanceFromPV() rather than summing h.myY+ss.priorPathLength.  This supports reading dist_[pc]v from a file.
+
+	* isl.properties: New parameters hepInit[Read|Write] to indicate whether or not to read or write hepatocyte variables from a file.  The salient variables are dist_pv and dist_cv.  If you read them from a file, it will select a random hepatocyte from the file and use the dist_[pc]v values from the file instead of generating them.
+
+2016-06-20  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountReactionProducts.java: Use Java 8 functional iteration constructs.
+
+2016-06-10-15:46  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (z?_sample_perc, init()): Replace with an array so the code is neutral to the number of zones (defined in the hepstructspec.properties file.
+
+2016-06-07-16:14  gepr  <gepr@tempusdictum.com>
+
+	* *.java: lobule → hepStruct throughout.
+
+2016-06-07-16:12  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (rsrcGradientScriptLocation): eiGradient → rsrcGradient, ei-gradient → rsrc-gradient.
+	(context): New parameter indicating whether the experiment context is a Liver or a Culture.  Only "liver" makes any sense now.  "culture" will exit with an error.
+
+2016-05-28-13:39  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties, CountNecroticCells, Observer: "death" → "necrosis".
+
+2016-04-28-15:27  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties (bindProbScript[Params|Inputs]): New parameters passing directly from .properties to bind-prob-function.js.  They are JSON formatted arrays of strings.
+
+	* isl.properties (eiGradientScript[Params|Inputs]): New parameters passing directly from the .properties file to the E[IL] script (ei-gradient-function.js).  They are JSON formatted arrays of strings.
+
+2016-04-28-15:23  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties(script[Params|Inputs]: New parameters passing directly from the .properties file to the dosing scripts (dose-function.js and constant-conc-function.js).  They are JSON formatted arrays of strings.
+
+2016-04-20  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties(dose.?.infusionConcMax): Pass this parameter from .properties to the constant-conc-function.js script.
+
+2016-04-18  gepr  <gepr@tempusdictum.com>
+
+	* metabolic.properties (bindProbScriptLocation): Add script location to .properties file.
+
+	* isl.properties (bind[Prob|Cycles]): Obsolete.
+	(eiGradientScriptLocation): Add script location string to the properties file.
+
+	* delivery.properties: scriptFile → scriptLocation, for better semantics to the variety of prefixes (classpath: vs. http:).
+
+2016-03-30  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ISLFractionObs.java: MyInt → MutableInt.
+
+2016-03-09  gepr  <gepr@tempusdictum.com>
+
+	* */*.java: isl.util → bsg.util.
+
+2015-09-21  gepr  <gepr@tempusdictum.com>
+
+	* util/SRControl.java: MASON deprecated exists and get[Float|Double], using new method names.  Replaced inappropriately synchronized Vector class with ArrayList.  Test for some null objects like tagstr.  Remove explicit calls to printStackTrace().
+
+	* util/PRNGWrapper.java: Suppress "serial" warning because it hides the UID from RandomEngine.
+
+	* util/CollectionUtils.java (indexOf()): Avoid "rawtypes" warning by setting Comparator type to Object.
+	(lastIndexOf(), shuffle()): Avoid rawtypes warning by adding generics wildcard <?>.  This means we get "unchecked" warnings when we use shuffle().
+
+	* table/Table.java (getColumNames(), getRowMap()): Replace generics wildcard (?) with String, since that's what they are.
+	(columnIndexOf()): Avoid "rawtypes" warning by setting Comparator type to Object.
+
+	* table/DefaultTable.java (getColumnNames(), getRowMap()): Replace generics wildcard (?) with String, since that's what they are.
+
+	* measurement/Observer.java (log): Make final.
+	(step(), flush(), finish()): Replace for loop with stream().forEach.
+
+	* io/DataScanner.java (methodCache): Add generics wildcard.
+
+2015-08-25  gepr  <gepr@tempusdictum.com>
+
+	* util/Complex[Math].java: For upgrade from commons-math-2.2.jar to commons-math3-3.5.jar.  Changed to commons' MathParseException.  Changed PI.multiply() args from ints to doubles.  Use singleton object EuclideanDistance for obsolete class method.
+
+2015-04-01  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ISLExtRatioObs.java (step()): Fix extraction ratio output bug where, after infusionStopTime, Time was reported as 0.0.
+
+2015-03-23  gepr  <gepr@tempusdictum.com>
+
+	* util/ScriptEval.java (main()): Add arguments to make the unit tester more flexible.
+
+	* util/SRControl: Change bolus to dose in variable names. Make changes recommended by Netbeans.
+
+	* measurement/CountReactionProducts.java (init()): Change BolusEntry to DoseEntry.
+
+	* delivery.properties (referenceDose): New parameter specifying the number of total Solute objects to instantiate for that dose.  bolusRatio was changed to doseRatio and the meaning is no longer "ratio between this solute and other solutes" (where the sums of all bolusRatios for a dose = 1.0).  The meaning of doseRatio is "ratio between this solute and referenceDose" (where each solute can have any amount of the referenceDose, even where doseRatio > 1.0).  E.g. if Marker.doseRatio = 1.5 and referenceDose = 100, then there will be ~150 Marker objects created.  Also note that the default script name changed from bolus-dose-function.js to dose-funciton.js.
+
+2015-03-06  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (finish()): Call flush() then OutputLog.finish() to let the system finish GZipping the OutputLogs.
+
+	* measurement/Obs.java (constructor): Provide the option of an Obs GZipping its OutputLog.
+
+	* measurement/CountReactionProducts.java (constructor): Call super() with the new GZip flag = true.  We GZip this Obs by default because they include so much data.
+
+	* measurement/[CountDeadCells,CountSoluteInCompartment,DataModelObs,ISLEnzymeObs,ISLExtRatioObs,ISLFractionObs,RefModelObs] (constructor): Call super() with the new GZip flag set to false.
+
+	* io/OutputLog.java (gzo): Provide the option for GZipping any OutputLog via a constructor boolean parameter.
+
+2015-03-04  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties: Updated to include (but not use) 2nd dose with example NecInhib and NAC entries.  Removed those from the 1st dose (because the addition of the unique "allSolute" hash obviates empty entries in the 1st dose).
+
+2015-02-26  gepr  <gepr@tempusdictum.com>
+
+	* util/CollectionUtils.java (describe(), addIn()): Tools for examining and summing Maps.
+
+	* measurement/ISLExtRatioObs.java (step()): Change the location where we measure input from isl.getSoluteIn() to isl.delivery.getSoluteIn(), which reflects the fact that doses can go to 1 of several targets.  So, now we measure the dosage directly rather than trying to measure it in the analog's functional components.  This happens to match referent experiment measures better, anyway, since extraction ratio is calculated based on infusion concentration.  Also note that we execute a isl.delivery.clearSoluteIn() at the end of this measure, making it exclusive.
+
+2015-02-24  gepr  <gepr@tempusdictum.com>
+
+	* util/StringUtils.java (convertStreamToString()): Throw an exception if the stream is null (i.e. if the script couldn't be found in the resource location).
+
+	* util/ScriptEval.java: Add copyright header.
+	(constructor): Catch and rethrow an exception if the dose scriptFile can't be found.
+
+	* measurement/Observer.java (init()): Determine which measure to use based on the new profileMeasure parameter.
+
+	* measurement/ISLFractionObs.java (step()): Measure output fraction using the total of that Solute for the divisor, rather than the total of all Solute.  E.g. of = |Marker|/|Marker_total| rather than |Marker|/|Solute_total|.  This raises the measure by 1/bolusRatio for that Solute type.
+
+	* measurement/ISLExtRatioObs.java: Add copyright header.
+
+	* measurement/CountReactionProducts.java (init()): Use new, uniquely populated ArrayList DeliveryMethod.allSolute as the reference list for Solute types, rather than the contents of the 1st dose.
+
+	* delivery.properties(deliveryType): Move deliveryType under dose so that each dose can have a separate delivery type (bolus vs infusion).
+	(scriptFile): New scriptFile property for each dose, specifying which script to execute for that dose.  These files are found via getResources, under isl/model directory.
+	(time): Move time under dose property.
+	(infusionStopTime): If dose.?.deliveryType == infusion, specify dose.?.infusionStopTime in order to stop it.
+	(profileMeasure): Which measure to use for profiles: output fraction ("fraction") or extraction ratio ("extraction").
+
+2015-02-13  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (scheduleRxnProdMeasure()): Use the new measureAllSolute boolean.
+
+	* measurement/CountReactionProducts.java (init()): Replace unused specific Solute type parameter with a boolean allTypes parameter, allowing these measures to measure all known solute in the cell not just the reaction products.  That's set by a batch_control.properties entry.
+
+	* delivery.properties (pGSHUp): Yet another gshUp parameter, this one to specify a probability by which a gshUp Solute will have an effect and decrease the gsh_accumulator.  Also, since for this hack this Solute has to stay inside Hepatocytes without being bound to a Binder, this parameter does double duty and, if present, prevents non-active gshUp Solute from leaving the Hepatocyte.
+	(gshUp): This parameter now decreases the accumulator (clamped at 0) rather than increasing the GSH threshold.
+
+2015-02-12  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties (dose.0.solute.9): Added a NAC Solute.  Ideally, this would merge with previous NecInhib Solute.  But an urgent timeline requires that merge to wait.
+
+	dose.0.solute.9.bindable = false
+	dose.0.solute.9.bolusRatio = 0.8
+	dose.0.solute.9.numProps = 4
+	dose.0.solute.9.property.0.key = membraneCrossing
+	dose.0.solute.9.property.0.type = boolean
+	dose.0.solute.9.property.0.val = true
+	dose.0.solute.9.property.1.key = bileRatio
+	dose.0.solute.9.property.1.type = real
+	dose.0.solute.9.property.1.val = 0.0
+	dose.0.solute.9.property.2.key = core2Rim
+	dose.0.solute.9.property.2.type = real
+	dose.0.solute.9.property.2.val = 0.5
+	# whether this Solute increases the GSH threshold and by how much
+	dose.0.solute.9.property.3.key = gshUp
+	dose.0.solute.9.property.3.type = real
+	dose.0.solute.9.property.3.val = 1.0
+	dose.0.solute.9.tag = NAC
+
+
+2015-02-09  gepr  <gepr@tempusdictum.com>
+
+	* util/CollectionUtils.java (shuffle()): Change "random" to "rng" to avoid confusing it with SimState.random.
+
+	* measurement/Observer.java (Constructor): Update javadoc.
+	(scheduleRxnProdMeasure()): Use an array that Observer will execute rather than the schedule. Remove interval parameter. They'll be executed every cycle like the others.
+	(step()): Manually execute observations rather than using the schedule.
+	(count_solute_delta_t): Remove. Take data every cycle.
+
+	* measurement/CountReactionProducts.java (init()): Use a temporary pRNG in order to avoid changing the pRNG stream when we add these measures.
+	(step()): Change StringBuffer to StringBuilder.
+
+2015-01-29  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Use new convenience method scheduleRxnProdMeasure().  Separate zone 1 and 2 reaction product measurements.
+	(scheduleRxnProdMeasure()): New convenience method.
+
+	* [delivery|isl].properties: Use format output by SRControl (i.e. alphabetical).  Use "new-default" ("control") values from heptox manuscript, except modified batch_control.properties for small development executions.
+
+
+	vvvvvvvvvv isl-is branch development vvvvvvvvvvvvv
+	
+
+2015-08-19 Dorian Lombard <lombarddorian@gmail.com>
+
+	* isl.properties: Added inducesToxicMediatorTreshold and inducesProtectiveMediatorTreshold.
+
+	* delivery.properties: Added ToxicMediator and ProtectiveMediator solutes and "inducesToxicMediator" property to N solute
+
+2015-03-31 bkp <b.p@berkeley.edu>
+
+	* metabolic.properties: Specified that KupfferCells contain “nonspecific” 
+	EnzymeGroups by default.
+
+2015-03-10 bkp <b.p@berkeley.edu>
+
+	* isl.properties: Removed bindProb and bindCycles because they are now 
+	EnzymeGroup-specific.
+
+	* metabolic.properties: Specifies properties of EnzymeGroups, including which 
+	Cells are to contain which EnzymeGroups. Formatting is similar to Solute 
+	properties.
+
+	* measurement/Observer.java: Creates a new ISLEnzymeObserver for each type of 
+	EnzymeGroup.
+
+	* measurement/ISLEnzymeObserver.java: Sums capacity values of a specific 
+	EnzymeGroup over all Hepatocytes.
+
+2015-01-16 bkp <b.p@berkeley.edu>
+
+	* delivery.properties: Fixed a bug where numProps default values were too small 
+	for LPS and Cytokine, causing “inflammatory” and “pDegrade” properties, 
+	respectively, to be ignored.
+
+2015-01-13 bkp <b.p@berkeley.edu>
+
+	* isl.properties (kcDensity): New parameter [0,1] to control the fraction of grid
+	points in eSpace to contain a KupfferCell. Note ecDensity + kcDensity must be <=
+	1.0.
+
+
+2015-01-09 bkp <b.p@berkeley.edu>
+
+	* delivery.properties: Added entries for Cytokine and LPS.
+
+	* isl.properties (drReplenish): New parameter [0,1] that controls the probability
+	to replenish an Enzyme when 1) the elimination queue is empty, 2) there are fewer
+	Enzymes than at the start of the simulation, and 3) there are no Cytokines.
+
+	* isl.properties (drRemove): New parameter (0,1] that controls the probability
+	that a 	Cytokine schedules an unbound Binder to be removed. At most 1 Binder can
+	be scheduled to be removed each SCyc.
+
+	* isl.properties (drRate): New parameter (natural) that controls the rate at which
+	Binders are scheduled to be removed. A Binder is scheduled to be removed drRate
+	SCycs after the end of the queue.
+
+2015-01-09 bkp <b.p@berkeley.edu>
+
+	* isl.properties (inflammatoryStimulusThreshold): New parameter that controls the
+	threshold of inflammatory objects above which Cytokines can be created.
+
+	* isl.properties (cytokineThreshold): New parameter that controls the threshold of
+	Cytokine objects above which Cytokines cannot be created.
+
+	* isl.properties (exponentialFactor): New parameter that scales the probability of
+	a Cytokine being produced. That probability = 1 - exp(-1*(#InflammatoryStimuli -
+	inflammatoryStimulusThreshold)/exponentialFactor).
+
+
+	^^^^^^^^^^^^^^ isl-is branch development ^^^^^^^^^^^^
+
+
+
+2014-12-23  gepr  <gepr@tempusdictum.com>
+
+	* util/CollectionUtils.java (CollectionUtils): Remove my irresponsible System.print statement.
+
+2014-10-15  gepr  <gepr@tempusdictum.com>
+
+	* util/SRControl.java: Change METABOLITES to REACTIONPRODUCTS and metProb to rxnProb.
+
+	* measurement/Observer.java: Rename metabolite with rxnProduct(s).
+
+	* measurement/CountReactionProducts.java: Moved
+	CountMetabolites.java to CountReactionProucts.java.  Also some
+	cleanup, removing unused imports and replacing explicit
+	constructor generics with the implicit <>.
+
+	* delivery.properties: Change Compound to oAPAP, metProb to
+	rxnProb, metabolites to rxnProducts, metProbGradient to
+	rxnProbGradient, Metabolite_N to N, Damage1 to nMD, and Damage2 to
+	MitoDD, Metabolite_A to G, and Metabolite_B to S.
+
+2014-10-14 aks <drandrewksmith@gmail.com>
+
+	* SRControl.java (isl.util): commented out some log.debug lines and added a way for spatial 		parameters to have PV = CV when in SR.properties the min and max values are just a single 		number instead of number:number.
+
+2014-10-13 aks <drandrewksmith@gmail.com>
+
+	* SRControl.java (isl.util): some changes to try to fix the floating-point rounding issue 	  when enforcing the constraint that the sum of the production map values = 1.0.  The issue 		throws the following errors:
+	Exception in thread "main" java.lang.RuntimeException: sum of map values 		<0.9999999999999999,1.0> != 1.0
+or
+	Exception in thread "main" java.lang.RuntimeException: sum of map values <1.0000000000000002,1.0> != 1.0
+
+	Also, added a way for independently varying the PV and CV values of spatial parameters.
+
+2014-10-08 aks <drandrewksmith@gmail.com>
+
+	* SRControl.java (isl.util): modified main() to write isl.properties and delivery.properties 		with different parameters to a set of experiment directories, the number of which specified 		by the parameter numSRexps in SR.properties.
+
+2014-10-07  gepr  <gepr@tempusdictum.com>
+
+	* util/ScriptEval.java: Change handling of return value from
+	JavaScript to accommodate new Java 8 script engine "nashorn",
+	which distinguishes between Integer and Double.  Perhaps using
+	Number might be cleaner than introspection.
+
+	* util/Gamma.java(factorial(), lgamma()): Suppress "fallthrough" warnings.
+
+	* util/CollectionUtils.java: Stop suppressing "unchecked"
+	warning. Use generics. Remove polymorphic methods for handling
+	solute Bags (solutes is an ArrayList now).
+	(shuffle()): New method to shuffle ArrayLists, stolen from MASON's Bag.shuffle().
+
+2014-10-05 aks <drandrewksmith@gmail.com>
+
+	* SRControl.java (isl.util): added random variation and file printing methods for both isl 	   and delivery parameter databases.
+
+2014-09-03 aks <drandrewksmith@gmail.com>
+
+	* Main.java: added a check to use SR controller (SRControl.java) before 
+	calling BatchControl.
+
+2014-09-03 aks <drandrewksmith@gmail.com>
+
+        * SRControl.java (isl.util): a utility to vary the parameters from the parameter 
+        files to be used for Sensitivity Runs (SRs)
+
+2014-07-24  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties (inhibitionPotency): New parameter for
+	adjusting how potent the NecInhib is.
+
+2014-07-17  gepr  <gepr@tempusdictum.com>
+
+	* [isl|delivery].properties: Test case to verify death inhibition
+	is working.  It took drastic changes to get a rescheduling event.
+	Dose 2 time set to 3000 cycles.  Set NecInhib transportOut = false
+	so that the inhibitor stays inside cells forever.  Increase the
+	amount of Damage2 produced from Metabolite_N so that more cells
+	will die.  Lower deathRange to <1,1> (only takes 1 Damage2 to
+	trigger necrosis).
+
+
+	
+2014-07-11  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Obs.java(writeOutputs()): Fix bug that seemed to
+	only show up in body_????.csv output where columns with no
+	representatives did not print, leading to misleading row print
+	outs.  E.g. when Metabolite_A first appears, it is printed right
+	next to Compound, which makes it seem like the Metabolite_A is
+	actually NecInhib.  New code prints a "0" when there is none of
+	that column present.
+
+2014-07-10  gepr  <gepr@tempusdictum.com>
+
+	* util/ScriptEval.java(script): Use local IVar script, scope, and
+	context rather than share them between ScriptEval instances.
+
+2014-07-09  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties: Include "inhibitsNecrosis" as an extra
+	parameter for NecInhib solute.
+
+	* [delivery|isl].properties: Canonical parameter vector for
+	necrosis inhibition development
+
+2014-07-08  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties: Canonical parameter vector for ELInhib use
+	case where the first dose is normal (with Compound, Marker, etc.)
+	and the second dose only has ELInhib.  Include new property
+	"unknownClearance", which is real valued and represents the amount
+	of this solute that is magically cleared as it otherwise would
+	have entered the CV.  If a prng draw is below "unknownClearance,
+	then it's redirected to the retiredSolute without ever having
+	entered CV.solutes.
+	(elInhibitFactor): New parameter, real valued, to say how much
+	this solute inhibits EL.
+
+2014-07-02  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties: Bring parameters in line with last EI4 results.
+
+	* delivery.properties: Bring parameters in line with last ISLM results.
+
+2014-07-01  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java (init()): Only create the
+	CountSoluteInCompartment for the isl.body if useBody = true.
+
+2014-06-30  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties: Add new Solute type "ELInhib" for the new
+	inhibitor.  Set metProb[Start&Finish] = 0.0.  Don't include
+	"metabolites" production map.  These will be the settings for
+	Solute that are bound, but not metabolized inside Hepatocytes.
+	Reordered so that Marker is first.
+
+2014-04-07  gepr  <gepr@tempusdictum.com>
+
+	* util/MyInt.java(toString()): Bring closer to other Java Numbers
+	to help in output of SampledCompartment measure.
+
+	* measurement/Observer.java: New measure for contents of (mouse)
+	Body.
+
+	* measurement/CountSoluteInCompartment.java: New class to measure
+	the contents of the (mouse) Body.
+
+	* throughout: MyInt -> Number.
+
+2014-04-02  gepr  <gepr@tempusdictum.com>
+
+	* util/ScriptEval.java(main()): Unit tests for the two dosage
+	scripts.
+
+	* delivery.properties (alpha,beta,gamma): Remove these "hard"
+	parameters and rely on the bolus-dose-function.js to set and use
+	parameters like those.
+
+2014-04-01  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (useIntro, introSample): New parameters for
+	choosing whether to dose an IntroCompartment rather than the body.
+	useIntro can only be true if useBody is true.
+
+2014-03-31  gepr  <gepr@tempusdictum.com>
+
+	* table/Table.java(addRow()): Fix generics use so that Netbeans no
+	longer complains.  This is an unused class which we should
+	probably delete.
+
+2014-03-24  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java(init()): Change name from "continual" to "infusion".
+
+	* isl.properties (useBody, bodySample): 2 new parameters for the (mouse) body.
+	(useBody): boolean whether or not to include a body in the
+	simulation, also implying recirculation from the CV, and
+	(bodySample): ratio specifying the amount of solute to flow from
+	the body into the PV.
+
+	* delivery.properties (deliveryType): Changed option string from
+	"continual" to "infusion" in order to distinguish internal
+	variables involved in a rescheduling a bolus function that has yet
+	to reach zero from the infusion use case.
+
+2014-03-20  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java: Use schedule orderings more to place
+	Doses first in the schedule as part of unifying dosing.  dose=0,
+	model=1, observers=2, isdones=3, batch=4, mcclock=5
+
+	* measurement/CountMetabolite.java: Change BolusDose to Dose to
+	reflect refactoring to unify dosing.
+
+2014-03-17  gepr  <gepr@tempusdictum.com>
+
+	* *.java: Updated Copyright dates throughout.
+
+	* io/OutputLog.java(constructor): Mirror changes to ishc where
+	OutputLog checks for the existence of the logs/ directory before
+	trying to write to it.
+
+2013-12-31  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountDeadCells.java(step()): Change count criterion
+	from Time_of_Death < now to (now-Time_of_Death < step_size).
+	Deaths were counted multiple times otherwise.
+
+2013-12-20  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (deathDelay[Min|Max]): New parameter specifying a
+	uniform pRNG draw for how long (in cycles) before a Hepatocyte
+	crosses the death_threshold and the die() method is called.
+
+2013-12-10  gepr  <gepr@tempusdictum.com>
+
+	* util/CollectionUtils.java(zero_m[di](), sum_mi()): Document
+	these methods.
+	(countType()): New methods for counting the occurances of a single
+	type inside a list of solute objects.
+
+	* measurement/Observer.java: Add new CountDeadCells measure.
+	
+	* measurement/CountDeadCells.java: New measure counting the dead
+	cells in the lobule and writing them to a file with the following
+	format: Cell_ID, Time_of_Death, Distance_from_PV, Distance_from_CV.
+
+	* isl.properties (deathRange): New ISL parameter specifying the
+	PV-CV range for the death_threshold.  When a Hepatocyte has too
+	many solute objects of the death causing types in the
+	delivery.properties, then that cell dies.
+
+	* delivery.properties ("causesDeath"): Added a new property:
+	"causesDeath" to indicate that this solute type can cause
+	Hepatocytes to die.
+
+2013-12-05  aks   <drandrewksmith@gmail.com>
+
+	* delivery.properties (Damage1 and Damage2): replaced previous Damage entry with two new 	 entries, Damage1 and Damage2.
+
+2013-11-14  aks   <drandrewksmith@gmail.com>
+
+	* delivery.properties (Amplify): New boolean property for Damage to turn off/on the Damage 	   amplification mechanism.  
+
+2013-09-24  gepr  <gepr@tempusdictum.com>
+
+	* util/SigmoidGradient.java(main()): Change SigmoidGradient.main()
+	from a unit test to a useful output for showing the function
+	evaluation across some sample intervals.
+
+	* delivery.properties (metProbGradient): New property
+	[linear|sigmoid] specifying how to calculate the metProb ∈
+	[metProbStart, metProbFinish]. Default is linear.
+
+	* util/SigmoidGradient.java: New class to map an interval to
+	[10.0,0.0] according to an inverted sigmoid: (refY-refX)/1+e^(x-5)
+	∈ [refX,refY], x ∈ [valX,valY].
+
+	* util/Gradient.java: Convert to super class of Linear|Sigmoid.
+
+	* util/LinearGradient.java: New class to map two intervals
+	linearly.
+
+2013-09-11  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountMetabolite.java: Add a measurement for GSH
+	Depletion.  This is a hack since a) it's not a metabolite, b) it's
+	not even an object, c) it's a double rather than an integer count,
+	etc.  However, it makes the most sense to include it with the
+	metabolite data, since it's measured over a sampling of the cells
+	and makes sense in this model, only in conjunction with this
+	metabolite data.  We should not use it for validation.  Also note
+	the code is a hack because I forcibly simulated a solute tag
+	"GSH_Depletion" to get the file header to work, then add the
+	measure manually during the measure's step() function.
+
+	* util/MyInt.java(interface): Finally extend java.lang.Number like
+	I should've done long ago.
+
+2013-09-10  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (gshDepletion[Inc|Range]): New parameters.
+
+	* delivery.properties ("depletesGSH"): New property.
+
+2013-07-10  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (ssUseSoD): New parameter.  When true, an
+	additional solute diffusive grid is placed between the ESpace and
+	the HepSpace.
+
+2013-05-23  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties: Moved metabolismProb from isl.properties to
+	here and provide metabolite type specific metabolism
+	probabilities.
+	(metabolismProb): Replaced with metProbStart, metProbFinish.
+
+	* isl.properties (metabolismProb): Moved to delivery.properties as
+	a solute-specific property.
+
+2013-05-16  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountMetabolite.java(init()): Add this hepatocyte's
+	distance from the PV as a parsable element of the column title.
+	This will allow us to plot metabolite amounts as a function of
+	distance from the PV, a finer grain than just per zone.
+
+	* delivery.properties (useContinualDoseFunction): Change default
+	to false because when we run with the time evolving dose function,
+	we don't get the regression result where Marker appraoches 1.0 and
+	Compound approaches some value between 0 and 1.
+
+2013-05-10  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties (dose.?.solute.?.bindable): New property.
+	(dose.?.solute.?.bolusRatio): Renamed from ratio.
+	(dose.?.solute.?.property.3.key = metabolites): New property.
+	This tells the model which objects in the set of all solutes are
+	created when this solute is metabolized.  It takes the form:
+	A=>x,B=>y,C=>z, where A,B,C ∍ Strings and x,y,z ∍ doubles.  x+y+z
+	!= 1.0 generates a runtime exception.  New metabolites were added
+	for the APAP use cases, where Compound can generate 3 metabolites
+	(A, B, and N) and Metabolite_N can generate a 4th metabolite
+	called "Damage".
+
+	* measurement/Observer.java(init()): Changed from CountSolute to
+	CountMetabolite and changed the file name from "solute_*" to
+	"metabolite_*". Pass in "null" for type to count to reflect new
+	option in CountMetabolite interface to count all types.
+
+	* measurement/CountMetabolite.java: Renamed from CountSolute,
+	since Metabolite specific prediates are hard-coded in.
+	(Constructor): Allow passing in "null" for the metabolite to
+	count.  If "null", count all of them.  If specific, count only
+	that one.
+
+2013-04-12  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java: Instantiate 2 CountSolute objects,
+	one for zones 1 and 2 to measure a sample of of hepatocytes and
+	one for zone 3 to measure a higher sample of hepatocytes. These
+	measures are placed directly on the model schedule as repeating
+	events and are stopped in Observer.step() when the isl is found to
+	be no longer running.
+
+	* measurement/CountSolute.java: Refactor the whole class to allow
+	for measuring one particular solute type (Metabolite is the
+	initial use case) at varying frequencies and taking a sample of
+	the existing hepatocyte populations.  Frequencies and sample size
+	parameters are not yet exposed to the .properties file layers.
+
+	* measurement/Obs.java(setHeaders()): Move out of constructor for
+	more flexible manipulation of headers for various measures.
+
+	* util/CollectionUtils.java(countTypes()): Moved from Vas.java to
+	make it more usable by other classes.
+
+2013-01-16  gepr  <gepr@tempusdictum.com>
+
+	* isl.properties (eiGrad*): Move parameters to the
+	ei-gradient-script.js file.
+
+	* util/ScriptEval.java: Change from singleton class to regular
+	class with instances.  ScriptEngineManager and ScriptEngine are
+	static variables created when the class loads.  Those are used by
+	both invocations of the scripts.  The eval() method now passes the
+	time for every script used.  All other variables passed to the
+	script from Java code will be local to the caller of the script
+	and will use the engine.put() method.
+
+2013-01-10  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java: Change "constant" to "continual".
+
+	* delivery.properties (useContinualDoseFunction): New parameter.
+	True => use a JavaScript script to set the conncentration to be
+	maintained in the PV as solute is distributed into the lobule.
+	False => continue to use the dose.alpha constant parameter.
+	Remove the "delivery" prefix.
+
+	* util/ScriptEval.java: New singleton class to read and execute
+	the continual-dose-script.js JavaScript.  Later will probably
+	convert it to multiple instances that read different scripts.
+
+	* util/StringUtils.java(convertStreamToString()): New method to
+	read a file into a string.  Used by ScriptEval class to read the
+	continual dose JavaScript script into memory once.
+
+2013-01-08  gepr  <gepr@tempusdictum.com>
+
+	* delivery.properties: New prop file split out from isl.properties.
+
+2013-01-07  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ISLExtRatioObs.java(step()): Flip extraction ratio
+	from in/out to out/in.
+
+	* util/CollectionUtils.java(sum_mi()): Sum the values in a
+	Map<String,MyInt>.
+
+2012-12-24  gepr  <gepr@tempusdictum.com>
+
+	* measurement/ISLFractionObs.java(step()): Multiply output
+	fraction by scale.
+
+	* util/CollectionUtils.java(zero_md(), zero_mi()): Rename zero to
+	zero_md and create a new zero_mi() to zero mutable int Maps.
+
+	* measurement/ISLExtRatioObs.java: New object for use in constant
+	dose conditions, where "maxSolute" does not make sene.  This
+	measures solute in divided by solute out, which are prepared by
+	the ISL.updateOutputs() method.
+
+	* measurement/Observer.java(init()): Use new ISLExtRatioObs for
+	constant dosing.
+
+	* measurement/ISLFractionObs.java(step()): Refactored for
+	readability and to accommodate a new sibling observation
+	ISLExtRatioObs.
+
+	* isl.properties (deliveryType, infusionStopTime): New to
+	accommodate both constant and bolus delivery types.
+	(bolus => delivery): renamed.
+	(delivery.dose.0.time => delivery.time.0) changed hierarchy to
+	externalize dosing control to the delivery method.
+
+2012-10-10  gepr  <gepr@tempusdictum.com>
+
+	* util/ObjectUtils, io/DataScanner, measurement/CountSolute,
+	measurement/Obs, measurement/ISLEnzymeObs,
+	measurement/ISLFractionObs: Changed HashMap to LinkedHashMap to
+	force deterministic ordering.
+
+2012-09-06  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* measurement/ISLFractionObs.java(step()): Mimic the
+	discretization action of the fraction collector.  Rather than
+	report each observation, we accumulate output as we execute the
+	stepsPerCycle.  Then every stepsPerCycle, we report the
+	accumulated value and zero the values for the next interval.  This
+	was the mechanism used by the Objective-C ISL and is important for
+	cross-model validation.
+
+	* isl.properties (core2Rim): New property for solute.  Double in
+	[0,1] used against a uniform prng draw, draw < core2Rim => try to
+	put the solute in the core first, rim if core fails.
+
+	* util/CollectionUtils.java(zero()): Utility to zero the values in
+	a <String,MutableDouble> Map.
+
+2012-08-27  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* isl.properties (ssForwardBias, ssLateralBias): Renamed from
+	"turbo".  New lateral bias parameter in [0.0,1.0] where 0 means
+	completely inwardly biased (no outward flow) and 1 means outward
+	biased (no inward flow).
+
+2012-08-24  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Obs.java(isTargetRunning()): Ground to time as well
+	as model status.
+
+2012-08-23  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java(step()): Change logic to stop when the
+	ISL stops, not when any model stops.
+
+2012-08-17  gepr  <gepr@tempusdictum.com>
+
+	* measurement/Observer.java(step()): Fixed bug where the Observer
+	failed to reschedule itself after the dataModel finished.
+
+2012-08-15  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* measurement/ISLEnzymeObs.java: Forgot to add "Time" to the
+	outMap.
+
+	* measurement/Observer.java: Add EnzymeObs to observations.
+
+	* measurement/ISLEnzymeObs.java: New observation to log a count
+	of enzymes in each SS for each cycle.
+
+	* measurement/DataModelObs.java: Change output type from Double to
+	Number to allow Integer outputs as well as Double outputs.
+
+2012-08-14  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* isl.properties,SSParams,Lobule (el[Thresh|Rate|Response]): New
+	parameters to control enzyme elimination.
+
+2012-08-13  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* isl.properties (eiGradYRange, eiResponse): eiGradYRange/max_grid
+	determines the shape of the Gradient.  eiResponse is a multiplier
+	onto that and may be unnecessary.  Leve eiResponse at 1.0 and it
+	has no effect.  Also added a comment to the properties file
+	stating that eiGradYRange is divided by the max_grid = sum(max(SS
+	length) per zone).  Changing the alpha or beta parameters on the
+	Type[AB] length parameters will change the shape of the gradient.
+
+2012-08-09  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* isl.properties (JumpProb): Remove these for now.  We're relying
+	on the evenly distributed prandom motion in the
+	SSGrid.moveMoore().  We may need them back later.
+	(eiGrad*, eiResponse): New parameters.
+
+	* util/Gradient.java(getters): Add getters to examine Gradients.
+
+2012-08-03  gepr  <gepr@red.red.dontexist.com>
+
+	* util/PRNGWrapper.java(main()): Add test for 2 types of SS.
+
+	* isl.properties (parameters): Move closer in line with ei3-046.
+
+2012-07-31  gepr  <gepr@red.red.dontexist.com>
+
+	* util/PRNGWrapper.java: New class to wrap the MASON prng so that
+	it can be used by COLT distributions.  Do not use multiple prngs.
+
+	* util/MathUtils.java(area): Convenience calculating area from
+	circumference.
+
+2012-07-24  gepr  <gepr@red.red.dontexist.com>
+
+	* isl.properties (membraneCrossing, bileRatio): remove quotes,
+	which were preventing the "Solute.hasProperty()" method from
+	working.
+
+2012-07-23  gepr  <gepr@red.red.dontexist.com>
+
+	* measurement/Obs.writeOutputs(): Remove superfluous Time write.
+
+2012-07-20  gepr  <gepr@red.red.dontexist.com>
+
+	* measurement/Obs.java(step()): call out to method to reuse code
+	between models.
+
+	* measurement/RefModelObs.java: New file to observe the RefModel.
+
+	* measurement/DataModelObs.java(step()): Bring output log in line
+	with ISL and RefModel.
+
+	* isl.properties (tag): Remove quotes since parameter database
+	queries it as a string.
+
+	* measurement/Observer.java(constructor): Add RefModel to be
+	observed.
+	(init()): Add call to Obs.writeHeader().
+
+	* measurement/Obs.java(headers): New IVar to handle headers.
+	(constructor): Add "Time" header since ISL and Ref models don't.
+	(writeHeader()): New method.  Can't do this in the constructor
+	because DataModel needs to edit the headers array before its
+	header is written.
+
+	* measurement/ISLFractionObs.java: Move constructor and step()
+	logic to Obs() superclass.
+
+	* measurement/DataModelObs.java(constructor): Remove Time column
+	added by Obs().
+
+2012-07-19  gepr  <gepr@red.red.dontexist.com>
+
+	* measurement/Observer.java(init()): Append trial_count to log
+	file names, one file per trial.
+
+	* Main.java(main()): Use batch_control.properties for the gui
+	parameter rather than isl.properties.
+
+	* isl.properties(gui, seed, cycleLimit, monteCarloTrials)
+	(runFileBase, lobuleIterates): All moved from isl.properties to
+	batch_control.properties.
+
+2012-07-05  gepr  <gepr@tempusdictum.com>
+
+	* util/MyInt.java: Change from int to long.
+
+	* measurement/DataModelObs.java: Change structure of Obs
+	subclasses to call the super() with model and file parameters.
+
+	* measurement/Observer.java(init()): Change CountSolute to log to
+	a "trace.csv" file.  Add a "run_log.csv" file.  Add a
+	"datmodel.csv" file.
+
+	* measurement/Obs.java(run log): New log to take output fraction
+	measurements every cycle.
+
+2012-07-02  gepr  <gepr@tempusdictum.com>
+
+	* measurement/CountSolute.java(IVars): Refactor due to IDE
+	confusion over the "isl" package and the "isl" instance.
+
+	* Main.java(Main()): Remove obsolete Telemetry class.
+
+2011-08-10  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* util/MyInt.java: Allow access directly to the val IVar.
+
+	* measurement/DataModelObs.java: New Obs for the DataModel.
+
+	* measurement/Observer.java(import AbstractISLModel): to avoid
+	name conflict between isl.x and the isl variable.  It apparently
+	only confuses NetBeans.
+	(batchControl, isl, dataModel): renamed, added so that the
+	observere can call methods on the observed.
+	(constructor): Take all observed models as parameters.  Move away
+	from using a sim.engine.Sequence so we can have individual
+	control.
+	(init()): Start each model independently to handle stand alone
+	mode.
+	(step()): Ditto.
+
+	* measurement/CountSolute.java(import AbstractISLModel): to avoid
+	name conflict between isl.x and the isl variable.  It apparently
+	only confuses NetBeans.
+	(constructor): pass in ISL model pointer instead of just the bag
+	so we can call methods on the ISL model.
+
+	* measurement/Obs.java(log): Added.  Use from parent.
+	(isTargetRunning()): New.  Used to check if the subject under
+	observation has a STARTED status.
+
+	* Main.java(view): Changed to gui and loaded from properties file.
+	(main()): Start models with command-line args in prep for stand
+	alone options.
+
+	* isl.properties (gui, seed): Use properties file instead of code
+	to set the seed and the gui option.
+
+2011-06-21  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* measurement/CountSolute.java(step()): Remove paranoid check for
+	node == null and allow nodes to have no solute without printing a
+	warning.  We may later want to print an output for the empty node
+	anyway.
+
+2010-04-01  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* measurement/Telemetry.java(init()): Include debug output.
+
+2010-03-09  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* util/MyInt.java: Mutable int object.
+
+	* measurement/Observer.java: Subclass from Steppable.  The
+	Observer will manage the individual Obs using a Sequence.
+
+	* measurement/CountSolute.java: New singleton Obs for counting
+	Solute within a LiverNode.
+	
+	* measurement/Obs.java: Subclass from Steppable so we can place
+	individual observation events on the schedule.
+
+	* isl.properties (bileRatio): Added new Solute parameter.
+

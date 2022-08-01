@@ -1,0 +1,245 @@
+
+2018-03-22-10:38  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-03-12-10:14  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl,ControlParams (takeNTSnaps): New parameter to specify whether to take necTrig snapshots.
+
+2018-02-13-10:13  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl, ControlParams (measureMITs): New IVar boolean to turn on/off measures for MITs (membrane interaction types -- entries, exits, rejects, and traps).
+
+2017-11-30-16:19  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl.java (svnversion): Add a new (temporary) ParameterDatabase to read the build.prop file and set svnversion.
+	(start()): Pring the SVN version to the log file.
+
+2017-08-16-17:05  gepr  <gepr@tempusdictum.com>
+
+	* ControlParams.java (runFileBase): Deleted runFileBase because we now output all 3 profile measures "outFract", "doseFract", and "extRatio".
+
+2017-03-14-10:21  gepr  <gepr@tempusdictum.com>
+
+	* ControlParams.java: Parameters was moved from isl.measurement.view to isl.io.
+
+2016-11-02  gepr  <gepr@tempusdictum.com>
+
+	* Parameters.java (getPropVal()): Use BigDecimal when comparing sums of doubles against 1.0.  Sometimes summation produces numbers like 0.09999999999 instead of 0.1.
+
+2016-10-26-16:42  gepr  <gepr@tempusdictum.com>
+
+	* Parameters.java (getPropVal()): Reduce precision tolerance for MathUtils.equals() because the new PAP entry was producing 0.99999999999... instead of 1.0.  We'll want to change to BigDecimals at some point.
+
+2016-10-22  gepr  <gepr@tempusdictum.com>
+
+	* Parameters.java (getPropVal()): New function to parse parameter properties files.  Removes copy-pasted code between MetabolicParams and DeliveryParams.
+
+2016-09-08  gepr  <gepr@tempusdictum.com>
+
+	* NodeView.java (SimplePortrayal2D): Reflect change from ArrayList<Solute> to Map<String,Number> in LiverNode.
+
+2016-06-07-16:16  gepr  <gepr@tempusdictum.com>
+
+	* *.java: lobule → hepStruct throughout.
+
+2016-04-28-15:26  gepr  <gepr@tempusdictum.com>
+
+	* Parameters.java: New interface intended for all the *Params readers.
+
+	* ControlParams.java (Parameters): Implement new Parameters interface primarily for the Genson [de]serializer.
+
+2015-09-21  gepr  <gepr@tempusdictum.com>
+
+	* LobuleView.java (findNodeView()): Replace explicit Iterator with generics for loop.
+
+	* BatchControl.java (installMonteCarloCheck()): Replace anonymous Steppable with lambda.
+	(doLoop()): SuppressWarnings("rawtypes") used to accomodate interface with MASON.  We use generics, MASON does not.
+
+2015-03-06  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl.java (installMonteCarloCheck()): When a model finishes, call Observer.finish() to flush and finish the output files.  This is done mostly to tell the main thread to wait for the GZipped output to finish before moving on to the next trial.
+
+2015-02-13  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl,ControlParams (measureAllSolute): New IVar and parameter to allow the measurement of all solute in the lobule cells rather than just the reaction products.
+
+2015-02-09  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl.java (bcRNG): Keep a handle to the new pRNG to make the code more readable.
+	(start()): Set new schedule orderings for the 3 models as a part of the ordering overhall.  Schedule event orders are now based on models with large increments between them.  ISL has order 100 and ISL events should start there (100, 101, 102, ...).  DataModel starts at 96 and it's "isDone()" is at 97.  RefModel starts at 98.  Model-specific observation/measurement events start at the ISL action_order and add 100 (e.g. their order now starts at 200, used to start at 2).  The BatchView has order 900 and the MCCheck has order 1000.
+
+2015-02-02  gepr  <gepr@tempusdictum.com>
+
+	* ControlParams.java (loadParams()): Call System.currentTimeMillis() if seed is absent from batch_control.properties.  Set the local seed in BatchControl regardless.
+
+	* BatchControl.java (localSeed, setLocalSeed()): Store the seed used to override the default pRNG so we can print it to the log file.
+	(Constructor): Moved construction/replacement of the pRNG here from the ControlParams database reader.  Also, override the pRNG regardles of whether a seed is set manually or not.
+	(start()): Print the seed to the log file.
+
+2014-10-07  gepr  <gepr@tempusdictum.com>
+
+	* NodeView.java(draw()): Remove unnecessary casts (given generics)
+	and changes in response to solutes going from sim.util.Bag to
+	java.util.ArrayList.
+
+	* LobuleView.java: Added generics type specifiers in response to -Xlint.
+
+2014-03-20  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl.java: Use schedule orderings more to place
+	Doses first in the schedule as part of unifying dosing.  dose=0,
+	model=1, observers=2, isdones=3, batch=4, mcclock=5
+
+2014-01-30  gepr  <gepr@tempusdictum.com>
+
+	* GUIControl.java(init()): Stop using deprecated Display2D
+	constructor.
+
+2013-03-22  gepr  <gepr@tempusdictum.com>
+
+	* GUIControl.java(constructor): Pass System.currentTimeMillis() as
+	the seed to the BatchControl.  It will be overridden if there's a
+	seed in the batch_control.properties file.
+
+	* ControlParams.java(loadParams()): Allow for the presence or
+	absence of the seed.  If present, use it.  If absent, use a call
+	to System.currentTimeMillis() to facilitate distribution of mc
+	trials across multiple machines.
+
+	* BatchControl.java(constructor): Pass in the seed in order to
+	allow distribution of mc trials across multiple machines, varying
+	the seed for each machine.
+	(doLoop()): Ditto.
+
+2012-10-10  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl.java: Changed HashMap to LinkedHashMap to force
+	deterministic ordering.
+
+2012-08-16  gepr  <gepr@tempusdictum.com>
+
+	* BatchControl.java(installMonteCarloCheck()): JVM can't find the
+	Schedule.clear() method.  Replaceing it with reset().
+
+2012-07-20  gepr  <gepr@red.red.dontexist.com>
+
+	* BatchControl.java(start()): Don't schedule Data and Ref models
+	or their observers in monte carlo trials after the first.
+
+2012-07-19  gepr  <gepr@red.red.dontexist.com>
+
+	* BatchControl.java(run_file_base): Read the base of the run file
+	name from control parameter file.
+
+	* ControlParams.java(seed, cycleLimit, monteCarloTrials)
+	(runFileBase, lobuleIterates): Loading delegated to this class.
+
+	* BatchControl.java(getThis()): Used to verify inter-trial execution.
+	(pd, cycleLimit, mc_trials, trial_count): New IVars for batch
+	control parameters.
+	(stops): Since we're now restarting the BatchControl, we'll want
+	to initialize this for each restart.
+	(constructor): delegate parameters to the ControlParams class.
+	(installMonteCarloCheck()): New method, called in start(), to
+	create an anonymous stepper to check whether we need to start()
+	the batchControl again for each monte carlo trial.
+
+2012-07-17  gepr  <gepr@red.red.dontexist.com>
+
+	* BatchControl.java: Getters for the models so we can inspect them
+	and plot the output fraction from the ISL.
+
+2012-07-05  gepr  <gepr@tempusdictum.com>
+
+	* ISLView.java: maxSolute moved from isl to isl.bolus.
+
+2012-07-02  gepr  <gepr@tempusdictum.com>
+
+	* ISLView.java(IVars): Replace Telemetry with logger.
+
+	* BatchControl.java(setCycleLimit()): Setter so we can edit the
+	value in the Model inspector panel.
+
+	* NodeView.java(IVars): Add logger.
+	(draw()): Generalize node coloring from Vas to LiverNode.  Also
+	hack to get colors working.
+
+2011-08-11  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* BatchControl.java(refModel): New ivar.
+	(start()): New clause to instantiate and start RefModel.
+
+2011-08-10  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* BatchView.java(step()): choose which models to observe,
+	depending on standalone or co-simulation.
+
+	* GUIControl.java(log): Use slf4j logger.
+	(constructor): invoke BatchControl with command-line args.
+
+	* BatchControl.java(import AbstractModelISLModel): To avoid
+	conflict with variable "isl" and class hierarchy "isl.x",
+	apparently only a problem with Netbeans.
+	(log): Use slf4j logger.
+	(mode): Stand alone or co-sim.
+	(constructor): Take command-line args rather than seed.  Use
+	isl.properties.  Remove batch_control.properties.  Construct a new
+	prng with the seed read from the properties file.
+	(start()): Only start the models called for in the command-line
+	argument, unless you run co-simulation.
+	(stopMe()): Callback to stop repeating scheduled events.
+	(keyExists(), argumentForKey()): Copied from sim.engine.SimState
+	because they're private.
+	(standAlone()): Parse -standalone command-line arg.
+	(canUseGUI()): Determine if we can use the gui based on what
+	models are running, regardless of what's in the properties file.
+	(doLoop()): Customized doLoop() to allow constructing SimStates
+	with the command-line args rather than just a seed.
+
+2011-06-24  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* BatchControl.java(pd): Split parameter database into one for
+	batch_control and one for isl.
+
+2011-06-23  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* BatchControl.java(start()): Change back to send the entire
+	parent state into the ISL.
+
+2011-06-21  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* BatchControl.java(start()): Use new constructor for ISL, which 
+	requires the pRNG instead of the whole caller state.
+
+2010-04-01  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* LobuleView.java(islView): Added back pointer for ISLView.
+	(mirrorLobule()):  Add back pointer to NodeView.
+
+	* GUIControl.java(getSimulationInspectedObject()): Add so we get a
+	Model tab in the Console.
+
+	* ControlParams.java: New class to hold cross-model control
+	parameters. (None yet.)
+
+	* ISLView.java(maxSolute): Cache this for coloring.
+	(constructor): Add back pointer to ISLView to LobuleView.
+
+	* BatchControl.java(getTime()): Compensate for negative times and
+	Console query prior to construction of the ISL.
+	(getCycleLimit()): Add so that it'll show up in the Model
+	inspector.
+
+	* NodeView.java: Add dynamic coloring to nodes (broken).
+
+2010-03-09  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* BatchControl.java: Add measurement observer to schedule.
+
+2010-02-24  glen  <gepr@tempusdictum.com>
+
+	* BatchControl.java: Use the new isl.mason2IslTime() function to
+	translate from model time to simulation time.
+

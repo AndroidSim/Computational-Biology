@@ -1,0 +1,258 @@
+o EI4 notes
+
+  - in order to get more enzymes near the CV than near the PV, we have
+    to implement the following: "more energy => same enzymes; less
+    energy => more enzymes"
+
+  - one way to do this is to implement a direct rules:
+
+    * hepatocytes near the CV induce more enzymes than those near the PV
+    * hepatocytes near the PV induce fewer enzymes than those near the CV
+    * H near the CV eliminate less
+    * H near the PV eliminate more
+
+    * this translates to:
+
+      o high Gradient => low induction, high elimination
+      o low Gradient => high induction, low elimination
+
+  - another way to look at it is that it takes energy to induce or
+    eliminate enzymes.  The H near the PV have plenty of G.  If that's
+    energy (like oxygen or somesuch) then they can induce and
+    eliminate to their hearts' content.  The H near the CV, on the
+    other hand, have to regulate their G closely.  If it costs money
+    to induce and eliminate, then they'll induce and eliminate only
+    when they MUST.  If we assume there's cost to inducing and
+    eliminating, but none for leaving enzymes floating around, then
+    there will be more induction (when they need it) and very little
+    or no elimination.
+
+    * high G => lots of induction and elimination
+    * low G => limited induction and negligible elimination
+
+    * if this were the case, the aspects we'd expect are:
+
+      o zonation at any observation after exposure
+      o large, frequent fluctuations, but maintained amount in Zone 1
+      o steady increase, less fluctuation in Zone 3
+
+  - i.e. induce inversely proportional to G
+         eliminate directly proportional to G
+
+  - This amounts to the idea that there are a limited number of energy quanta and a H must decide what to do with them: induce and/or eliminate.  The more it induces, the less energy it has to eliminate.
+
+  - But the problem with the mechanism implemented is it does not conserve energy, elimination and induction doesn't balance.
+
+o epsilon floating point tolerances discussion
+
+  // TBD: Should I be using Java's Float.MIN_VALUE or a different
+  //      value for the tolerance on time values?
+  //
+  //      The Swarm version of this code is using FLT_MIN which
+  //      seems to be considerably larger than Float.MIN_VALUE
+  //      from what I can tell: 
+  //         C    float.h FLT_MIN = 1.17549435e-38F   (from my Ubuntu 10.10 VM)
+  //         Java Float.MIN_VLAUE = 2^-149 = 1.4E-45  (from Java 5.0 API)
+  //
+  //      NOTE: To determine the value of FLT_MIN on my Ubuntu 10.10 VM
+  //            I ran the following command:
+  //               $ gcc -dM -E - < /dev/null | grep FLT
+  //
+  //            FLT_MIN is defined as __FLT_MIN__ in float.h and
+  //            the gcc command above returned:
+  //               #define __FLT_MIN__ 1.17549435e-38F
+  //
+  //            On my Ubuntu 10.10 VM, the float.h header is in:
+  //               /usr/lib/gcc/i686-linux-gnu/4.4/include
+  //
+  // TBD: Should we be using FLT_MIN as a tolerance?  Shouldn't
+  //      we be using FLT_EPSILON?
+  //
+  //      FLT_EPSILON is significantly larger than FLT_MIN and
+  //      Float.MIN_VALUE, but its still small and in the past
+  //      it is the value that I've typically used for tolerances.
+  //
+  //      From float.h documentation for FLT_EPSILON:
+  //         "The difference between 1 and the least value
+  //          greater than 1 that is representable in the
+  //          given floating point type, b**1-p."
+  //
+  //         $ gcc -dM -E - < /dev/null | grep FLT | grep EPSILON
+  //         #define __FLT_EPSILON__ 1.19209290e-7F
+
+  // Epsilon size:
+  // I performed some quick test with double values to determine
+  // the minimum change that was detectable by inequality operators.
+  // Specifically, given a value and a delta, how small can delta
+  // get before the following inequality is false:
+  //      ( value - delta ) < value
+  // 
+  // The answer is 1.0e-16.  If delta is 1.0e-15, the inequality
+  // above is true, i.e. delta is a detectable change.  When I
+  // add the extra zero, the inequality becomes false, i.e. the
+  // value i not changed by subtracting delta.
+  //
+  // Note: the exact detectability threshold may be a value between
+  //       1.0e-16 and 1.0e-15, but I didn't check for that; I just
+  //       wanted to know the ballpark.
+  //
+  // So that seems to imply that a TIME_EPSILON < 1.0e-15 is actually
+  // pointless and I would suggest using something on the order of
+  // FLT_EPSILON, approx 1.0e-7.
+  //
+
+o design discussion
+//
+// Design discussion: (bring this up with Glen at some point)
+// ------------------
+//   In the current design (based on the Swarm version) the data model
+//   increments a cycle counter every step, ie dataNdx.  When data values
+//   are requested, i.e. getOutputs is called, the model uses the cycle
+//   count as the index into the data and retrieves the time and output
+//   measurements for that cycle.
+//
+//   An alternative design would be schedule to the output measurements
+//   to update at the time specified in the input data.  That is,
+//   after loading the data from file, we would loop through the rows
+//   and schedule the model to change it's current data values at the
+//   times specified in the first column of each row.  The model's step
+//   method would then be called at the appropriate time and given its
+//   new output measurements.  The model would simply store the measurements
+//   and pass them back from getOutputs.
+//
+//   We may want the data model to save the last/previous measurements
+//   as well as the current measurements to facilitate performing the
+//   interpolation.
+//
+//   I think the designs are equivalent, but I'm not sure if there'd
+//   be a performance difference.  If getOutputs is _not_ called for
+//   every time value in the data, then the current design would likely
+//   be more efficient.  On the other hand, if data changes are scheduled
+//   and hence only the initialization code interacts with the data
+//   table, we could have the output measurements being fed to the model
+//   from other sources, ie multiple files or sockets or whatever.
+//
+//   Another thought... We could implement a Table Row Iterator class
+//   and then either wrapper that create the Steppable actions objects
+//   (i.e. upon step, the iterator is advanced to the next row and then
+//   updated the model with the new row data).  Or, if we are sticking
+//   with the current composite-style design, then the iterator would
+//   be an ivar of this class and we simply advance it when step is
+//   called (ie the iterator replaces the cycle counter).
+
+o design discussion from RefModel.java
+// Design Discussion: Time
+// -----------------
+//   * Is there a possible fence post error?
+//       To me, it seems like the logical definition of getTime
+//       should be:
+//          start + cycle * step
+//       But from looking at and testing of ISL/Swarm code, what
+//       the reference model actually uses is:
+//          start + (cycle - 1) * step
+//       So on the first loop of the model (cycle 0), getTime
+//       return 'start - step', ie one step before start.  If
+//       start = 0, then time would actually be negative.
+//
+//   * Should time arg to 'ecd' be 0 or step for first cycle?
+//       This is similar to discussion above.  The ISL/Swarm code
+//       uses:
+//          t = time_diff = time_now - time_start
+//       as the time argument to the 'ecd' function.
+//
+//       On the first cycle/step, time_now equals time_start,
+//       so t = 0.  Therefore, in the extended CD model, the
+//       contour of integration (aka gamma) -- which is defined
+//       as 1/t -- is infinite, i.e. 1/0 (on the first loop).
+//       This makes me wonder if we should be using:
+//          t = (cycle + 1) * step
+//       instead of
+//          t = cycle * step
+//       as the time argument for 'ecd' method.
+//
+//   * Should we use a 'time' ivar?
+//       Instead of calculating the model time based on the cycle count
+//       we could create another ivar and increment it in the 'step'
+//       method.  Does it make any difference?  It might improve
+//       performance slightly but it also adds another variable and
+//       hence another possible source of error.
+//
+//       _IF_ the time step/increment actually varied during the
+//       simulation, e.g. we started with step = 0.1 but then adjusted
+//       the step based on other criteria on each cycle.  IF that
+//       capability was needed, then it would be important to have
+//       a 'time' ivar which we incremented every cycle.
+//
+//       We should also consider always the getter methods instead
+//       the ivar directly because that allows to make a variable,
+//       such as time step, dynamic without needing to recode any
+//       other methods.  However that does introduce some performance
+//       cost naturally.
+//
+
+// Design Discussion: General Equation-Based Model (EBM)
+// -----------------
+//    This class has been written to assume that invoking the 'ecd'
+//    method on a subclass of AbstractCDModel.  We could possibly
+//    convert this class to become a general purpose EBM wrapper.
+//       Step 1: Define an Equation interface, e.g.
+//                  public interface Equation<T> {
+//                     public T calculate ( Object ... args );
+//                  }
+//       Step 2: Change AbstractCDModel to implement the Equation
+//               interface and implement the calculate to call
+//               'ecd'.
+//       Step 3: Change the getters, setters and ivars in the class
+//               from being CD Model specific to only requiring
+//               an instance of Equation.
+//       Step 4: Change 'step' method to call 'calculate'.
+//
+//    A very generic definition of 'calculate' would take a Map
+//    argument and retrieve all equation parameter, per-call,
+//    from this Map.  I don't think we'd want to go to that
+//    extreme.  Actually it would probably flexible enough if
+//    we assumed, or required, at least one arg, i.e. time, to be
+//    passed to every call to 'calculate', e.g.:
+//        public T calculate ( double time, Object ... args );
+//
+//    Or we might assume that time is the only arg and all
+//    other equation parameters are stored in ivar and must be
+//    set (via setters) before 'calculate' is called.
+//
+
+o ToDo's from RefModel.java
+
+// TODO: 7/17
+// ====
+//    * [DONE] Convert cdParams to be an instance of Properties
+//    * [DONE] Test code
+//
+//    * [PART DONE] Idea: set(Object,Map) could be designed to save
+//            "unused" properties as well as failed properties
+
+// TODO: 7/19
+// ====
+//    * Rewrite CD Model classes to have z as an ivar and for it to
+//      default to L and provide an ecd(z,t) method that works like
+//      ecd(z,t,extracting) and provide an ecd(t,extracting) method
+//      as well
+//    * Rewrite unit testing for CD Model classes to set z instead
+//      of passing it (optional)
+//    * Add z as a setting in RefModel constructor???
+//
+//    * [DONE] Run tests with ISL/Swarm version to confirm time
+//             calculation and 'ecd' parameters
+//
+
+// TODO: 7/27
+// =====
+//    * Remove hardcoded initialization in the constructor and put that
+//      initialization in 'main' method, if possible
+//       * We can't use the 'doLoop' mechanism as it is currently written
+//         if we also want to perform initialization.
+//    * Implement unit test for RefModel
+//    * Clean up code and remove completed TODOs
+//    *
+//    *
+//    *
+//

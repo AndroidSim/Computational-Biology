@@ -1,0 +1,210 @@
+2021-09-06  aks   <drandrewksmith@gmail.com>
+
+    * Cell.java: added unified gradient calculation for Endothelial and Kupffer Cells, similar to the one for Hepatocytes. To method getBindingProbability(EnzymeGroup eg), added the binding probability gradient calculation from the unified gradient.
+
+2021-06-09  aks   <drandrewksmith@gmail.com>
+
+    * Cell.java (listBoundMObject()): new method to list all bound mobile objects using preexisting method getAllBoundMobileObjects() for preparation to output the measurement to files. 
+
+2021-06-03  aks   <drandrewksmith@gmail.com>
+
+    * Cell.java (getBindingProbability(EnzymeGroup eg)): fixed a bug in the "stepwise" binding mode where the amount of bound mobile objects could be greater than the capacity of the Enzyme Group that binds those mobile objects. This happened because "fraction" did not depend on the amount of bound mobile objects, and was always set to 1 because capacity is always > 0. 
+
+2021-03-03  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java: fixed bug where the sigmoid property was "sigShiftShape" instead of "sigShiftSharp".
+
+2021-02-25  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java, NecrosisHandler.java: For both classes, changed the function call formats to the gradient calculations through the unified gradient for the new sigmoid gradient parameters, shift and sharp. For Hepatocyte.java, also added code block within setting the reaction probability gradient to check for the "sigShiftSharp" property, and, if present, get the Shift and Sharp parameters to pass to the gradient calculation.
+
+2021-02-17  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java (init(hinit)): added the function to calculate the unified gradiet value from distances for a Hepatocyte during initilization in the Culture context when hepInitRead = true.
+
+2020-07-29  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java, NecrosisHandler.java: commented out or deleted unnecessary lines of code.
+
+2020-07-28  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java, NecrosisHandler.java: changed the log.info calls.
+
+2020-07-27  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java (init()): add log.info call for debugging.
+
+2020-07-20  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java (init()): moved setting unified gradient value for the cell from its distances dPV and dCV before the other initialization calls (super.init()) and (finishInit()), because they use gradients.
+	* Hepatocyte.java (createEnzymeGroups(), setGradients, finishInit()): added calls to HepStruct functions that evaluate various gradients (i.e. reaction probability and production, enzyme groups, and GSH threshold) using the unified gradient.
+	* NecrosisHandler.java(): added calls to HepStruct functions that evaluates stress threshold gradient using the unified gradient.
+
+2020-07-07  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java(init()): call distances2UniGradient() in HepStruct to initialize the unified gradient value for each hepatocyte during initialization.
+
+2020-03-11-11:09  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (ReactionInfo): Replace the temporary hard-coded JS-like function with a call to the new bsg.util.ExpGradient. The "shape" parameter was tuned to match the previous function.
+
+2020-03-06-11:33  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (getResources()): Replace the JS script with a temporary Java hard-coded version.
+
+2020-03-05-11:24  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (createEnzymeGroups()): Failed to switch <0,1> for the EG IC flip. Change to <1,0>.
+
+2020-03-03-16:06  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (createEnzymeGroups()): Replace hard-coded binding initial capacity gradient with a call to HepStruct.evalGradient().
+
+2020-02-27-16:22  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (setGradients(), finishInit()): Call HepStruct.evalGradient() instead of bsg.util.[Linear|Sigmoid]Gradient.eval().
+	* NecrosisHandler.java (constructor): Ditto.
+
+2019-10-18    <gepr@mia.c.ucsf-generic.internal>
+
+	* NecrosisHandler, Hepatocyte: Add parameter (exos, exoManhattanDist) controlled logic to swap between neighbor and EXO mechanisms. This was a merge from ^/branches/islj-evs r1265.
+
+2019-08-13  gepr  <gepr@zareason-mediabox5330>
+
+	* Hepatocyte.java (init()): When initializing from HepInit recorded JSON files, 1st cast the Object to a Number, then get the intValue() for the d[CP]Vs. This is a result of promoting the type of the JSON values from Integer to Object.
+
+2019-07-18  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java: Merge from ^/branches/islj-ALTrelease. I.e. allow for necroticRelease of ALT.
+
+2019-05-07-15:16  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java: Edit a comment to remove reference to the bindable parameter, which has been removed.
+
+2019-03-04  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java: control parameter, necroticRelease (boolean, true/false), to turn off or on the release of ALT on cell death.
+
+2018-12-13  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java (necrose()): intracellular ALT released on cell death.
+
+2018-11-21-16:55  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-04-03-09:15  gepr  <gepr@tempusdictum.com>
+
+	* NecrosisHandler.java (run()): Separate HepNeighbors predicates so that NecTrigSnaps can distinguish them.
+	(isCellStressed(), downStreamStatus(), latSTatus(), shouldCellNecrose()): New methods to embody Cell state predicates.
+	(stress_thresh, stressorTypes): Rename necrosis_thresh and necrosisTypes.
+
+2018-04-03-09:14  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (necrotic): Make public so NecTrigSnap can access it.
+	* Cell.java (myGrid): Make public so the NecTrigSnap can access it.
+
+2018-03-09-10:56  gepr  <gepr@tempusdictum.com>
+
+	* NecrosisHandler.java (necrosis_step): Make public so we can test whether it exists from the NecTrigSnap measure.
+	* Hepatocyte.java (nh): New IVar holding the NecrosisHandler so that we can tell if a Hepatocyte has triggered necrosis.  This may change depending on the results of the hepneighbors work.
+
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv merged in ^/trunks/islj into ^/branches/islj-hepn vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+2018-08-23-10:37  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte, Cell (canCross()): Promote transportOut test from Hepatocyte to Cell.
+
+2018-08-22-09:41  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java (canCross()): Add additional test for a Solute-specific "cellEnterExitProb" entry, which overrides the model-wide parameter.
+	* Hepatocyte.java (canCross()): Replace test for transportOut parameter which was accidentally deleted with the last checkin.
+
+2018-08-17-09:54  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java (CROSS_PROB, canCross()): Δ MEMBRANE_CROSS_PROB ∈ ℝ static variable to CROSS_PROB ∈ Double2D.  Add a test for which direction being crossed (IN or OUT) and use the appropriate one.
+	Add a polymorph for canCross() in order for the instance upon which it's called to send its class' CROSS_PROB, rather than use the super's.
+	* Hepatocyte, EC, KupfferCell (CROSS_PROB, canCross()): Include the class variable CROSS_PROB, a setter, and the canCross() without the Double2D probabilities argument.
+
+2018-08-16-12:37  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java (accept(), canItLeave(), canCross()): Unify accept() and canItLeave() into canCross(,[IN|OUT]), respectively. Note that accept() called add() whereas canItLeave() did not call remove(). So, calls to canCross() also need to be reconciled to add() the Solute when necessary.
+	* Hepatocyte.java (add(), eliminatedByGSH()): Because Hepatocyte.accept() overrode Cell.accept() in order to handle GSH Solute removal, that logic was moved to add() to unify accept() and canItLeave(). eliminatedByGSH() is a new method.
+
+2018-06-12-07:58  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (amplify()): Refactor to parameterize the [min,max) bounds of the uniform distribution. Change unconventional capitalized variable names to conventional lower/camel case.
+
+2018-06-11  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java: changed amplification distribution to uniform [min, max]
+
+2018-05-24  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java: changed amplification distribution from gaussian (mean=4, std=1) to uniform ([0,2])
+
+2018-04-05  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java, Transporter.java: commented out log calls for ALT release mechanism verification to decrease file size while running.
+
+2018-04-04  aks   <drandrewksmith@gmail.com>
+
+	* Hepatocyte.java (altRelease(), amplify(Solute s)): commented out or moved output to log calls in altRelease() to speed up execution and decrease log length. Also, lowered amplification in amplify(Solute s) from uniform [0,6] to [0,2].
+
+2018-03-23-09:43  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (transportSolute()): Use the logic that bottlenecks Solute movement through present(), forget(), remove(), and add().
+
+2018-03-23-09:42  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java (remove()): Add polymorphic that accepts a boolean indicating whether or not the removal should be measured or treated as a leak. And eliminate the leaky IVar stub.
+
+2018-03-20  aks   <drandrewksmith@gmail.com>
+
+	*Transporter.java: added check for transport delay min == transport delay, and if so, then set time delay = min; otherwise, uniform random [min, max]
+
+2018-03-12  aks   <drandrewksmith@gmail.com>
+
+	* Transporter.java: moved from isl.model package.
+	* Hepatocyte.java (getALTAmount(), ALTRelease(), transportSolute(Solute s)): new method tto return the ALT amount counter for measurements, ALT release mechanism within its own method (also the ALT mechanism no longer accounts for previous damage, so creation of ALT only when membrane damage > threshold), and removed adding the newly created ALT Solute to the Hepatocyte's solute array list and now transport is just adding the ALT Solute to the grid space and SS's solute list. 
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ merged in ^/trunks/islj into ^/branches/islj-hepn ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+2018-03-22-10:38  gepr  <gepr@tempusdictum.com>
+
+	* merge ^/trunks/islj into ^/branches/islj-ssf
+
+2018-02-23-12:12  gepr  <gepr@tempusdictum.com>
+
+	* Reaction[Info|Handler] (present()): Calls the alternate form with the extra boolean parameter.
+	* Hepatocyte.java (present(), bileAndAmpHandling()): Polymorphic override to Cell.present() specifying whether we should perform the bileAndAmpHandling() operations. bileAndAmplify() is executed for new Solute coming in and for new reaction products being produced inside, but NOT for any new Solute created as a result of Amplification.  If we did it for amplified product, we'd have to handle the infinite recursion it would cause.
+	* Cell.java (present(), forget()): Moved the methods to be closer to add().
+
+2018-02-19-14:45  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java (remove()): Throw an exception if you try to remove something that's not present.
+
+2018-02-19-11:53  gepr  <gepr@tempusdictum.com>
+
+	* Hepatocyte.java (canItLeave()): Add call to countMove() here since we don't call super.
+	* Cell.java (accept(), canItLeave()): Promote the countMove() call out of the if-clause (which prevented some rejects and traps from being logged.
+
+2018-02-16-12:04  gepr  <gepr@tempusdictum.com>
+
+	* ReactionInfo.java: Δ add() to present() to reflect that Solute created inside the Cell doesn't "enter" that Cell.
+	* ReactionHandler.java (run()): Δ rxn_info.add(rxnProduct) → rxn_info.present(rxnProduct) so that the introduction of this new Solute doesn't trigger an "entry" MIT.
+
+2018-02-13-11:24  gepr  <gepr@tempusdictum.com>
+
+	* Cell.java (MEMBRANE_CROSS_PROB, accept(), canItLeave()): New class variable to specify a pRNG draw when a Solute tries to enter or exit any Cell. The code also checks for solute-specific, dynamic, membraneCrossProb property in types.properties.
+
+2018-02-08-16:15  gepr  <gepr@tempusdictum.com>
+
+	* NecrosisHandler: Use read-only list of Cell.solutes.
+	* Hepatocyte, KupfferCell, Reaction[Handler|Info]: Use new bottleneck methods.
+	* Cell.java (entries, exits, rejects, and traps): New IVars to count Solute that enters, exits, is rejected (by accept()) and is trapped (by a failed canItLeave()).
+	(add(), remove(), present(), forget()): New methods to encapsulate counting of exits, entries, rejects, and traps. present() and forget() handle the construction and destruction of Solute (which don't "enter" or "exit" because they're made by the Cell).
+
+2018-02-07-10:31  gepr  <gepr@tempusdictum.com>
+
+	* isl.model.cell: New package to encapsulate Cell-centric code.

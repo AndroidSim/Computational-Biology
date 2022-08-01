@@ -1,0 +1,37 @@
+2021-04-13  glen e. p. ropella  <gepr@tempusdictum.com>
+
+	* Change from absolute path (https://...) to relative path (^/) so that we can check it out with either https or svn+ssh.
+
+42019-04-26-11:32  gepr  <gepr@tempusdictum.com>
+
+	* bsg.jar: Upgrade from rev 1074 to 1220.
+
+2018-02-06-16:42  gepr  <gepr@tempusdictum.com>
+
+	* bsg.jar: Bump to 1074 for bsg.util.CollectionUtils.countType[s]() → countObjects[By|Of]Type() interface change.
+
+2016-11-02-16:45  gepr  <gepr@tempusdictum.com>
+
+	* bsg.jar: Bump to 905 for URLDecode of resource paths.
+
+2016-09-01-14:43  gepr  <gepr@tempusdictum.com>
+
+	* bsg.jar: Bump to 888 for new CollectionUtils.addIn() functionality.
+
+2016-03-09 gepr <gepr@tempusdictum.com>
+
+	* libraries: isl.util → bsg.util, which means include either a bsg project or bsg.jar.
+
+2015-08-25  gepr  <gepr@tempusdictum.com>
+
+	* libraries: Upgraded every library except colt (which was already up-to-date).  Removed hamcrest entirely.
+
+2014-03-17  gepr  <gepr@tempusdictum.com>
+
+	* Added licenses. Removed old mason14 and mason15 libraries.
+	Removed JMF.jar since we're not using it.
+
+2013-12-31  gepr  <gepr@tempusdictum.com>
+
+	* mason17-with-src.jar: Use newest version of MASON.
+

@@ -1,0 +1,6 @@
+2012-07-19  gepr  <gepr@red.red.dontexist.com>
+
+	* notes: New file to hold design discussion and relevant comments
+	that clutter the code.
+	Move comments from RefModel.
+

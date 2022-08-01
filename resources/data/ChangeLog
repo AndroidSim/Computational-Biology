@@ -1,0 +1,4 @@
+2016-06-24  gepr  <gepr@tempusdictum.com>
+
+	* jpet297-fig2-all.csv: Moved from <root>/cfg/data to <root>/resources/data.
+
